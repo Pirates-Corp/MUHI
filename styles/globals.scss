@@ -1,0 +1,71 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+a {
+  text-decoration: none;
+}
+ul{
+  list-style: none;
+  padding-left: 0;
+}
+
+
+
+
+// colors
+
+:root{
+  --primary         : #286DA9;
+  --primary-light   : #CDDEEC;
+  --secondary       : #74BB45;
+  --secondary-light : #DAEDCC;
+  --red             : #ED3F3F;
+  --red-light       : #FCDBDB;
+  --dark            : #343131;
+  --dark-light      : #7A7979;
+  --black           : #000;
+  --white           : #fff;
+}
+
+
+/* fonts  */
+
+@font-face {
+  font-family: HeadingLight;
+  src: url(../public/fonts/HelveticaNeueLt.ttf);
+ }
+
+@font-face {
+  font-family: HeadingMedium;
+  src: url(../public/fonts/HelveticaNeueMedium.ttf);
+ }
+
+@font-face {
+  font-family: HeadingBold;
+  src: url(../public/fonts/HelveticaNeuBold.ttf);
+ }
+
+ @font-face {
+  font-family: HeadingHeavy;
+  src: url(../public/fonts/HelveticaNeueHv.ttf);
+ }
+
+ @font-face {
+  font-family: TextRegular;
+  src: url(../public/fonts/Rubik-Regular.ttf);
+ }
+
+ @font-face {
+  font-family: TextMedium;
+  src: url(../public/fonts/Rubik-Medium.ttf);
+ }
+
+ @font-face {
+  font-family: TextBold;
+  src: url(../public/fonts/Rubik-Bold.ttf);
+ }
