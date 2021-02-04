@@ -74,7 +74,7 @@ export default function AdminSideBar()
                     </Link>
                 </li>
          
-               <label htmlFor="check-box">
+               <label id={style.hide} htmlFor="check-box">
                <div id={style.closeMenu}>
                    <img src='/imgs/svgs/CloseMenu.svg' alt="-" />
                </div>
