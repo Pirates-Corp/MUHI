@@ -26,7 +26,7 @@ export default function AdminSideBar()
                 <li> 
                     <Link href="/home"> 
                     <a>
-                         <div className={style.circle}><img src='/imgs/svgs/Home.svg' alt='Home'/></div>
+                         <div className={`${style.circle}`}><img src='/imgs/svgs/Home.svg' alt='Home'/></div>
                          <div className={style.navText}> Home</div>
                     </a>   
                     </Link>
@@ -35,7 +35,7 @@ export default function AdminSideBar()
                <li>
                      <Link href="/newsletter-creation" >
                          <a>
-                            <div className={style.circle}><img src='/imgs/svgs/Notification.svg' alt='Notification'/></div> 
+                            <div className={`${style.circle} `}><img src='/imgs/svgs/Notification.svg' alt='Notification'/></div> 
                             <div className={style.navText}> Newsletter Creation</div>
                          </a> 
                       </Link>
@@ -43,7 +43,7 @@ export default function AdminSideBar()
                 <li> 
                     <Link href="/quiz" >
                         <a>
-                           <div className={style.circle}><img src='/imgs/svgs/Quiz.svg' alt='Quiz'/></div>
+                           <div className={`${style.circle} `}><img src='/imgs/svgs/Quiz.svg' alt='Quiz'/></div>
                            <div className={style.navText}>Quiz Creation</div>
                         </a> 
                     </Link>
@@ -51,7 +51,7 @@ export default function AdminSideBar()
                 <li> 
                     <Link href="/report" >
                         <a>
-                            <div className={style.circle}><img src='/imgs/svgs/Report.svg' alt='Report'/></div>
+                            <div className={`${style.circle} `}><img src='/imgs/svgs/Report.svg' alt='Report'/></div>
                             <div className={style.navText}>Students Report</div>
                         </a> 
                     </Link>
@@ -59,7 +59,7 @@ export default function AdminSideBar()
                 <li>
                     <Link href="/management" >
                         <a>
-                            <div className={style.circle }><img src='/imgs/svgs/ManageAccounts.svg' alt='Account-Management'/></div>
+                            <div className={`${style.circle}` }><img src='/imgs/svgs/ManageAccounts.svg' alt='Account-Management'/></div>
                             <div className={style.navText}> Account Management</div>
                         </a> 
                     </Link>
@@ -68,8 +68,8 @@ export default function AdminSideBar()
                 <li> 
                     <Link href="/logout" >
                         <a>
-                            <div className={style.circle} ><img src='/imgs/svgs/Logout.svg' alt='Log out'/></div>
-                            <div className={style.navText}>Log out</div>
+                            <div className={`${style.circle} `} ><img src='/imgs/svgs/Logout.svg' alt='Log out'/></div>
+                            <div className={style.navText}>Logout</div>
                         </a> 
                     </Link>
                 </li>
