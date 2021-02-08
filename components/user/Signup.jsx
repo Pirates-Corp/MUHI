@@ -50,7 +50,7 @@ export default function Signup() {
                 <div>
                     <button type="submit">Sign up</button>
                 </div>
-                <div>
+                <div> 
                     <p>Start with Google</p>
                 </div>
                 <div>

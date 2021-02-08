@@ -1,0 +1,1 @@
+import style from "../admin/Login.module.scss";
