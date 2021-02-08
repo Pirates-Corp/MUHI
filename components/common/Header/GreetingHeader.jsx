@@ -1,0 +1,1 @@
+import style from "../../common/Header/GreetingHeader.module.scss";
