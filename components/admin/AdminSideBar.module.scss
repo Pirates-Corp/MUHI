@@ -72,7 +72,7 @@
 
 
   #holder {
-    position: absolute;
+    position: fixed;
     top: 1.5rem;
     left: 1vw;
     bottom: 0;
@@ -162,8 +162,18 @@
 -------------------------*/
 
 @media all and (max-width: 350px) {
+
+//blur Nav bg 
+  // #nav{
+  //   position: fixed;
+  //   background-color: rgba(255, 255, 255, 0.192);
+  //   backdrop-filter: blur(4px);
+  //   height: 100vh;
+  //   width: 100vw;
+  // }
+
   #openMenu {
-    position: absolute;
+    position: fixed;
     top: 1rem;
     right: 1rem;
     margin: 0 auto;
@@ -186,6 +196,8 @@
     visibility: visible;
   }
 
+   
+
   .checkBox:not(:checked) ~ #holder {
     animation-name: fadeInDown;
     animation-duration: 0.5s;
@@ -194,7 +206,7 @@
   #holder
    {
     visibility: hidden;
-    position: absolute;
+    position: fixed;
     top: 5vh;
     left: 10vw;
     right: 10vw;
@@ -390,15 +402,15 @@
 
 
   #holder {
-    position: absolute;
+    position: fixed;
     top: 1.5rem;
     left: 2vw;
     bottom: 0;
-    height: 700px;
-    width: 5rem;
+    height: 95vh;
+    width: 4.5rem;
     margin-top: 0;
     border-radius: 51.0943px;
-    padding: 2rem 1rem;
+    padding: 1rem .8rem;
     transition: 0.5s;
 
     li:nth-child(1)
@@ -490,11 +502,11 @@
 
 
   #holder {
-    position: absolute;
+    position: fixed;
     top: 1.5rem;
     left: 2vw;
     bottom: 0;
-    height: 720px;
+    height: 95vh;
     width: 5rem;
     margin-top: 0;
     border-radius: 51.0943px;

@@ -1,8 +1,11 @@
-export default BaseLayout({children})
+import style from "../Layouts/BaseLayout.module.scss"
+const BaseLayout = ({children}) =>
 {
   return(
-    <div className="BaseContainer">
-        
+    <div className={style.container}>
+        {children}
     </div>
   )
 }
+
+export default BaseLayout;
