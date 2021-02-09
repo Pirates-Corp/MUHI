@@ -9,7 +9,7 @@ const uri = (process.env.dbConnectionString)
 let cached = global.mongo
 
 if (!cached) {
-    cached = global.mongo = { conn: null, promise: null, collections: {} }
+    cached = global.mongo = { conn: null, promise: null, user: null, collections: {} }
 }
 
 export async function getDatabaseInstance() {
@@ -64,3 +64,4 @@ export const getCollection = async (collectionName, schema) => {
 
     return cached.collections[collectionName];
 }
+

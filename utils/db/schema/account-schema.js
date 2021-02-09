@@ -1,44 +1,55 @@
 export const accountSchema = {
     $jsonSchema: {
-        required: ["name", "_id", "password", "mobileNo", "accountState", "role", "resetToken", "accountType"],
+        required: ["_id"],
+        additionalProperties:false,
         properties: {
+            _id : {
+                bsonType: "string",
+                description: "Name field is required"
+            },
             name: {
+                maxLength: 50,
+                bsonType: "string",
+                description: "Name field is optional"
+            },
+            email : {
+                minLength: 10,
                 maxLength: 50,
                 bsonType: "string",
                 description: "Name field is required"
             },
-            _id: {
-                maxLength: 50,
-                bsonType: "string",
-                description: "Mail is required"
-            },
             password: {
                 minLength: 6,
-                maxLength: 16,
                 bsonType: "string",
-                description: "Password is required"
+                description: "Password is optional"
             },
             mobileNo: {
                 minLength: 5,
                 maxLength: 15,
-                bsonType: "long",
-                description: "Mobile number is required"
+                bsonType: "string",
+                description: "Mobile number is optional"
             },
             accountState: {
-                bsonType: "bool",
-                description: "Account state is required"
-            },
-            role: {
-                minLength: 5,
+                minLength: 6,
                 maxLength: 9,
                 bsonType: "string",
-                description: "User role is required"
+                description: "Account state is optional"
+            },
+            role: {
+                minLength: 4,
+                maxLength: 9,
+                bsonType: "string",
+                description: "User role is optional"
             },
             accountType: {
                 minLength: 4,
                 maxLength: 6,
                 bsonType: "string",
-                description: "Account type is required"
+                description: "Account type is optional"
+            },
+            resetToken : {
+                bsonType: "string",
+                description: "reset token is optional"
             }
         }
     }

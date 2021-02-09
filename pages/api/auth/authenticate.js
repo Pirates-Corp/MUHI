@@ -1,4 +1,4 @@
-import { login } from '../../../utils/db/account-manager'
+import { authenticate } from '../../../utils/db/account-manager'
 
 export default async (req, res) => {
     await authenticate(req,res)
