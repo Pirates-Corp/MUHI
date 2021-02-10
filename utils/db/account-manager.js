@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import jwt, { decode } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { getCollection } from '../db/helpers/db-util'
 import { accountSchema } from './schema/account-schema'
 
@@ -50,7 +50,7 @@ export const login = async (httpReq, httpRes) => {
     } else {
         let userDetails = httpReq.body
         if (userDetails.email && userDetails.password) {
-            if (new String(userDetails.role).trim() !== "admin" && !emailRegex.test(new String(userDetails.userId).trim())) {
+            if (!emailRegex.test(new String(userDetails.email).trim())) {
                 restext = "Incorrect email";
                 console.log(restext)
             }
@@ -61,8 +61,12 @@ export const login = async (httpReq, httpRes) => {
             if (isPasswordCorrect) {
                 restext = 'Login Successfull for user => ' + userDetails.email
                 httpRes = saveTokenInCookie(httpRes, user._id, user.password)
-                resCode = 201
+                resCode = 200
                 updateCurrentUserInGlobalScope(user)
+                console.log(restext);
+            } else {
+                restext = 'Login Failed due to incorrect password for the user => ' + userDetails.email
+                resCode = 401
                 console.log(restext);
             }
         } else {
@@ -80,10 +84,12 @@ export const logout = async (httpReq, httpRes) => {
         resCode = 401;
         restext = ""
     } else {
-        resCode = 200
-        restext = 'Logout successfull'
-        removeCurrentUserFromGlobalScope();
-        deleteTokenFromCookie(httpRes);
+        if (getCurrentUser()) {
+            resCode = 200
+            restext = 'Logout successfull'
+            removeCurrentUserFromGlobalScope();
+            deleteTokenFromCookie(httpRes);
+        }
     }
     httpRes.statusCode = resCode
     httpRes.send(restext)
@@ -132,7 +138,7 @@ export const forgotPassword = () => {
 
 }
 
-export const validateResetToken = (token) => {
+export const validateResetToken = async (httpReq, httpRes, token) => {
 
 }
 
