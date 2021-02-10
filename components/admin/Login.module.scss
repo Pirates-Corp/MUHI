@@ -9,13 +9,102 @@
 /*-----------------------
          Mixin
 -------------------------*/
+@mixin loginBox {
+      #loginBox
+      {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--white);
+            display: grid;
+            place-items: center;
+        
+           
+            
+            #innerLoginBox
+            {
+                 height: 25rem;
+                 width: 30rem;
+                 padding: 2rem;
+                 background-color: var(--primary-light);
+                 border: 6px solid rgba(40, 109, 169, 0.08);
+                 border-radius: 10px;
+            }
+
+            #headingHolder
+            {
+                  
+                  width: 100%;
+                  margin-bottom: 2rem;
+
+                  img{
+                        display: block;
+                        height: 5rem;
+                        width: 10rem;
+                        margin: 0 auto;
+                     }
+
+                  h1
+                  {
+                      margin: 1rem auto;
+                      font-size: 1.6rem;
+                      font-family: HeadingHeavy;
+                      background: -webkit-linear-gradient(-30deg,#75BC43,#0759A0);
+                      -webkit-background-clip: text;
+                      -webkit-text-fill-color: transparent;
+                  }
+            }
+      }
+}
 
 
 /*-----------------------
         Mobile - small
 -------------------------*/
 @media all and (max-width: 350px) {
- 
+      #loginBox
+      {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--white);
+            display: grid;
+            place-items: center;
+        
+           
+            
+            #innerLoginBox
+            {
+                 height: 30rem;
+                 width: 18rem;
+                 padding: 2rem;
+                 background-color: var(--primary-light);
+                 border: 6px solid rgba(40, 109, 169, 0.08);
+                 border-radius: 10px;
+            }
+
+            #headingHolder
+            {
+                  
+                  width: 100%;
+                  margin-bottom: 2rem;
+
+                  img{
+                        display: block;
+                        height: 5rem;
+                        width: 10rem;
+                        margin: 0 auto;
+                     }
+
+                  h1
+                  {
+                      margin: 1rem auto;
+                      font-size: 1.6rem;
+                      font-family: HeadingHeavy;
+                      background: -webkit-linear-gradient(-30deg,#75BC43,#0759A0);
+                      -webkit-background-clip: text;
+                      -webkit-text-fill-color: transparent;
+                  }
+            }
+      }
 }
 
 /*-----------------------
@@ -23,32 +112,80 @@
 -------------------------*/
 @media all and (min-width: 350px) and (max-width: 600px) {
 
-}
+    
+            #loginBox
+            {
+                  width: 100vw;
+                  height: 100vh;
+                  background-color: var(--white);
+                  display: grid;
+                  place-items: center;
+              
+                 
+                  
+                  #innerLoginBox
+                  {
+                       height: 25rem;
+                       width: 20rem;
+                       padding: 2rem;
+                       background-color: var(--primary-light);
+                       border: 6px solid rgba(40, 109, 169, 0.08);
+                       border-radius: 10px;
+                  }
+      
+                  #headingHolder
+                  {
+                        
+                        width: 100%;
+                        margin-bottom: 2rem;
+      
+                        img{
+                              display: block;
+                              height: 5rem;
+                              width: 10rem;
+                              margin: 0 auto;
+                           }
+      
+                        h1
+                        {
+                            margin: 1rem auto;
+                            font-size: 1.6rem;
+                            font-family: HeadingHeavy;
+                            background: -webkit-linear-gradient(-30deg,#75BC43,#0759A0);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+                  }
+            }
+      }
+      
+
 
 /*-----------------------
       Tablet - small
 -------------------------*/
 @media all and (min-width: 600px) and (max-width: 900px) {
     
+      @include loginBox();
 }
 
 /*-----------------------
       Tablet - Large
 -------------------------*/
 @media all and (min-width: 900px) and (max-width: 1200px) {
-  
+      @include loginBox();
 }
 
 /*-----------------------
       Desktop - small
 -------------------------*/
 @media all and (min-width: 1200px) and (max-width: 1800px) {
-  
+      @include loginBox();
 }
 
 /*-----------------------
       Desktop - large
 -------------------------*/
 @media all and (min-width: 1800px) {
- 
+      @include loginBox();
 }

@@ -16,24 +16,24 @@ const Login = ({loading, setLoading}) => {
     }
 
   return (
-    <div > 
-        <div > 
-            <div> 
-                <img src="" alt="logo"/>
-                <h1>MUHI Admin | LOG IN</h1>
+    <div id={style.loginBox} > 
+        <div id={style.innerLoginBox}> 
+            <div id={style.headingHolder}> 
+                <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
+                <h1>Admin - Log In</h1>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <img src="" alt="logo" />
-                    <input type="text" name="username" ref={register({ required: true })} />
-                    {errors.username && <span>This field is required</span>}
+                <div className="TextBox">
+                    <img src="/imgs/svgs/UserName.svg" alt="username" />
+                    <input type="text" name="username" placeholder="Username"  required />
+                   
                 </div>
-                <div>
-                    <img src="" alt="logo" />
-                    <input type="text" name="password" ref={register({ required: true })} />
-                    {errors.password && <span>This field is required</span>}
+                <div className="TextBox">
+                    <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
+                    <input type="password" name="password" placeholder="Password" required  />
+                    
                 </div>
-                <input type="submit"/>
+                <input className="prBtn" type="submit" value="Login"/>
             </form>
         </div>
     </div>
