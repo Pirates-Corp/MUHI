@@ -12,7 +12,7 @@ if (!cached) {
     cached = global.mongo = { conn: null, promise: null, user: null, collections: {} }
 }
 
-export async function getDatabaseInstance() {
+export const getDatabaseInstance = async () => {
     if (cached.conn) {
         console.log('Mongo Client is already exists in the global scope.');
         return cached.conn

@@ -42,11 +42,51 @@ export const authenticate = async (httpReq, httpRes) => {
 }
 
 export const login = async (httpReq, httpRes) => {
-    
+    let resCode = 400
+    let restext = ""
+    if (httpReq.method !== "POST") {
+        resCode = 401;
+        restext = ""
+    } else {
+        let userDetails = httpReq.body
+        if (userDetails.email && userDetails.password) {
+            if (new String(userDetails.role).trim() !== "admin" && !emailRegex.test(new String(userDetails.userId).trim())) {
+                restext = "Incorrect email";
+                console.log(restext)
+            }
+            const accountsCollection = await getCollection(collectionName, accountSchema)
+            const user = await accountsCollection.findOne({ _id: userDetails.email })
+            console.log('User found in DB => ' + user._id)
+            const isPasswordCorrect = bcrypt.compareSync(userDetails.password, user.password)
+            if (isPasswordCorrect) {
+                restext = 'Login Successfull for user => ' + userDetails.email
+                httpRes = saveTokenInCookie(httpRes, user._id, user.password)
+                resCode = 201
+                updateCurrentUserInGlobalScope(user)
+                console.log(restext);
+            }
+        } else {
+            restext = "Required fields missing";
+        }
+    }
+    httpRes.statusCode = resCode
+    httpRes.send(restext)
 }
 
-export const logout = () => {
-
+export const logout = async (httpReq, httpRes) => {
+    let resCode = 400
+    let restext = ""
+    if (httpReq.method !== "POST") {
+        resCode = 401;
+        restext = ""
+    } else {
+        resCode = 200
+        restext = 'Logout successfull'
+        removeCurrentUserFromGlobalScope();
+        deleteTokenFromCookie(httpRes);
+    }
+    httpRes.statusCode = resCode
+    httpRes.send(restext)
 }
 
 export const signup = async (httpReq, httpRes) => {
@@ -69,7 +109,6 @@ export const signup = async (httpReq, httpRes) => {
                 restext = "Account created for the user : " + JSON.stringify(userDetails) + ";"
                 httpRes = saveTokenInCookie(httpRes, userDetails._id, userDetails.password)
                 resCode = 201
-                delete userDetails.password
                 updateCurrentUserInGlobalScope(userDetails)
                 console.log(restext);
             }).catch((err) => {
@@ -123,7 +162,7 @@ export const suspendAccount = (id) => {
  */
 
 export const getTokenFromCookie = (httpReq) => {
-    if(httpReq.cookies) {
+    if (httpReq.cookies) {
         return httpReq.cookies[cookieName]
     }
     let rawCookie = httpReq.headers?.cookie
@@ -139,7 +178,7 @@ export const saveTokenInCookie = (httpRes, id, password) => {
 }
 
 export const deleteTokenFromCookie = (httpRes) => {
-    let cookie = `${cookieName}='';Expires=${new Date(Date.now()-cookieExpiryTime)}`
+    let cookie = `${cookieName}='';Expires=${new Date(Date.now() - cookieExpiryTime)}`
     httpRes.setHeader('Set-cookie', cookie)
     return httpRes
 }
@@ -160,7 +199,7 @@ export const decodePayload = (token) => {
 
 export const getCurrentUser = () => {
     if (cached.user) {
-        console.log('Current User exists in the global scope. User : '+user);
+        console.log('Current User exists in the global scope. User : ' + cached.user);
         return cached.user
     }
 
@@ -171,10 +210,10 @@ export const getCurrentUser = () => {
 
 export const updateCurrentUserInGlobalScope = (userDetails) => {
     cached.user = userDetails
-    console.log('Updated Current User in Global Scope.  User : '+user);
+    console.log('Updated Current User in Global Scope.  User : ' + userDetails);
 }
 
 export const removeCurrentUserFromGlobalScope = () => {
-    console.log('Removing Current User form Global Scope.User : '+getCurrentUser() );
+    console.log('Removing Current User form Global Scope.User : ' + getCurrentUser());
     updateCurrentUserInGlobalScope(null)
 }
