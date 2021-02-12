@@ -19,6 +19,11 @@
     "react-hook-form": "^6.15.1",
     "sass": "^1.32.6",
     "swr": "^0.4.1",
-    "validator": "^13.5.2"
-  }
+    "validator": "^13.5.2",
+    "bcrypt": "^5.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.4",
+    "nodemailer": "^6.4.18"
+  },
+  "devDependencies": {}
 }
