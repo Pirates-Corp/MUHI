@@ -111,7 +111,7 @@ export const processQuery = async (action, collectionName, schema, document, upd
         const collection = await getCollection(collectionName, schema)
         switch (action) {
             case createOne:
-                return await collection.insertOne(document)
+                return [true,await collection.insertOne(document)]
             case createMany:
                 return await collection.insertMany(document)
             case readOne:
@@ -130,6 +130,6 @@ export const processQuery = async (action, collectionName, schema, document, upd
                 return null
         }
     } catch (err) {
-        console.log('Error in DB Processor => ' + err)
+        return [false,err]
     }
 }

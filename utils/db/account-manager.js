@@ -14,6 +14,7 @@ import {
 } from '../db/helpers/db-util'
 import { accountSchema } from './helpers/schema/account-schema'
 import nodemailer from 'nodemailer'
+import { routes } from '../routes'
 
 const accountsCollection = process.env.userCollection
 
@@ -29,48 +30,65 @@ const cookieExpiryTime = process.env.cookieExpiryTime
 
 const cookieName = process.env.cookieName
 
-const passwordResetPath = process.env.passwordResetPath
-
 const emailRegex = new RegExp(/\S+@\S+\.\S+/);
 
-const isProductionEnv = process.env.nodeEnv === 'production'
+const isProductionEnv = process.env.nodeEnv || 'production'
 
-const mailSubject = 'Password reset notification'
+const mailSubject_passwordResetRequest = 'Password reset link'
 
-const mailMessage = 'Password reset request is submitted for you account./nPlease follow this <link> to reset the password./nIf its not you, please ignore this mail.'
+const mailSubject_passwordResetNotification = 'Password reset notificationn'
+
+const mailSubject_accountCreationNotification = 'Account creation notification'
+
+const passwordResetRequest = 'Password reset request is submitted for your account. Please use the following link <link> to reset the password. If its not you, please ignore this mail.'
+
+const passwordResetNotification = 'Your Muhi Account\'s password was changed successfully. Please use the following link <link> to log into your account.'
+
+const accountCreationNotification = 'You have created an account in Muhi Quiz. Please use the following link <link> to take quizzes.'
+
+const admin = 'admin', moderator = 'moderator', user = 'user'
 
 let cached = global.mongo
 
-export const authenticate = async (httpReq, httpRes) => {
+export const authenticate = async (httpReq) => {
     let resCode = 400
-    let resText = ""
+    let resBody = null
     try {
         const token = getTokenFromCookie(httpReq)
         if (token) {
             const decoded = decodePayload(token)
-            const user = await getCurrentUser()
-            if (user && decoded && user._id === decoded.email && user.password === decoded.password) {
-                resCode = 200
-                resText = "Valid User : " + user._id
-                console.log(resText)
+            if (decoded) {
+                const user = await getUser(decoded.id)
+                if (user && decoded && user._id === decoded.id) {
+                    const isPasswordCorrect = bcrypt.compareSync(decoded.password, user.password)
+                    if (isPasswordCorrect) {
+                        console.log('Valid User => ' + user._id);
+                        let currentUser = { ...user }
+                        delete currentUser.password
+                        delete currentUser.resetToken
+                        resCode = 200
+                        resBody = currentUser
+                    } else {
+                        console.log('Invalid Password => ' + user._id);
+                    }
+                } else {
+                    console.log('Invalid User => ' + user._id);
+                }
             } else {
-                resCode = 401
-                resText = "Invalid User : " + user._id
-                console.log(resText)
-                httpRes.redirect([301], "\login")
+                console.log('JWT expired.');
+                removeCurrentUserFromGlobalScope()
             }
         } else {
             resCode = 401
-            resText = "No users logged in"
-            console.log(resText)
+            resBody = "No users logged in"
+            console.log(resBody)
         }
     } catch (err) {
         resCode = 400
-        resText = 'Error in authentication. Error => ' + err
-        console.log(resText)
+        resBody = 'Error in authentication => ' + err
+        console.log(resBody)
     }
-    httpRes.statusCode = resCode
-    httpRes.send(resText)
+    return [resCode, resBody]
 }
 
 export const login = async (httpReq, httpRes) => {
@@ -81,32 +99,37 @@ export const login = async (httpReq, httpRes) => {
             resCode = 401;
             resText = ""
         } else if (getCurrentUser()) {
-            resCode = 400;
             resText = "Already Logged In"
         } else {
             let userDetails = httpReq.body
-            if (userDetails.email && userDetails.password) {
-                if (!emailRegex.test(new String(userDetails.email).trim())) {
-                    resText = "Incorrect email";
-                    console.log(resText)
-                }
-                const user = await getUser(userDetails.email)
+            if (userDetails.id && userDetails.password) {
+                const user = await getUser(userDetails.id)
                 if (user) {
                     console.log('User found in DB => ' + user._id)
                     const isPasswordCorrect = bcrypt.compareSync(userDetails.password, user.password)
                     if (isPasswordCorrect) {
-                        resText = 'Login Successfull for user => ' + userDetails.email
-                        httpRes = saveTokenInCookie(httpRes, user._id, user.password)
+                        resText = 'Login Successfull for user => ' + userDetails.id
+                        const jwtToken = encodePayload({ id: user._id, password: userDetails.password }, authTokenExpiryTime)
+                        saveTokenInCookie(httpRes, jwtToken)
                         resCode = 200
+                        await updateLastAciveTimeForTheUser(user._id)
                         updateCurrentUserInGlobalScope(user)
                         console.log(resText);
+                        if (user.role === admin) {
+                            httpRes.redirect(routes.adminDashboard)
+                        } else if (user.role === moderator) {
+                            httpRes.redirect(routes.adminDashboard)
+                        } else {
+                            httpRes.redirect(routes.userDashboard)
+                        }
+                        return
                     } else {
-                        resText = 'Login Failed due to incorrect password for the user => ' + userDetails.email
+                        resText = 'Login Failed due to incorrect password for the user => ' + userDetails.id
                         resCode = 401
                         console.log(resText);
                     }
                 } else {
-                    resText = 'User Not found =>' + userDetails.email
+                    resText = 'User Not found =>' + userDetails.id
                     console.log(resCode);
                 }
             } else {
@@ -125,7 +148,7 @@ export const login = async (httpReq, httpRes) => {
 export const logout = async (httpReq, httpRes) => {
     let resCode = 400
     let resText = ""
-    if (httpReq.method !== "POST") {
+    if (httpReq.method !== "PUT") {
         resCode = 401;
         resText = ""
     } else {
@@ -155,30 +178,48 @@ export const signup = async (httpReq, httpRes) => {
             resText = "Already Logged In"
         } else {
             let userDetails = httpReq.body
-            if (userDetails.name && userDetails.email && userDetails.password && userDetails.mobileNo && userDetails.accountType) {
-                if (new String(userDetails.role).trim() !== "admin" && !emailRegex.test(new String(userDetails.email).trim())) {
-                    resText = "Incorrect email";
+            if (userDetails.name && userDetails.email && userDetails.role) {
+                userDetails.accountType = userDetails.accountType ? userDetails.accountType : 'muhi'
+                if (userDetails.accountType !== 'google' && !userDetails.password) {
+                    resText = "Please provide the password";
                     console.log(resText)
-                }
-                userDetails.accountState = userDetails.accountState ? userDetails.accountState : "active"
-                userDetails.role = userDetails.role ? userDetails.role : "user"
-                userDetails._id = userDetails.email
-                userDetails.password = bcrypt.hashSync(userDetails.password, saltRounds)
-                await createUser(userDetails).then(result => {
-                    resText = "Account created for the user : " + JSON.stringify(userDetails) + ";"
-                    httpRes = saveTokenInCookie(httpRes, userDetails._id, userDetails.password)
-                    resCode = 201
-                    updateCurrentUserInGlobalScope(userDetails)
-                    console.log(resText);
-                }).catch(err => {
-                    if (err.code == 11000) {
-                        resCode = 409
-                        resText = 'account already exists : ' + err
-                        console.log('Account already exists : ' + err);
+                } else if (!emailRegex.test(new String(userDetails.email).trim())) {
+                    resText = "Unusual email pattern. Signup request rejected";
+                    console.log(resText)
+                } else {
+                    userDetails._id = new String(userDetails.role === admin ? userDetails.name : userDetails.email).toLowerCase()
+                    userDetails.accountState = userDetails.accountState ? userDetails.accountState : "active"
+                    userDetails.password = bcrypt.hashSync(userDetails.password, saltRounds)
+                    userDetails.lastLogin = new Date(Date.now())
+                    const result = await createUser(userDetails)
+                    if (result.length >= 2 && result[0]) {
+                        resText = "Account created for the user : " + JSON.stringify(userDetails) + ";"
+                        const jwtToken = encodePayload({ id: userDetails._id, password: userDetails.password }, authTokenExpiryTime)
+                        saveTokenInCookie(httpRes, jwtToken)
+                        resCode = 201
+                        updateCurrentUserInGlobalScope(userDetails)
+                        await sendMail(userDetails.email, mailSubject_accountCreationNotification, getMailBody(httpReq, accountCreationNotification))
+                        console.log(resText);
+                        if (userDetails.role === admin) {
+                            httpRes.redirect(routes.adminDashboard)
+                        } else if (userDetails.role === moderator) {
+                            httpRes.redirect(routes.adminDashboard)
+                        } else {
+                            httpRes.redirect(routes.userDashboard)
+                        }
+                        return
+                    } else if (result.length >= 1 && !result[0]) {
+                        if (result[1].code == 11000) {
+                            resCode = 409
+                            resText = 'account already exists : ' + result[1]
+                            console.log('Account already exists : ' + result[1]);
+                        } else {
+                            resText = "Account creation failed for the user : " + JSON.stringify(userDetails) + ";  Error : " + JSON.stringify(result[1])
+                        }
                     } else {
-                        resText = "Account creation failed for the user : " + JSON.stringify(userDetails) + ";  Error : " + JSON.stringify(err)
+                        console.log('Unknown error ocured while signing up => ' + result);
                     }
-                })
+                }
             } else {
                 resText = "Required fields missing";
             }
@@ -196,26 +237,81 @@ export const forgotPassword = async (httpReq, httpRes) => {
     let resCode = 400
     let resText = ""
     try {
-        const email = httpReq.body?.email
-        if (email) {
-            const encodedToken = encodePayload({ email }, resetTokenExpiryTime)
-            const document = { _id: email };
-            const updateConition = {
-                $set: {
-                    resetToken: encodedToken,
-                },
-            };
-            const queryOptions = { upsert: false }
-            await updateUserDetails(document, updateConition, queryOptions)
-            const passwordResetLink = getPasswordResetLink(httpReq, encodedToken)
-            sendResetTokenToMail(email, passwordResetLink)
-            resCode = 200
-            resText = 'Reset token sent to mail'
-            console.log(resText)
+        if (httpReq.method !== "PUT") {
+            resCode = 401;
+            resText = ""
+        } else {
+            const id = httpReq.body?.id
+            if (id) {
+                let email
+                if (!emailRegex.test(new String(id).trim())) {
+                    const adminuser = await getUser(id)             // admin user will send user id instead of mail id
+                    if (user) {
+                        email = adminuser.email
+                    }
+                } else {
+                    email = id
+                }
+                const encodedToken = encodePayload({ id }, resetTokenExpiryTime)
+                await updatePasswordResetTokenForTheUser(id, encodedToken)
+                const mailBody = getMailBody(httpReq, passwordResetRequest, routes.passwordResetPath, encodedToken)
+                await sendMail(email, mailSubject_passwordResetRequest, mailBody)
+                resCode = 200
+                resText = 'Reset token sent to mail'
+                console.log(resText)
+            }
         }
     } catch (err) {
         resCode = 400
         resText = 'Error in authentication. Error => ' + err
+        console.log(resText)
+    }
+    httpRes.statusCode = resCode
+    httpRes.send(resText)
+}
+
+export const updatePassword = async (httpReq, httpRes) => {
+    let resCode = 400
+    let resText = ""
+    try {
+        if (httpReq.method !== "PUT") {
+            resCode = 401;
+            resText = ""
+        } else {
+            const userDetails = httpReq.body
+            if (userDetails) {
+                const id = userDetails.id
+                let newPassword = userDetails.password
+                if (id && newPassword) {
+                    const user = await getUser(id)
+                    if (user) {
+                        newPassword = bcrypt.hashSync(userDetails.password, saltRounds)
+                        await updateUserPassword(id, newPassword)
+                        const mailBody = getMailBody(httpReq, passwordResetNotification)
+                        await sendMail(id, mailSubject_passwordResetNotification, mailBody)
+                        updateCurrentUserInGlobalScope(user)
+                        resCode = 200
+                        resText = 'Password successfully updated !'
+                        console.log(resText)
+                    } else {
+                        resCode = 400
+                        resText = 'Error while updating password ! Please try again'
+                        console.log(resText)
+                    }
+                } else {
+                    resCode = 400
+                    resText = 'Error while updating password ! Invalid user => ' + id
+                    console.log(resText)
+                }
+            } else {
+                resCode = 400
+                resText = 'Error parsing user details ! Please try again'
+                console.log(resText)
+            }
+        }
+    } catch (err) {
+        resCode = 400
+        resText = 'Error while updating password. Error => ' + err
         console.log(resText)
     }
     httpRes.statusCode = resCode
@@ -226,23 +322,32 @@ export const validateResetToken = async (httpReq, httpRes) => {
     let resCode = 400
     let resText = ""
     try {
-        const token = httpReq.body?.token
-        if (token) {
-            const decoded = decodePayload(token)
-            if (decoded.id && decoded.password) {
-                const user = await getUser(decoded.id)
-                if (user) {
-                    console.log('User found in DB => ' + user._id)
-                    resText = 'Reset token validated succesfully'
-                    resCode = 200
-                } else {
-                    resText = 'Invalid reset token'
-                    resCode = 400
-                    console.log(resCode);
-                }
-            }
+        if (httpReq.method !== "POST") {
+            resCode = 401;
+            resText = ""
         } else {
-            resText = "Token is empty"
+            const token = httpReq.body?.token
+            if (token) {
+                const decoded = decodePayload(token)
+                if (decoded.id) {
+                    const user = await getUser(decoded.id)
+                    if (user && token === user.resetToken) {
+                        console.log('User found in DB => ' + user._id)
+                        console.log('reset token validated successfully for user => ' + decoded.id);
+                        delete user.password
+                        delete user.resetToken
+                        httpRes.json(user)
+                        return
+                    } else {
+                        resText = 'Invalid reset token'
+                        resCode = 400
+                        console.log(resText);
+                    }
+                }
+            } else {
+                resText = "Token is empty"
+                console.log(resText)
+            }
         }
     } catch (err) {
         resCode = 400
@@ -253,31 +358,9 @@ export const validateResetToken = async (httpReq, httpRes) => {
     httpRes.send(resText)
 }
 
-export const createUser = async (userDetails) => {
-    return await insertDocument(accountsCollection, accountSchema, userDetails)
-}
-
-export const getUser = async (id) => {
-    try {
-        return getDocument(accountsCollection, accountSchema, { _id: id })
-    } catch (err) {
-        console.log('Error getting user from DB => ' + err)
-    }
-    return null
-}
-
 export const getUserDetails = async (httpReq, httpRes) => {
     const user = await getUser('id')
     delete user.password
-}
-
-export const updateUserDetails = async (document, updateConition, queryOptions) => {
-    try {
-        return updateDocument(accountsCollection, accountSchema, document, updateConition, queryOptions)
-    } catch (err) {
-        console.log('Error getting user from DB => ' + err)
-    }
-    return null
 }
 
 export const getAllusers = () => {
@@ -301,36 +384,89 @@ export const suspendAccount = (id) => {
  *  Helper functions
  */
 
+export const createUser = async (userDetails) => {
+    return await insertDocument(accountsCollection, accountSchema, userDetails)
+}
+
+export const updatePasswordResetTokenForTheUser = async (id, encodedToken) => {
+    const updateCondition = {
+        $set: {
+            resetToken: encodedToken,
+        },
+    };
+    const queryOptions = { upsert: false }
+    await updateUserDetails(id, updateCondition, queryOptions)
+}
+
+export const updateLastAciveTimeForTheUser = async (id) => {
+    try {
+        const updateConition = {
+            $set: {
+                lastLogin: new Date(Date.now()),
+            },
+        };
+        const queryOptions = { upsert: false }
+        return await updateUserDetails(id, updateConition, queryOptions)
+    } catch (err) {
+        console.log('Error while updating last login time for user=> ' + err);
+    }
+}
+
+export const updateUserPassword = async (id, password) => {
+    try {
+        const updateConition = {
+            $set: {
+                password,
+                resetToken: '-'                // we should remove password reset token from db once password is updated
+            },
+        };
+        const queryOptions = { upsert: false }
+        return await updateUserDetails(id, updateConition, queryOptions)
+    } catch (err) {
+        console.log('Error while updating last login time for user=> ' + err);
+    }
+}
+
+export const getUser = async (id) => {
+    if (getCurrentUser() && getCurrentUser()._id == id) return getCurrentUser()
+    return await getDocument(accountsCollection, accountSchema, { _id: new String(id).toLowerCase() })
+}
+
+export const updateUserDetails = async (id, updateConition, queryOptions) => {
+    return updateDocument(accountsCollection, accountSchema, { _id: new String(id).toLowerCase() }, updateConition, queryOptions)
+}
+
 export const getTokenFromCookie = (httpReq) => {
     if (httpReq.cookies) {
         return httpReq.cookies[cookieName]
     }
     let rawCookie = httpReq.headers?.cookie
-    return rawCookie[cookieName]
+    return rawCookie[cookieName]   // jwt cookie
 }
 
 
-export const saveTokenInCookie = (httpRes, email, password) => {
-    const jwtToken = encodePayload({ email, password }, authTokenExpiryTime)
-    const cookie = `${cookieName}=${jwtToken}; Max-Age=${cookieExpiryTime}; HttpOnly=true; Secure=${isProductionEnv}; SameSite=Lax`
-    httpRes.setHeader('Set-cookie', cookie)
+export const saveTokenInCookie = (httpRes, jwtToken) => {
+    const secure = isProductionEnv === 'production' ? `Secure=true;` : ''
+    const cookie = `${cookieName}=${jwtToken}; Max-Age=${cookieExpiryTime}; HttpOnly=true;${secure}Path='/api';SameSite=Lax`
+    httpRes.setHeader('Set-cookie', [cookie])
     return httpRes
 }
 
 export const deleteTokenFromCookie = (httpRes) => {
-    let cookie = `${cookieName}='';Expires=${new Date(Date.now() - cookieExpiryTime)}`
+    let cookie = `${cookieName}='';Expires=${-1};`
     httpRes.setHeader('Set-cookie', cookie)
+    console.log('Rmoved token from the cookie');
     return httpRes
 }
 
 export const encodePayload = (payload, expiryTime) => {
     try {
-        return jwt.sign(
+        return encodeURIComponent(jwt.sign(
             payload,
             hashSecret,
             { expiresIn: expiryTime },
             { algorithm: 'RS256' }
-        );
+        ));
     } catch (err) {
         console.log('Error while encoding JWT => ' + err)
     }
@@ -339,7 +475,7 @@ export const encodePayload = (payload, expiryTime) => {
 
 export const decodePayload = (token) => {
     try {
-        var decoded = jwt.verify(token, hashSecret)
+        var decoded = jwt.verify(decodeURIComponent(token), hashSecret)
         return decoded
     } catch (err) {
         console.log('Error while decodind JWT => ' + err)
@@ -349,7 +485,7 @@ export const decodePayload = (token) => {
 
 export const getCurrentUser = () => {
     if (cached.user) {
-        console.log('Current User exists in the global scope. User : ' + cached.user);
+        console.log('Current User exists in the global scope.');
         return cached.user
     }
 
@@ -360,15 +496,15 @@ export const getCurrentUser = () => {
 
 export const updateCurrentUserInGlobalScope = (userDetails) => {
     cached.user = userDetails
-    console.log('Updated Current User in Global Scope.  User : ' + userDetails);
+    console.log('Updated Current User in Global Scope.');
 }
 
 export const removeCurrentUserFromGlobalScope = () => {
-    console.log('Removing Current User form Global Scope.User : ' + getCurrentUser());
+    console.log('Removing Current User form Global Scope.User');
     updateCurrentUserInGlobalScope(null)
 }
 
-export const sendResetTokenToMail = async (toAddress, resetLink) => {
+export const sendMail = async (toAddress, mailSubject, mailBody) => {
     const transporter = nodemailer.createTransport({
         service: process.env.mailService,
         auth: {
@@ -377,12 +513,11 @@ export const sendResetTokenToMail = async (toAddress, resetLink) => {
         }
     });
 
-
     const mailOption = {
         from: process.env.mailUser,
         to: toAddress,
         subject: mailSubject,
-        text: resetLink
+        text: mailBody
     };
 
     await transporter.sendMail(mailOption).then(res => {
@@ -392,7 +527,8 @@ export const sendResetTokenToMail = async (toAddress, resetLink) => {
     });
 }
 
-export const getPasswordResetLink = (httpReq, token) => {
+export const getMailBody = (httpReq, mailType, path = '', token = '') => {
     const host = httpReq.headers.host
-    return `http://${host}${passwordResetPath}${encodeURI(token)}`
+    const link = `http://${host}${path}${token}`
+    return `${mailType}`.replace('<link>', link)
 }
