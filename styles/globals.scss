@@ -1,0 +1,165 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+a {
+  text-decoration: none;
+}
+ul{
+  list-style: none;
+  padding-left: 0;
+}
+
+
+
+
+// colors
+
+:root{
+  --primary         : #286DA9;
+  --primary-light   : #CDDEEC;
+  --secondary       : #74BB45;
+  --secondary-light : #DAEDCC;
+  --red             : #ED3F3F;
+  --red-light       : #FCDBDB;
+  --dark            : #343131;
+  --dark-light      : #7A7979;
+  --black           : #000;
+  --white           : #fff;
+}
+
+
+/* fonts  */
+
+@font-face {
+  font-family: HeadingLight;
+  src: url(../public/fonts/HelveticaNeueLt.ttf);
+ }
+
+@font-face {
+  font-family: HeadingMedium;
+  src: url(../public/fonts/HelveticaNeueMedium.ttf);
+ }
+
+@font-face {
+  font-family: HeadingBold;
+  src: url(../public/fonts/HelveticaNeuBold.ttf);
+ }
+
+ @font-face {
+  font-family: HeadingHeavy;
+  src: url(../public/fonts/HelveticaNeueHv.ttf);
+ }
+
+ @font-face {
+  font-family: TextRegular;
+  src: url(../public/fonts/Rubik-Regular.ttf);
+ }
+
+ @font-face {
+  font-family: TextMedium;
+  src: url(../public/fonts/Rubik-Medium.ttf);
+ }
+
+ @font-face {
+  font-family: TextBold;
+  src: url(../public/fonts/Rubik-Bold.ttf);
+ }
+
+ /* 
+ ==========
+Text Box
+ ==========
+ */
+
+ .TextBox
+ {
+   position: relative;
+   margin: 1.3rem auto;
+   input[type=text]
+   {
+    background: #FFFFFF;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    padding: 12px 12px 12px 36px;
+    caret-color: var(--primary);
+    font-family: TextRegular;
+    color: var(--black);
+   }
+   input[type=text]::-webkit-input-placeholder { 
+    color:    var(--black);
+    opacity: 1 !important;
+   }
+   input[type=password]
+   {
+    background: #FFFFFF;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    padding: 12px 12px 12px 36px;
+    caret-color: var(--primary);
+    font-family: TextRegular;
+    color: var(--black);
+   }
+   input[type=password]::-webkit-input-placeholder { 
+    color:    var(--black);
+    opacity: 1 !important;
+   }
+   img
+   {
+     position: absolute;
+     width: 1rem;
+     height: 1rem;
+     margin-top: 12px;
+     margin-left: 12px;
+   }
+  
+ }
+
+
+
+ /* 
+ ==========
+ buttons 
+ ==========
+ */
+
+/*primary btn*/
+.prBtn
+{
+  background: #134673;
+  box-shadow: 0px 4px 11px -2px #0759A0;
+  border: none;
+  color: var(--white);
+  font-family: TextMedium;
+  padding: .6rem 1.4rem;
+
+}
+.prBtn:hover
+{
+  background: #134673;
+  box-shadow: 0px 4px 11px 0px #0759A0;
+  border: none;
+  color: var(--white);
+  font-family: TextMedium;
+  padding: .6rem 1.4rem;
+}
+
+
+.prBtn:focus
+{
+  background: #134673;
+  box-shadow: 0px 4px 11px 0px #0759A0;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: TextMedium;
+  padding: .5rem 1.3rem;
+}

@@ -1,0 +1,65 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+  .container {
+    padding: 2vh 3vw 0 3vw;
+  }
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+  .container {
+    padding: 2vh 3.5vw 0 3.5vw;
+  }
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+    .container {
+        padding: 2rem 1rem 0 6.5rem;
+      }
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+    .container {
+        padding: 2rem 2rem 0 8rem;
+      }
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+    .container {
+        padding: 2rem 1rem 0 7.5rem;
+      }
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+    .container {
+        padding: 2rem 2rem 0 7.5rem;
+      }
+}
