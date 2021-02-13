@@ -45,29 +45,24 @@ export const authenticate = async (httpReq, httpRes) => {
     let resCode = 400
     let resText = ""
     try {
-        if (httpReq.method !== "POST") {
-            resCode = 401;
-            resText = ""
-        } else {
-            const token = getTokenFromCookie(httpReq)
-            if (token) {
-                const decoded = decodePayload(token)
-                const user = await getCurrentUser()
-                if (user && decoded && user._id === decoded.email && user.password === decoded.password) {
-                    resCode = 200
-                    resText = "Valid User : " + user._id
-                    console.log(resText)
-                } else {
-                    resCode = 401
-                    resText = "Invalid User : " + user._id
-                    console.log(resText)
-                    httpRes.redirect([301], "\login")
-                }
+        const token = getTokenFromCookie(httpReq)
+        if (token) {
+            const decoded = decodePayload(token)
+            const user = await getCurrentUser()
+            if (user && decoded && user._id === decoded.email && user.password === decoded.password) {
+                resCode = 200
+                resText = "Valid User : " + user._id
+                console.log(resText)
             } else {
                 resCode = 401
-                resText = "No users logged in"
+                resText = "Invalid User : " + user._id
                 console.log(resText)
+                httpRes.redirect([301], "\login")
             }
+        } else {
+            resCode = 401
+            resText = "No users logged in"
+            console.log(resText)
         }
     } catch (err) {
         resCode = 400
@@ -130,7 +125,7 @@ export const login = async (httpReq, httpRes) => {
 export const logout = async (httpReq, httpRes) => {
     let resCode = 400
     let resText = ""
-    if (httpReq.method !== "PUT") {
+    if (httpReq.method !== "POST") {
         resCode = 401;
         resText = ""
     } else {
@@ -160,16 +155,14 @@ export const signup = async (httpReq, httpRes) => {
             resText = "Already Logged In"
         } else {
             let userDetails = httpReq.body
-            if (userDetails.name && userDetails.email && userDetails.password) {
+            if (userDetails.name && userDetails.email && userDetails.password && userDetails.mobileNo && userDetails.accountType) {
                 if (new String(userDetails.role).trim() !== "admin" && !emailRegex.test(new String(userDetails.email).trim())) {
                     resText = "Incorrect email";
                     console.log(resText)
                 }
-                userDetails.accountState = "active"
+                userDetails.accountState = userDetails.accountState ? userDetails.accountState : "active"
                 userDetails.role = userDetails.role ? userDetails.role : "user"
                 userDetails._id = userDetails.email
-                userDetails.mobileNo = userDetails?.mobileNo
-                userDetails.accountType = userDetails?.accountType
                 userDetails.password = bcrypt.hashSync(userDetails.password, saltRounds)
                 await createUser(userDetails).then(result => {
                     resText = "Account created for the user : " + JSON.stringify(userDetails) + ";"
