@@ -31,7 +31,7 @@ export default function AdminSideBar(){
                     {sideBarItems.map((item) => (
                         <li>
                             <Link href={item.href}>
-                                <a onClick={() => setActiveId(item.id)}>
+                                <a>
                                     <div className={router.pathname === '/admin/' + item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
                                     <div className={style.navText}>{item.text}</div>
                                 </a>
