@@ -3,13 +3,13 @@ import Link from "next/link"
 import style from "../admin/AdminSideBar.module.scss"
 
 const sideBarItems = [
-    {id : 1, href: "/about", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
-    {id : 2, href: "/home", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
-    {id : 3, href: "/newsletter-creation", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
-    {id : 4, href: "/quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
-    {id : 5, href: "/report", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Report"},
-    {id : 6, href: "/management", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"},
-    {id : 7, href: "/logout", src: "/imgs/svgs/Logout.svg", alt: "Logout", text: "Logout"}
+    {id : 1, href: "profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
+    {id : 2, href: "dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
+    {id : 3, href: "newsletter", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
+    {id : 4, href: "quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
+    {id : 5, href: "reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Report"},
+    {id : 6, href: "accounts", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"},
+    {id : 7, href: "logout", src: "/imgs/svgs/Logout.svg", alt: "Logout", text: "Logout"}
 ]
 
 export default function AdminSideBar(){
@@ -36,7 +36,6 @@ export default function AdminSideBar(){
                             </Link>
                         </li>
                     ))}
-     
                     <label id={style.hide} htmlFor="check-box">
                         <div id={style.closeMenu}>
                             <img src='/imgs/svgs/CloseMenu.svg' alt="-" />

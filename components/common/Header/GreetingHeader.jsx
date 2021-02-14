@@ -7,14 +7,14 @@ const GreetingHeader = () => {
   return (
     <div> 
         <div>
-            <p>{/**role */}</p>
+            <p>Admin</p>
         </div>
         <div > 
-            <span>{/** Good mornig/evening */}</span>
-            <span>{/**username */}</span>
+            <span>Good Morning</span>
+            <span>Adile</span>
         </div>
         <div>
-            <p>{/**quote */}</p>
+            <p>All praise is due to God alone, the Sustainer of all the worlds, - Al-Faatiha</p>
         </div>
     </div>
   )
