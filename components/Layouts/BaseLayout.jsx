@@ -10,7 +10,6 @@ const BaseLayout = ({children}) =>
         {children}
     </div>
     </>
-  
   )
 }
 
