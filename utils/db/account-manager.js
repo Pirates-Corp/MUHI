@@ -469,7 +469,7 @@ export const saveTokenInCookie = (httpRes, jwtToken) => {
 }
 
 export const deleteTokenFromCookie = (httpRes) => {
-    let cookie = `${cookieName}='';Expires=${new Date(Date.now() - 60 * 1000)};`
+    let cookie = `${cookieName}='';Max-Age=0;Path=/;SameSite=Lax`
     httpRes.setHeader('Set-cookie', cookie)
     console.log('Rmoved token from the cookie');
     return httpRes
