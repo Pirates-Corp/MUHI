@@ -8,11 +8,11 @@ const Login = ({loading, setLoading}) => {
     const { register, handleSubmit, errors } = useForm();
     const router = useRouter()
 
-    const onSubmit = async (data, e) => {
-        console.log("data", data);
+    const onSubmit = async (e) => {
+        console.log("data", e);
         //TODO:Submit the form
 
-        router.push('/admin/dashboard');
+        // router.push('/admin/dashboard');
     }
 
   return (
@@ -22,16 +22,16 @@ const Login = ({loading, setLoading}) => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form action='/api/auth/login' method='POST' onSubmit={(e) => onSubmit(e)}>
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
-                    <input type="text" name="username" placeholder="Username"  required />
+                    <input type="text" name="id" placeholder="Username"  required />
                    
                 </div>
                 <div className="TextBox">
                     <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
                     <input type="password" name="password" placeholder="Password" required  />
-                    
+                    <input type="hidden" name='role' value='admin'/>
                 </div>
                 <input className="prBtn" type="submit" value="Login"/>
             </form>

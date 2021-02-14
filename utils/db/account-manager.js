@@ -98,8 +98,8 @@ export const login = async (httpReq, httpRes) => {
         if (httpReq.method !== "POST") {
             resCode = 401;
             resText = ""
-        } else if (getCurrentUser()) {
-            resText = "Already Logged In"
+        } else if ((await authenticate(httpReq))[0] === 200) {
+            resText = "Already Logged In. Please logout and try again"
         } else {
             let userDetails = httpReq.body
             if (userDetails.id && userDetails.password) {
@@ -152,7 +152,7 @@ export const logout = async (httpReq, httpRes) => {
         resCode = 401;
         resText = ""
     } else {
-        if (getCurrentUser()) {
+        if ((await authenticate(httpReq))[0] === 200) {
             resCode = 200
             resText = 'Logout successfull'
             removeCurrentUserFromGlobalScope();
@@ -173,9 +173,9 @@ export const signup = async (httpReq, httpRes) => {
         if (httpReq.method !== "PUT") {
             resCode = 401;
             resText = ""
-        } else if (getCurrentUser()) {
+        } else if ((await authenticate(httpReq))[0] === 200) {
             resCode = 400;
-            resText = "Already Logged In"
+            resText = "Already Logged In. Please logout and try again"
         } else {
             let userDetails = httpReq.body
             if (userDetails.name && userDetails.email && userDetails.role) {
@@ -334,9 +334,7 @@ export const validateResetToken = async (httpReq, httpRes) => {
                     if (user && token === user.resetToken) {
                         console.log('User found in DB => ' + user._id)
                         console.log('reset token validated successfully for user => ' + decoded.id);
-                        delete user.password
-                        delete user.resetToken
-                        httpRes.json(user)
+                        httpRes.redirect('/api/db/user')
                         return
                     } else {
                         resText = 'Invalid reset token'
@@ -359,8 +357,25 @@ export const validateResetToken = async (httpReq, httpRes) => {
 }
 
 export const getUserDetails = async (httpReq, httpRes) => {
-    const user = await getUser('id')
-    delete user.password
+    try {
+        const result = await authenticate(httpReq)
+        if (result && result[0] === 200) {
+            httpRes.statusCode = 200
+            httpRes.json(result[1])
+        } else if (result) {
+            httpRes.statusCode = result[0]
+            const resText = 'Problem in authentication => ' + result[1]
+            console.log(resText);
+            httpRes.send(resText)
+        } else {
+            httpRes.statusCode = 400
+            const resText = 'authentication err while getting user details'
+            console.log(resText);
+            httpRes.send(resText)
+        }
+    } catch (err) {
+        console.log('Error getting user details ' + err);
+    }
 }
 
 export const getAllusers = () => {
@@ -428,7 +443,8 @@ export const updateUserPassword = async (id, password) => {
 }
 
 export const getUser = async (id) => {
-    if (getCurrentUser() && getCurrentUser()._id == id) return getCurrentUser()
+    const currentUser = getCurrentUser()
+    if (currentUser && currentUser._id == id) return currentUser
     return await getDocument(accountsCollection, accountSchema, { _id: new String(id).toLowerCase() })
 }
 
@@ -447,13 +463,13 @@ export const getTokenFromCookie = (httpReq) => {
 
 export const saveTokenInCookie = (httpRes, jwtToken) => {
     const secure = isProductionEnv === 'production' ? `Secure=true;` : ''
-    const cookie = `${cookieName}=${jwtToken}; Max-Age=${cookieExpiryTime}; HttpOnly=true;${secure}Path='/api';SameSite=Lax`
+    const cookie = `${cookieName}=${jwtToken}; Max-Age=${cookieExpiryTime}; HttpOnly=true;${secure}Path=/;SameSite=Lax`
     httpRes.setHeader('Set-cookie', [cookie])
     return httpRes
 }
 
 export const deleteTokenFromCookie = (httpRes) => {
-    let cookie = `${cookieName}='';Expires=${-1};`
+    let cookie = `${cookieName}='';Expires=${new Date(Date.now() - 60 * 1000)};`
     httpRes.setHeader('Set-cookie', cookie)
     console.log('Rmoved token from the cookie');
     return httpRes
