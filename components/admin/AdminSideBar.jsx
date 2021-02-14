@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Link from "next/link"
+import { useRouter } from "next/router";
+
 import style from "../admin/AdminSideBar.module.scss"
 
 const sideBarItems = [
@@ -13,7 +15,7 @@ const sideBarItems = [
 ]
 
 export default function AdminSideBar(){
-    const [activeId, setActiveId] = useState(null);
+    const router = useRouter();
 
     return(
         <div>
@@ -29,8 +31,8 @@ export default function AdminSideBar(){
                     {sideBarItems.map((item) => (
                         <li>
                             <Link href={item.href}>
-                                <a onClick={() => setActiveId(item.id)}> 
-                                    <div className={activeId !== item.id ? `${style.circle}`: `${style.circle} ${style.active}`}><img src={item.src} alt={item.alt}/></div>
+                                <a onClick={() => setActiveId(item.id)}>
+                                    <div className={router.pathname === '/admin/' + item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
                                     <div className={style.navText}>{item.text}</div>
                                 </a>
                             </Link>
