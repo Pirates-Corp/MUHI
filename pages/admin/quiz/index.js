@@ -3,7 +3,7 @@ import BaseLayout from '../../../components/Layouts/BaseLayout.jsx'
 export default function quizzes() {
   return (
     <div>
-     <AdminSideBar/>
+  
       <BaseLayout>
          <h2>Quizzes</h2>
          <h2>Quizzes</h2>
