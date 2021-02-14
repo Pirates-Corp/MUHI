@@ -12,7 +12,7 @@ import {
     updateDocument,
     updateDocuments
 } from '../db/helpers/db-util'
-import { accountSchema } from './schema/account-schema'
+import { accountSchema } from './helpers/schema/account-schema'
 import nodemailer from 'nodemailer'
 
 const accountsCollection = process.env.userCollection

@@ -1,85 +1,48 @@
-import Head from 'next/head'
+import React, { useState } from 'react';
 import Link from "next/link"
 import style from "../admin/AdminSideBar.module.scss"
-export default function AdminSideBar()
-{
+
+const sideBarItems = [
+    {id : 1, href: "/about", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
+    {id : 2, href: "/home", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
+    {id : 3, href: "/newsletter-creation", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
+    {id : 4, href: "/quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
+    {id : 5, href: "/report", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Report"},
+    {id : 6, href: "/management", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"},
+    {id : 7, href: "/logout", src: "/imgs/svgs/Logout.svg", alt: "Logout", text: "Logout"}
+]
+
+export default function AdminSideBar(){
+    const [activeId, setActiveId] = useState(null);
+
     return(
         <div>
             <div id={style.nav} >
-            <input id="check-box" className={style.checkBox} type="checkbox" />
-            <label htmlFor="check-box" >
-                <div id={style.openMenu}>
-                    <img src='/imgs/svgs/OpenMenu.svg' alt="-" />
-                </div>
-            </label>
-            <ul id={style.holder}>
-         
-               <li>
-                     <Link href="/about"> 
-                       <a> 
-                           <div className={`${style.circle} ${style.active}`}><img src='/imgs/svgs/Profile.svg' alt='profile'/></div>
-                           <div className={style.navText}>profile</div>
-                       </a>
-                    </Link>
-                </li>
-
-                <li> 
-                    <Link href="/home"> 
-                    <a>
-                         <div className={`${style.circle}`}><img src='/imgs/svgs/Home.svg' alt='Home'/></div>
-                         <div className={style.navText}> Home</div>
-                    </a>   
-                    </Link>
-               </li> 
-
-               <li>
-                     <Link href="/newsletter-creation" >
-                         <a>
-                            <div className={`${style.circle} `}><img src='/imgs/svgs/Notification.svg' alt='Notification'/></div> 
-                            <div className={style.navText}> Newsletter Creation</div>
-                         </a> 
-                      </Link>
-                </li>
-                <li> 
-                    <Link href="/quiz" >
-                        <a>
-                           <div className={`${style.circle} `}><img src='/imgs/svgs/Quiz.svg' alt='Quiz'/></div>
-                           <div className={style.navText}>Quiz Creation</div>
-                        </a> 
-                    </Link>
-                </li>
-                <li> 
-                    <Link href="/report" >
-                        <a>
-                            <div className={`${style.circle} `}><img src='/imgs/svgs/Report.svg' alt='Report'/></div>
-                            <div className={style.navText}>Students Report</div>
-                        </a> 
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/management" >
-                        <a>
-                            <div className={`${style.circle}` }><img src='/imgs/svgs/ManageAccounts.svg' alt='Account-Management'/></div>
-                            <div className={style.navText}> Account Management</div>
-                        </a> 
-                    </Link>
-                </li>
-
-                <li> 
-                    <Link href="/logout" >
-                        <a>
-                            <div className={`${style.circle} `} ><img src='/imgs/svgs/Logout.svg' alt='Log out'/></div>
-                            <div className={style.navText}>Logout</div>
-                        </a> 
-                    </Link>
-                </li>
-         
-               <label id={style.hide} htmlFor="check-box">
-               <div id={style.closeMenu}>
-                   <img src='/imgs/svgs/CloseMenu.svg' alt="-" />
-               </div>
-               </label>
-            </ul>
+                <input id="check-box" className={style.checkBox} type="checkbox" />
+                <label htmlFor="check-box" >
+                    <div id={style.openMenu}>
+                        <img src='/imgs/svgs/OpenMenu.svg' alt="-" />
+                    </div>
+                </label>
+                
+                <ul id={style.holder}>
+                    {sideBarItems.map((item) => (
+                        <li>
+                            <Link href={item.href}>
+                                <a onClick={() => setActiveId(item.id)}> 
+                                    <div className={activeId !== item.id ? `${style.circle}`: `${style.circle} ${style.active}`}><img src={item.src} alt={item.alt}/></div>
+                                    <div className={style.navText}>{item.text}</div>
+                                </a>
+                            </Link>
+                        </li>
+                    ))}
+     
+                    <label id={style.hide} htmlFor="check-box">
+                        <div id={style.closeMenu}>
+                            <img src='/imgs/svgs/CloseMenu.svg' alt="-" />
+                        </div>
+                    </label>
+                </ul>
             </div>
         </div>
     )

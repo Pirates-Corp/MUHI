@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-module.exports = { };
-=======
 module.exports = {
   env: {
     nodeEnv: 'development',
@@ -25,4 +22,3 @@ module.exports = {
     passwordResetPath: '/reset_password/'
   }
 }
->>>>>>> Back-end
