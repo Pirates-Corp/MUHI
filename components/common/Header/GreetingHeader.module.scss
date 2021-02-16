@@ -9,46 +9,333 @@
 /*-----------------------
          Mixin
 -------------------------*/
+@mixin tablet {
+      #greetHeader
+      {
+          padding: 1rem;
+          width: 100%;
+          min-height: 30vh;
+          background: linear-gradient(93.81deg, #F9E6EE 15.55%, #E7F2FC 82.1%);
+          border-radius: 10px;
+      }
+    
+      #roleBox
+      {
+         position: absolute;
+         right: 3rem;
+         top: 2rem;
+         .role
+         {
+            font-family: TextRegular;
+            display: block;
+            width: fit-content;
+            border: 2px solid var(--primary-light); 
+            border-radius: 5px;  
+            padding: .2rem;
+            font-size: 1.2rem;
+            color: var(--dark-light);
+         }
+      }
+    
+      #greet
+      {
+            margin-top: 3rem;
+            .wish
+            {
+                font-family: HeadingLight;
+                font-size: 2.5rem; 
+            }
+            .user
+            {   
+                word-wrap: break-word;
+                margin-top: .3rem;
+                font-family: TextBold;
+                font-size: 2.5rem; 
+                width: 100%; 
+            }
+      }
+      #quoteBox
+      {
+            .quote
+            {
+                word-wrap: break-word;
+                font-family: TextRegular;
+                font-size: 1rem;  
+            }
+            .quote::before{
+                  content: " '' ";
+            }
+            .quote::after{
+                content: " '' ";
+          }
+      }
+}
 
 
 /*-----------------------
         Mobile - small
 -------------------------*/
 @media all and (max-width: 350px) {
- 
+  #greetHeader
+  {
+      padding: .8rem;
+      width: 100%;
+      min-height: 30vh;
+      background: linear-gradient(93.81deg, #F9E6EE 15.55%, #E7F2FC 82.1%);
+      border-radius: 10px;
+  }
+
+  #roleBox
+  {
+     .role
+     {
+        font-family: TextRegular;
+        display: block;
+        width: fit-content;
+        border: 2px solid var(--primary-light); 
+        border-radius: 5px;  
+        padding: .2rem;
+        font-size: .8rem;
+        color: var(--dark-light);
+     }
+  }
+
+  #greet
+  {
+        .wish
+        {
+            font-family: HeadingLight;
+            font-size: 1.2rem;
+        }
+        .user
+        {   
+            word-wrap: break-word;
+            margin-top: .3rem;
+            display: block;
+            font-family: TextBold;
+            font-size: 2rem; 
+            width: 100%; 
+        }
+  }
+  #quoteBox
+  {
+        .quote
+        {
+            word-wrap: break-word;
+            font-family: TextRegular;
+            font-size: .8rem;  
+        }
+        .quote::before{
+              content: " '' ";
+        }
+        .quote::after{
+            content: " '' ";
+      }
+  }
 }
 
 /*-----------------------
         Mobile - Large
 -------------------------*/
 @media all and (min-width: 350px) and (max-width: 600px) {
-
+      #greetHeader
+      {
+          padding: .8rem;
+          width: 100%;
+          min-height: 30vh;
+          background: linear-gradient(93.81deg, #F9E6EE 15.55%, #E7F2FC 82.1%);
+          border-radius: 10px;
+      }
+    
+      #roleBox
+      {
+         .role
+         {
+            font-family: TextRegular;
+            display: block;
+            width: fit-content;
+            border: 2px solid var(--primary-light); 
+            border-radius: 5px;  
+            padding: .2rem;
+            font-size: 1rem;
+            color: var(--dark-light);
+         }
+      }
+    
+      #greet
+      {
+            .wish
+            {
+                font-family: HeadingLight;
+                font-size: 1.5rem;
+            }
+            .user
+            {   
+                word-wrap: break-word;
+                margin-top: .3rem;
+                display: block;
+                font-family: TextBold;
+                font-size: 2.5rem; 
+                width: 100%; 
+            }
+      }
+      #quoteBox
+      {
+            .quote
+            {
+                word-wrap: break-word;
+                font-family: TextRegular;
+                font-size: 1rem;  
+            }
+            .quote::before{
+                  content: " '' ";
+            }
+            .quote::after{
+                content: " '' ";
+          }
+      }
 }
 
 /*-----------------------
       Tablet - small
 -------------------------*/
 @media all and (min-width: 600px) and (max-width: 900px) {
-    
+      @include tablet();
 }
 
 /*-----------------------
       Tablet - Large
 -------------------------*/
 @media all and (min-width: 900px) and (max-width: 1200px) {
-  
+      @include tablet();
 }
 
 /*-----------------------
       Desktop - small
 -------------------------*/
 @media all and (min-width: 1200px) and (max-width: 1800px) {
-  
+      #greetHeader
+      {
+          padding: 2rem;
+          width: 100%;
+          min-height: 30vh;
+          background: linear-gradient(93.81deg, #F9E6EE 15.55%, #E7F2FC 82.1%);
+          border-radius: 10px;
+      }
+    
+      #roleBox
+      {
+         position: absolute;
+         right: 3rem;
+         top: 2rem;
+         .role
+         {
+            font-family: TextRegular;
+            display: block;
+            width: fit-content;
+            border: 2px solid var(--primary-light); 
+            border-radius: 5px;  
+            padding: .2rem;
+            font-size: 1.2rem;
+            color: var(--dark-light);
+         }
+      }
+    
+      #greet
+      {
+            margin-top: 3rem;
+            .wish
+            {
+                font-family: HeadingLight;
+                font-size: 2.5rem; 
+            }
+            .user
+            {   
+                word-wrap: break-word;
+                margin-top: .3rem;
+                font-family: TextBold;
+                font-size: 2.5rem; 
+                width: 100%; 
+            }
+      }
+      #quoteBox
+      {
+            .quote
+            {
+                word-wrap: break-word;
+                font-family: TextRegular;
+                font-size: 1.2rem;  
+            }
+            .quote::before{
+                  content: " '' ";
+            }
+            .quote::after{
+                content: " '' ";
+          }
+      }
 }
 
 /*-----------------------
       Desktop - large
 -------------------------*/
 @media all and (min-width: 1800px) {
- 
+      #greetHeader
+      {
+          padding: 3rem;
+          width: 100%;
+          min-height: 30vh;
+          background: linear-gradient(93.81deg, #F9E6EE 15.55%, #E7F2FC 82.1%);
+          border-radius: 10px;
+      }
+    
+      #roleBox
+      {
+         position: absolute;
+         right: 3rem;
+         top: 2rem;
+         .role
+         {
+            font-family: TextRegular;
+            display: block;
+            width: fit-content;
+            border: 2px solid var(--primary-light); 
+            border-radius: 5px;  
+            padding: .2rem;
+            font-size: 1.2rem;
+            color: var(--dark-light);
+         }
+      }
+    
+      #greet
+      {
+            margin-top: 3rem;
+            .wish
+            {
+                font-family: HeadingLight;
+                font-size: 3rem; 
+            }
+            .user
+            {   
+                word-wrap: break-word;
+                margin-top: .3rem;
+                font-family: TextBold;
+                font-size: 3rem; 
+                width: 100%; 
+            }
+      }
+      #quoteBox
+      {
+            .quote
+            {
+                word-wrap: break-word;
+                font-family: TextRegular;
+                font-size: 2rem;  
+            }
+            .quote::before{
+                  content: " '' ";
+            }
+            .quote::after{
+                content: " '' ";
+          }
+      }
 }

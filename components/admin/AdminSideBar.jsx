@@ -34,7 +34,7 @@ export default function AdminSideBar(){
                                 <a>
                                     <div className={router.pathname === '/admin/' + item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
                                     <div className={style.navText}>{item.text}</div>
-                                </a>
+                                </a> 
                             </Link>
                         </li>
                     ))}
