@@ -11,10 +11,10 @@ import {
   deleteDocuments,
   updateDocument,
   updateDocuments,
-} from "../db/helpers/db-util";
+} from "./helpers/db-util";
 import { accountSchema } from "./helpers/schema/account-schema";
 import nodemailer from "nodemailer";
-import { routes } from "../routes";
+import { routes } from "./routes";
 
 const accountsCollection = process.env.userCollection;
 

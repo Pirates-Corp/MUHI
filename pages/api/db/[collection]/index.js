@@ -1,4 +1,4 @@
-import { getUserDetails } from "../../../../utils/db/account-manager";
+import { getUserDetails } from "../../../../utils/db/account-handler";
 
 const userCollection = "user",
   reportsCollection = "reports";

@@ -1,7 +1,6 @@
 export const accountSchema = {
   $jsonSchema: {
     required: ["_id"],
-    additionalProperties: false,
     properties: {
       _id: {
         bsonType: "string",
@@ -14,7 +13,7 @@ export const accountSchema = {
       },
       email: {
         minLength: 10,
-        maxLength: 50,
+        maxLength: 60,
         bsonType: "string",
         description: "Name field is required",
       },
@@ -29,11 +28,11 @@ export const accountSchema = {
         bsonType: "string",
         description: "Mobile number is optional",
       },
-      accountState: {
+      state: {
         minLength: 6,
         maxLength: 9,
         bsonType: "string",
-        description: "Account state is optional. 1.active 2.inactive",
+        description: "Account state is optional. 1.Active 2.Inactive",
       },
       role: {
         minLength: 4,
