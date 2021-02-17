@@ -6,14 +6,17 @@ export default function quizzes() {
     <>
       <BaseLayout>
         <PrimaryHeading heading="Quiz"/>
-        <Link href='quiz/create-quiz' >
-            <a  className='seBtn'>
-               <img src="/imgs/svgs/AddQuestionPlus.svg"></img>
+
+        <Link href='quiz/create-quiz'>
+            <a  className='blueBtn'>
+               <img  className="mt-1" src="/imgs/svgs/AddQuestionPlus.svg"></img>
                Create
             </a>
         </Link>
-       <button className='seBtn' > <img src="/imgs/svgs/AddQuestionPlus.svg"></img> Create</button>
-               
+       
+
+    
+    
       </BaseLayout>
     </>
   )
