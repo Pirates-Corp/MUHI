@@ -18,7 +18,6 @@ module.exports = {
     cookieName: 'jwt',
     mailService: 'gmail',
     mailUser: 'muhiquiz@gmail.com',
-    mailPassword: 'aeqqlwyuysqqniff',
-    passwordResetPath: '/reset_password/'
+    mailPassword: 'aeqqlwyuysqqniff'
   }
 }

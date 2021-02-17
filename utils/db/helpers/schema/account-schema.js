@@ -1,9 +1,9 @@
 export const accountSchema = {
     $jsonSchema: {
         required: ["_id"],
-        additionalProperties:false,
+        additionalProperties: false,
         properties: {
-            _id : {
+            _id: {
                 bsonType: "string",
                 description: "Name field is required"
             },
@@ -12,7 +12,7 @@ export const accountSchema = {
                 bsonType: "string",
                 description: "Name field is optional"
             },
-            email : {
+            email: {
                 minLength: 10,
                 maxLength: 50,
                 bsonType: "string",
@@ -33,23 +33,27 @@ export const accountSchema = {
                 minLength: 6,
                 maxLength: 9,
                 bsonType: "string",
-                description: "Account state is optional"
+                description: "Account state is optional. 1.active 2.inactive"
             },
             role: {
                 minLength: 4,
                 maxLength: 9,
                 bsonType: "string",
-                description: "User role is optional"
+                description: "User role is optional. 1.admin 2.moderator 3.user"
             },
             accountType: {
                 minLength: 4,
-                maxLength: 6,
+                maxLength: 9,
                 bsonType: "string",
-                description: "Account type is optional"
+                description: "Account type is optional. 1.muhi 2,google 3.guest default : anonymous"
             },
-            resetToken : {
+            resetToken: {
                 bsonType: "string",
                 description: "reset token is optional"
+            },
+            lastLogin: {
+                bsonType: "date",
+                description: "lastActiveTime is optional"
             }
         }
     }
