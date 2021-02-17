@@ -1,11 +1,7 @@
 /*-----------------------
         GLOBAL Module css
 -------------------------*/
-#primaryHeading
-{
-      text-transform: capitalize;
-      font-family: HeadingHeavy; 
-}
+
 /*-----------------------
         Animations
 -------------------------*/
@@ -13,69 +9,46 @@
 /*-----------------------
          Mixin
 -------------------------*/
-@mixin tablet {
-      #primaryHeading
-      {
-          font-size: 2.5rem;
-          margin-top: 1rem;
-      }
-}
-@mixin desktop {
-      #primaryHeading
-      {
-          font-size: 2.8rem;  
-          margin-top: 1.5rem;
-      }
-}
+
 
 /*-----------------------
         Mobile - small
 -------------------------*/
 @media all and (max-width: 350px) {
-      #primaryHeading
-      {
-          font-size: 2.2rem;
-          padding-left: 1rem;  
-          margin-top: 1rem;
-      }
+ 
 }
 
 /*-----------------------
         Mobile - Large
 -------------------------*/
 @media all and (min-width: 350px) and (max-width: 600px) {
-      #primaryHeading
-      {
-          font-size: 2.2rem;
-          padding-left: 1rem;  
-          margin-top: 1.8rem;
-      }
+
 }
 
 /*-----------------------
       Tablet - small
 -------------------------*/
 @media all and (min-width: 600px) and (max-width: 900px) {
-     @include tablet();
+    
 }
 
 /*-----------------------
       Tablet - Large
 -------------------------*/
 @media all and (min-width: 900px) and (max-width: 1200px) {
-      @include tablet();
+  
 }
 
 /*-----------------------
       Desktop - small
 -------------------------*/
 @media all and (min-width: 1200px) and (max-width: 1800px) {
-   @include desktop();
+  
 }
 
 /*-----------------------
       Desktop - large
 -------------------------*/
 @media all and (min-width: 1800px) {
-    @include desktop();
+ 
 }

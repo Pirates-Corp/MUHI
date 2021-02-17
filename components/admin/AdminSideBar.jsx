@@ -9,7 +9,7 @@ const sideBarItems = [
     {id : 2, href: "dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
     {id : 3, href: "newsletter", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
     {id : 4, href: "quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
-    {id : 5, href: "reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Report"},
+    {id : 5, href: "reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Reports"},
     {id : 6, href: "accounts", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"},
     {id : 7, href: "logout", src: "/imgs/svgs/Logout.svg", alt: "Logout", text: "Logout"}
 ]
