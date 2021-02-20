@@ -15,6 +15,7 @@ import {
 import { accountSchema } from "./helpers/schema/account-schema";
 import nodemailer from "nodemailer";
 import { routes } from "./routes";
+import { use } from "passport";
 
 const accountsCollection = process.env.userCollection;
 
@@ -209,9 +210,10 @@ export const signup = async (httpReq, httpRes) => {
           userDetails._id = new String(
             userDetails.role === admin ? userDetails.name : userDetails.email
           ).toLowerCase();
-          userDetails.accountState = userDetails.accountState
-            ? userDetails.accountState
+          userDetails.state = userDetails.state
+            ? userDetails.state
             : "active";
+          const plainText = userDetails.password  
           userDetails.password = bcrypt.hashSync(
             userDetails.password,
             saltRounds
@@ -224,7 +226,7 @@ export const signup = async (httpReq, httpRes) => {
               JSON.stringify(userDetails) +
               ";";
             const jwtToken = encodePayload(
-              { id: userDetails._id, password: userDetails.password },
+              { id: userDetails._id, password: plainText },
               authTokenExpiryTime
             );
             saveTokenInCookie(httpRes, jwtToken);
@@ -283,27 +285,32 @@ export const forgotPassword = async (httpReq, httpRes) => {
     } else {
       const id = httpReq.body?.id;
       if (id) {
-        let email;
-        if (!emailRegex.test(new String(id).trim())) {
-          const adminuser = await getUser(id); // admin user will send user id instead of mail id
-          if (user) {
-            email = adminuser.email;
+        const user = await getUser(id)
+        if(user) {
+          let email;
+          if (!emailRegex.test(new String(id).trim()) && user.role === 'admin') {
+            email = user.email;
+          } else {
+            email = id;
           }
+          const encodedToken = encodePayload({ id }, resetTokenExpiryTime);
+          await updatePasswordResetTokenForTheUser(id, encodedToken);
+          const mailBody = getMailBody(
+            httpReq,
+            passwordResetRequest,
+            routes.passwordResetPath,
+            encodedToken
+          );
+          await sendMail(email, mailSubject_passwordResetRequest, mailBody);
+          resCode = 200;
+          resText = "Reset token sent to mail";
+          console.log(resText);
         } else {
-          email = id;
+          resText = "User Not Found => " + id;
+          console.log(resText);
         }
-        const encodedToken = encodePayload({ id }, resetTokenExpiryTime);
-        await updatePasswordResetTokenForTheUser(id, encodedToken);
-        const mailBody = getMailBody(
-          httpReq,
-          passwordResetRequest,
-          routes.passwordResetPath,
-          encodedToken
-        );
-        await sendMail(email, mailSubject_passwordResetRequest, mailBody);
-        resCode = 200;
-        resText = "Reset token sent to mail";
-        console.log(resText);
+      } else {
+        resText = "Required fields missing";
       }
     }
   } catch (err) {
@@ -374,8 +381,9 @@ export const validateResetToken = async (httpReq, httpRes) => {
       const token = httpReq.body?.token;
       if (token) {
         const decoded = decodePayload(token);
-        if (decoded.id) {
+        if (decoded) {
           const user = await getUser(decoded.id);
+          console.log(user);
           if (user && token === user.resetToken) {
             console.log("User found in DB => " + user._id);
             console.log(
