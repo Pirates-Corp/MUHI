@@ -195,9 +195,17 @@ export const signup = async (httpReq, httpRes) => {
       resText = "Already Logged In. Please logout and try again";
     } else {
       let userDetails = httpReq.body;
+      let newUser = {};
       if (userDetails.name && userDetails.email && userDetails.role) {
-        userDetails.role = new String(userDetails.role).toLowerCase();
-        userDetails.accountType = userDetails.accountType
+        newUser.name = userDetails.name;
+        newUser.email = userDetails.email;
+        newUser.mobileNo = userDetails.mobileNo;
+        newUser.role = new String(userDetails.role).toLowerCase();
+        newUser._id = new String(
+          userDetails.role === admin ? userDetails.name : userDetails.email
+        ).toLowerCase();
+        newUser.state = userDetails.state ? userDetails.state : "active";
+        newUser.accountType = userDetails.accountType
           ? userDetails.accountType
           : "muhi";
         if (userDetails.accountType !== "google" && !userDetails.password) {
@@ -207,26 +215,16 @@ export const signup = async (httpReq, httpRes) => {
           resText = "Unusual email pattern. Signup request rejected";
           console.log(resText);
         } else {
-          userDetails._id = new String(
-            userDetails.role === admin ? userDetails.name : userDetails.email
-          ).toLowerCase();
-          userDetails.state = userDetails.state
-            ? userDetails.state
-            : "active";
-          const plainText = userDetails.password  
-          userDetails.password = bcrypt.hashSync(
-            userDetails.password,
-            saltRounds
-          );
-          userDetails.lastLogin = new Date(Date.now());
-          const result = await createUser(userDetails);
+          newUser.password = bcrypt.hashSync(userDetails.password, saltRounds);
+          newUser.lastLogin = new Date(Date.now());
+          const result = await createUser(newUser);
           if (result.length >= 2 && result[0]) {
             resText =
               "Account created for the user : " +
               JSON.stringify(userDetails) +
               ";";
             const jwtToken = encodePayload(
-              { id: userDetails._id, password: plainText },
+              { id: userDetails._id, password: userDetails.password },
               authTokenExpiryTime
             );
             saveTokenInCookie(httpRes, jwtToken);
@@ -285,10 +283,13 @@ export const forgotPassword = async (httpReq, httpRes) => {
     } else {
       const id = httpReq.body?.id;
       if (id) {
-        const user = await getUser(id)
-        if(user) {
+        const user = await getUser(id);
+        if (user) {
           let email;
-          if (!emailRegex.test(new String(id).trim()) && user.role === 'admin') {
+          if (
+            !emailRegex.test(new String(id).trim()) &&
+            user.role === "admin"
+          ) {
             email = user.email;
           } else {
             email = id;
