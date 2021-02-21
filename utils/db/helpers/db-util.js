@@ -91,7 +91,6 @@ export const getCollection = async (collectionName, schema) => {
     const colection = db.collection(collectionName);
     cached.collections[collectionName] = colection;
   }
-
   return cached.collections[collectionName];
 };
 
@@ -171,7 +170,7 @@ export const processQuery = async (
       case readOne:
         return await collection.findOne(document);
       case readMany:
-        return await collection.findMany(document);
+        return await collection.find(document);
       case updateOne:
         return await collection.updateOne(
           document,

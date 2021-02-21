@@ -11,11 +11,10 @@ import {
   deleteDocuments,
   updateDocument,
   updateDocuments,
-} from "./helpers/db-util";
-import { accountSchema } from "./helpers/schema/account-schema";
+} from "./db/helpers/db-util";
+import { accountSchema } from "./db/helpers/schema/account-schema";
 import nodemailer from "nodemailer";
 import { routes } from "./routes";
-import { use } from "passport";
 
 const accountsCollection = process.env.userCollection;
 
@@ -224,7 +223,7 @@ export const signup = async (httpReq, httpRes) => {
               JSON.stringify(userDetails) +
               ";";
             const jwtToken = encodePayload(
-              { id: userDetails._id, password: userDetails.password },
+              { id: newUser._id, password: userDetails.password },
               authTokenExpiryTime
             );
             saveTokenInCookie(httpRes, jwtToken);
@@ -416,30 +415,6 @@ export const validateResetToken = async (httpReq, httpRes) => {
   httpRes.send(resText);
 };
 
-export const getUserDetails = async (httpReq, httpRes) => {
-  let resCode = 400;
-  let resBody = "";
-  try {
-    const result = await authenticate(httpReq);
-    if (result && result[0] === 200) {
-      resCode = 200;
-      resBody = result[1];
-    } else if (result) {
-      httpRes.statusCode = result[0];
-      resBody = "Problem in authentication => " + result[1];
-      console.log(resBody);
-    } else {
-      httpRes.statusCode = 400;
-      const resText = "authentication err while getting user details";
-      console.log(resBody);
-    }
-  } catch (err) {
-    console.log("Error getting user details " + err);
-  }
-  httpRes.statusCode = resCode;
-  resCode === 200 ? httpRes.json(resBody) : httpRes.send(resBody);
-};
-
 export const getUserById = async (httpReq, httpRes) => {
   let resCode = 400;
   let resBody = "";
@@ -479,7 +454,72 @@ export const getUserById = async (httpReq, httpRes) => {
   resCode === 200 ? httpRes.json(resBody) : httpRes.send(resBody);
 };
 
-export const getAllusers = () => {};
+export const getAllusers = async () => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    const result = await authenticate(httpReq);
+    if (result && result[0] === 200 && ( result[1].role === admin || result[1].role === moderator)) {
+    const collection = req.query?.collection;
+    const collectionDetails = collectionMap[collection];
+      if (collectionDetails) {
+        const query = {};
+        const cursor = await getDocuments(
+          collectionDetails.collectionName,
+          collectionDetails.schema,
+          query
+        );
+        if (cursor) {
+          const collectionsArray = [];
+          if ((await cursor.count()) === 0) {
+            console.log(
+              "No documents found in the collection => " +
+                collectionDetails.collectionName
+            );
+          } else {
+            await cursor.forEach((doc) => {
+              if (
+                collectionDetails.collectionName ===
+                collectionMap[user].collectionName
+              ) {
+                delete doc.password;
+                delete doc.resetToken;
+              }
+              collectionsArray.push(doc);
+            });
+          }
+          resCode = 200;
+          resBody = collectionsArray;
+        } else {
+          resBody = "Problem in Cursor fetched from DB";
+          console.log(resBody);
+        }
+      } else {
+        resBody = "Invalid Collection";
+        console.log(resBody);
+      }
+    } else if (result && result[0] === 200) {
+      resCode = 401;
+      resBody =
+        "Unauthorized action. Need admin or moderator handle to execute this operation";
+      console.log(resText);
+    } else if (result) {
+      resCode = result[0];
+      resBody = "Problem in authentication => " + result[1];
+      console.log(resText);
+    } else {
+      resCode = 400;
+      resBody = "Unknown err while getting user details";
+      console.log(resText);
+    }
+  } catch (err) {
+    resCode = 400;
+    resBody = "Error getting user details " + err;
+    console.log(resBody);
+  }
+  httpRes.statusCode = resCode;
+  resCode === 200 ? httpRes.json(resBody) : httpRes.send(resBody);
+};
 
 export const terminateUser = (id) => {};
 
