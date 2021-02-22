@@ -164,6 +164,26 @@ Text Box
   }
 }
 
+//textBox without Image
+
+.textBox{
+    background: #ffffff;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: none;
+    width: 95%;
+    padding: 1rem;
+    caret-color: var(--primary);
+    font-family: TextRegular;
+    color: var(--black);
+
+ &::-webkit-input-placeholder {
+    color: var(--black);
+    text-transform: capitalize;
+    opacity: 1 !important;
+  }
+}
+
 /* 
  ==========
  buttons 
@@ -219,6 +239,7 @@ color buttons
   transition: 0.5s;
 
   img {
+    filter: invert(32%) sepia(75%) saturate(939%) hue-rotate(177deg) brightness(92%) contrast(81%);
     margin-right: 8px !important;
     width: 1rem;
     height: 1rem;
@@ -230,7 +251,7 @@ color buttons
   background: var(--primary);
   color: var(--white);
   img {
-    filter: invert(100%) sepia(100%) saturate(2%) hue-rotate(183deg)
+    filter: invert(0%) sepia(100%) saturate(2%) hue-rotate(183deg)
       brightness(105%) contrast(101%);
   }
 }
@@ -304,7 +325,7 @@ color buttons
   background: var(--red);
   color: var(--white);
   img {
-    filter: invert(100%) sepia(100%) saturate(2%) hue-rotate(183deg)
+     filter: invert(100%) sepia(100%) saturate(2%) hue-rotate(183deg)
       brightness(105%) contrast(101%);
   }
 }
@@ -328,10 +349,12 @@ radio buttons
   cursor: pointer;
   font-size: 1.3rem;
   font-family: TextRegular;
- 
+
   input {
     position: absolute;
     opacity: 0;
+    top:0;
+    left: 0;
     cursor: pointer;
   }
 
@@ -350,11 +373,167 @@ radio buttons
     background: var(--primary)
    
   }
+  input:onfocus 
+  {
+    visibility: hidden;
+  }
+ 
+}
 
-  
+/*==========
+Round buttons
+===========*/
 
+.blueRoundBtn
+{
+  border: none;
+  display: block;
+  border-radius: 50% !important;
+  height: 1.5rem;
+  padding-top: 5;
+  width: 1.5rem;
+  background: var(--primary-light);
+  color: var(--primary);
+
+   img
+   {
+    display: block;
+    height: .8rem;
+    width: .8rem;
+    margin: 0 auto;
+   }
+
+   &:hover
+   {
+    background: var(--primary);
+    color: var(--white);
+
+      img
+      {
+        filter: invert(0%) sepia(0%) saturate(7481%) hue-rotate(145deg) brightness(105%) contrast(97%);
+      }
+   }
 
 }
+
+
+
+.redRoundBtn
+{
+  border: none;
+  display: block;
+  border-radius: 50% !important;
+  height: 1.5rem;
+  padding-top: 5;
+  width: 1.5rem;
+  background: var(--red-light);
+  color: var(--red);
+
+   img
+   {
+    display: block;
+    height: .8rem;
+    width: .8rem;
+    margin: 0 auto;
+    filter: invert(52%) sepia(7%) saturate(7438%) hue-rotate(321deg) brightness(86%) contrast(118%);
+   }
+
+   &:hover
+   {
+    background: var(--red);
+    color: var(--white);
+
+      img
+      {
+        filter: invert(0%) sepia(0%) saturate(7481%) hue-rotate(145deg) brightness(105%) contrast(97%);
+      }
+   }
+}
+
+
+
+
+.greenRoundBtn
+{
+  border: none;
+  display: block;
+  border-radius: 50% !important;
+  height: 1.5rem;
+  padding-top: 5;
+  width: 1.5rem;
+  background: var(--secondary-light);
+  color: var(--secondary);
+
+   img
+   {
+    filter: invert(67%) sepia(69%) saturate(371%) hue-rotate(52deg) brightness(85%) contrast(92%);
+    display: block;
+    height: .8rem;
+    width: .8rem;
+    margin: 0 auto;
+   }
+
+   &:hover
+   {
+    background: var(--secondary);
+    color: var(--white);
+
+      img
+      {
+        filter: invert(0%) sepia(0%) saturate(7481%) hue-rotate(145deg) brightness(105%) contrast(97%);
+      }
+   }
+
+}
+
+
+/*==========
+File Uploader
+===========*/
+
+.fileUploader
+      {
+            display: inline-block;
+            margin-right: 2rem;
+            position: relative;
+            background: #ffffff;
+            box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            border: none;
+            padding: 1rem;
+            min-width:   16rem;
+            caret-color: var(--primary);
+            font-family: TextRegular;
+            color: var(--black);
+
+            img{
+              width: 1rem;
+              height: 1rem;
+              margin-right: .2rem;
+              margin-top: .3rem;
+            }
+
+            input
+            {
+                  position: absolute;
+                  width: inherit;
+                  height: 100%;
+                  opacity: 0;
+                  top:0;
+                  left: 0;
+                  cursor: pointer;
+            }
+            &::after
+            {
+              content: attr(data);
+              word-wrap: break-all;
+            }
+          }
+
+
+
+
+
 
 .mt-1 {
   margin-top: 1rem !important;

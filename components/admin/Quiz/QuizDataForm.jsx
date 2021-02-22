@@ -8,6 +8,13 @@ const QuizDataForm = () => {
     ":" +
     new Date().toISOString().split(":")[1];
 
+
+    const AddQuestions=(e)=>
+    {
+      e.preventDefault();
+    }
+
+
   return (
     <CenterLayout>
       <PrimaryHeading heading="Create Quiz" />
@@ -93,6 +100,7 @@ const QuizDataForm = () => {
               className="blueBtn"
               name="Add Questions"
               value="Add Questions"
+              onSubmit={e=> AddQuestions(e)}
             />
           </div>
         </form>
