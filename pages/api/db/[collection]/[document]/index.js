@@ -1,23 +1,5 @@
-import { getUserById } from "../../../../../utils/account-handler";
-
-const userCollection = "user",
-  reportsCollection = "reports",
-  newsletterCollection = "newsletter",
-  quizCollection = "quiz";
+import { handleDocumentReadById } from "../../../../../utils/db/db-handler";
 
 export default async (req, res) => {
-  const collection = new String(req.query.collection).toLowerCase();
-  const document = new String(req.query.collection).toLowerCase();
-  if (collection === userCollection) {
-    if (document === "all") {
-      
-    } else {
-    }
-  } else if (collection === reportsCollection) {
-  } else if (collection === newsletterCollection) {
-  } else if (collection === quizCollection) {
-  } else {
-    res.statusCode = 400;
-    res.send("");
-  }
+  await handleDocumentReadById(req,res)
 };

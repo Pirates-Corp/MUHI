@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import {
   getCollection,
   getDatabaseInstance,
@@ -459,9 +459,13 @@ export const getAllusers = async () => {
   let resBody = "";
   try {
     const result = await authenticate(httpReq);
-    if (result && result[0] === 200 && ( result[1].role === admin || result[1].role === moderator)) {
-    const collection = req.query?.collection;
-    const collectionDetails = collectionMap[collection];
+    if (
+      result &&
+      result[0] === 200 &&
+      (result[1].role === admin || result[1].role === moderator)
+    ) {
+      const collection = req.query?.collection;
+      const collectionDetails = collectionMap[collection];
       if (collectionDetails) {
         const query = {};
         const cursor = await getDocuments(
@@ -547,13 +551,13 @@ export const updatePasswordResetTokenForTheUser = async (id, encodedToken) => {
 
 export const updateLastAciveTimeForTheUser = async (id) => {
   try {
-    const updateConition = {
+    const updateCondition = {
       $set: {
         lastLogin: new Date(Date.now()),
       },
     };
     const queryOptions = { upsert: false };
-    return await updateUserDetails(id, updateConition, queryOptions);
+    return await updateUserDetails(id, updateCondition, queryOptions);
   } catch (err) {
     console.log("Error while updating last login time for user=> " + err);
   }
@@ -561,14 +565,14 @@ export const updateLastAciveTimeForTheUser = async (id) => {
 
 export const updateUserPassword = async (id, password) => {
   try {
-    const updateConition = {
+    const updateCondition = {
       $set: {
         password,
         resetToken: "-", // we should remove password reset token from db once password is updated
       },
     };
     const queryOptions = { upsert: false };
-    return await updateUserDetails(id, updateConition, queryOptions);
+    return await updateUserDetails(id, updateCondition, queryOptions);
   } catch (err) {
     console.log("Error while updating last login time for user=> " + err);
   }

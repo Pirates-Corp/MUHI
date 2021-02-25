@@ -14,7 +14,7 @@ import { accountSchema } from "./helpers/schema/account-schema";
 import { quizSchema } from "./helpers/schema/quiz-schema";
 import { reportSchema } from "./helpers/schema/report-schema";
 import { newsLetterSchema } from "./helpers/schema/newsletter-schema";
-import { authenticate } from "../account-handler";
+import { authenticate, getUser, getUserById } from "../account-handler";
 
 const admin = "admin",
   moderator = "moderator",
@@ -40,7 +40,7 @@ const collectionMap = {
 };
 
 /**
- * For now, default document option will be used only with Accounts collection. So returing current use details here.
+ * For now, default document option will be used only with Accounts collection. So returing current user details here.
  *
  * @param {*} req
  * @param {*} res
@@ -73,46 +73,80 @@ export const handleDocumentReadById = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    const collection = req.query?.collection;
-    const collectionDetails = collectionMap[collection];
-    if (collectionDetails) {
-      const query = {};
-      const cursor = await getDocuments(
-        collectionDetails.collectionName,
-        collectionDetails.schema,
-        query
-      );
-      if (cursor) {
-        const collectionsArray = [];
-        if ((await cursor.count()) === 0) {
-          console.log(
-            "No documents found in the collection => " +
-              collectionDetails.collectionName
-          );
-        } else {
-          await cursor.forEach((doc) => {
+    const result = await authenticate(req);
+    if (result && result[0] === 200) {
+      const collection = decodeURIComponent(req.query?.collection);
+      const documentId = decodeURIComponent(req.query?.document);
+      const collectionDetails = collectionMap[collection];
+      if (
+        (result[1].role !== admin &&
+          collectionDetails.collectionName ===
+            collectionMap.user.collectionName &&
+          result[1].email !== documentId) ||
+        (result[1].role === user &&
+          collectionDetails.collectionName ===
+            collectionMap.report.collectionName &&
+          result[1].email !== documentId)
+      ) {
+        resCode = 401;
+        resBody =
+          "Unauthorized action. Need admin handle to execute this operation";
+        console.log(resBody);
+      } else {
+        if (collectionDetails) {
+          let result = null;
+          if (
+            collectionDetails.collectionName ===
+            collectionMap.user.collectionName
+          )
+            result = await getUser(documentId);
+          else {
+            const query = {
+              _id: new String(documentId).toLowerCase(),
+            };
+            result = await getDocument(
+              collectionDetails.collectionName,
+              collectionDetails.schema,
+              query
+            );
+          }
+          if (result) {
             if (
               collectionDetails.collectionName ===
-              collectionMap[user].collectionName
+              collectionMap.user.collectionName
             ) {
-              delete doc.password;
-              delete doc.resetToken;
+              delete result.password;
+              delete result.resetToken;
             }
-            collectionsArray.push(doc);
-          });
+            resBody = result;
+            resCode = 200;
+            console.log(
+              "returning the document for the id " +
+                documentId +
+                " =>" +
+                JSON.stringify(resBody)
+            );
+          } else {
+            resBody =
+              "Problem in document fetched from DB. Document may not be available in DB !";
+            console.log(resBody);
+          }
+        } else {
+          resBody = "Invalid Collection";
+          console.log(resBody);
         }
-        resCode = 200;
-        resBody = collectionsArray;
-      } else {
-        resBody = "Problem in Cursor fetched from DB";
-        console.log(resBody);
       }
+    } else if (result) {
+      resCode = result[0];
+      resBody = "Problem in authentication => " + result[1];
+      console.log(resBody);
     } else {
-      resBody = "Invalid Collection";
+      resCode = 400;
+      resBody = "Unknown err while getting user details";
       console.log(resBody);
     }
   } catch (err) {
-    console.log("Error getting user details " + err);
+    console.log("Error getting all documents =>  " + err);
   }
   res.statusCode = resCode;
   resCode === 200 ? res.json(resBody) : res.send(resBody);
@@ -123,50 +157,62 @@ export const handleDocumentReadAll = async (req, res) => {
   let resBody = "";
   try {
     const result = await authenticate(req);
-    if (result && result[0] === 200 && result[1].role === admin) {
-      const collection = req.query?.collection;
+    if (result && result[0] === 200) {
+      const collection = decodeURIComponent(req.query?.collection);
       const collectionDetails = collectionMap[collection];
-      if (collectionDetails) {
-        const query = {};
-        const cursor = await getDocuments(
-          collectionDetails.collectionName,
-          collectionDetails.schema,
-          query
-        );
-        if (cursor) {
-          const collectionsArray = [];
-          if ((await cursor.count()) === 0) {
-            console.log(
-              "No documents found in the collection => " +
-                collectionDetails.collectionName
-            );
+      if (
+        (result[1].role === moderator &&
+          collectionDetails.collectionName ===
+            collectionMap.user.collectionName) ||
+        (result[1].role === user &&
+          collectionDetails.collectionName ===
+            collectionMap.user.collectionName) ||
+        (result[1].role === user &&
+          collectionDetails.collectionName ===
+            collectionMap.report.collectionName)
+      ) {
+        resCode = 401;
+        resBody =
+          "Unauthorized action. Need admin handle to execute this operation";
+        console.log(resBody);
+      } else {
+        if (collectionDetails) {
+          const query = {};
+          const cursor = await getDocuments(
+            collectionDetails.collectionName,
+            collectionDetails.schema,
+            query
+          );
+          if (cursor) {
+            const collectionsArray = [];
+            if ((await cursor.count()) === 0) {
+              console.log(
+                "No documents found in the collection => " +
+                  collectionDetails.collectionName
+              );
+            } else {
+              await cursor.forEach((doc) => {
+                if (
+                  collectionDetails.collectionName ===
+                  collectionMap[user].collectionName
+                ) {
+                  delete doc.password;
+                  delete doc.resetToken;
+                }
+                collectionsArray.push(doc);
+              });
+            }
+            resCode = 200;
+            resBody = collectionsArray;
           } else {
-            await cursor.forEach((doc) => {
-              if (
-                collectionDetails.collectionName ===
-                collectionMap[user].collectionName
-              ) {
-                delete doc.password;
-                delete doc.resetToken;
-              }
-              collectionsArray.push(doc);
-            });
+            resBody = "Problem in Cursor fetched from DB";
+            console.log(resBody);
           }
-          resCode = 200;
-          resBody = collectionsArray;
         } else {
-          resBody = "Problem in Cursor fetched from DB";
+          resBody = "Invalid Collection";
           console.log(resBody);
         }
-      } else {
-        resBody = "Invalid Collection";
-        console.log(resBody);
       }
-    } else if (result && result[0] === 200) {
-      resCode = 401;
-      resBody =
-        "Unauthorized action. Need admin or moderator handle to execute this operation";
-      console.log(resBody);
     } else if (result) {
       resCode = result[0];
       resBody = "Problem in authentication => " + result[1];
@@ -199,6 +245,6 @@ export const handleFieldInsert = async (req, res) => {};
 
 export const handleFieldDelete = async (req, res) => {};
 
-export const handleFieldupdate = async (req, res) => {};
+export const handleFieldUpdate = async (req, res) => {};
 
 // export const getDocumentOverview = async (req, res) => {};
