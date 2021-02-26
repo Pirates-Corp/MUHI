@@ -1,6 +1,5 @@
 export const routes = {
-    userDashboard : '/dashboard',
+    userDashboard : '/admin/dashboard',
     adminDashboard : '/admin/dashboard',
-    setNewPassword : '',
     passwordResetPath : '/admin/reset_password/'
 }

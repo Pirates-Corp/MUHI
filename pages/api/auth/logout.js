@@ -1,4 +1,4 @@
-import { logout } from '../../../utils/db/account-manager'
+import { logout } from '../../../utils/account-handler'
 
 export default async (req, res) => {
     await logout(req,res)

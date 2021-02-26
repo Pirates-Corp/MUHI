@@ -1,6 +1,5 @@
-import { getUserDetails } from '../../../../utils/db/account-manager'
+import {handleDefaultDocumentRead} from '../../../../utils/db/db-handler'
 
-export default async (req, res) => {    
-    await getUserDetails(req,res)
+export default async (req, res) => {
+  await handleDefaultDocumentRead(req,res)
 }
-  
