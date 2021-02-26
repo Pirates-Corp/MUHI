@@ -11,11 +11,16 @@ const sideBarItems = [
     {id : 4, href: "quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
     {id : 5, href: "reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Reports"},
     {id : 6, href: "accounts", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"},
-    {id : 7, href: "logout", src: "/imgs/svgs/Logout.svg", alt: "Logout", text: "Logout"}
 ]
 
 export default function AdminSideBar(){
     const router = useRouter();
+
+    const handleLogout = async () => {
+        await fetch('/api/auth/logout', {
+            method: 'PUT',
+        });
+    };
 
     return(
         <div>
@@ -36,8 +41,16 @@ export default function AdminSideBar(){
                                     <div className={style.navText}>{item.text}</div>
                                 </a> 
                             </Link>
-                        </li>
+                        </li>   
                     ))}
+                    <li>
+                        <Link href="/admin/login">
+                            <a onClick={handleLogout}>
+                                <div className={style.circle}><img src="/imgs/svgs/Logout.svg" alt="Logout"/></div>
+                                <div className={style.navText}>Logout</div>
+                            </a> 
+                        </Link>
+                    </li>
                     <label id={style.hide} htmlFor="check-box">
                         <div id={style.closeMenu}>
                             <img src='/imgs/svgs/CloseMenu.svg' alt="-" />
