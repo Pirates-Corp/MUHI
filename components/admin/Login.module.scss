@@ -22,7 +22,7 @@
             
             #innerLoginBox
             {
-                 height: 25rem;
+                 min-height: 25rem;
                  width: 30rem;
                  padding: 2rem;
                  background-color: var(--primary-light);
@@ -73,7 +73,7 @@
             
             #innerLoginBox
             {
-                 height: 30rem;
+                 min-height: 30rem;
                  width: 18rem;
                  padding: 2rem;
                  background-color: var(--primary-light);
@@ -116,7 +116,7 @@
             #loginBox
             {
                   width: 100vw;
-                  height: 100vh;
+                 height: 100vh;
                   background-color: var(--white);
                   display: grid;
                   place-items: center;
@@ -125,7 +125,7 @@
                   
                   #innerLoginBox
                   {
-                       height: 25rem;
+                        min-height: 25rem;
                        width: 20rem;
                        padding: 2rem;
                        background-color: var(--primary-light);

@@ -1,0 +1,151 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin phone {
+      #formBox
+      {
+         background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+         border-radius: 20px;  
+         width: 100%;
+         height: 100%;  
+         padding: .2rem 1.5rem;
+      }
+      .buttonHolder
+      {
+      
+         a ,input
+         {
+               font-size: .9rem;
+         }
+         
+      }
+}
+@mixin tablet {
+      
+      #formBox
+      {
+         background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+         border-radius: 20px;  
+         width: 100%;
+         height: 100%;  
+         padding: .8rem 3rem;
+        
+         #dataForm
+         {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+         }
+       
+         #radio
+         {
+               display: inline;
+               margin-right: 1rem;
+         }
+         .buttonHolder
+         {
+            margin-top: 4rem;
+            position: relative;
+
+            a
+            {
+                  position: absolute;
+                  left: 0rem;
+            }
+            input
+            {
+                  position: absolute;
+                  right: 0rem;
+            }
+         }
+      }
+}
+@mixin Desktop {
+      #formBox
+      {
+         background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+         border-radius: 20px;  
+         width: 100%;
+         height: 100%;  
+         padding: 4rem 12rem;
+        
+         #dataForm
+         {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+         }
+       
+         #radio
+         {
+               display: inline;
+               margin-right: 1rem;
+         }
+         .buttonHolder
+         {
+            margin-top: 4rem;
+            position: relative;
+
+            a
+            {
+                  position: absolute;
+                  left: 0rem;
+            }
+            input
+            {
+                  position: absolute;
+                  right: 0rem;
+            }
+         }
+      }
+}
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+ @include phone();
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+ @include phone();  
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+  @include tablet()
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+  @include tablet()
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+  @include Desktop()
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+  @include Desktop()
+}

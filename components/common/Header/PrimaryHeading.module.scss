@@ -16,15 +16,15 @@
 @mixin tablet {
       #primaryHeading
       {
-          font-size: 2.5rem;
+          font-size: 2rem;
           margin-top: 1rem;
       }
 }
 @mixin desktop {
       #primaryHeading
       {
-          font-size: 2.8rem;  
-          margin-top: 1.5rem;
+          font-size: 2.5rem;  
+          margin-top: 1rem;
       }
 }
 
@@ -34,9 +34,11 @@
 @media all and (max-width: 350px) {
       #primaryHeading
       {
-          font-size: 2.2rem;
+          font-size: 2rem;
+          width: 3.5rem;
+          display: block;
           padding-left: 1rem;  
-          margin-top: 1rem;
+          margin-top: .6rem;
       }
 }
 
@@ -46,9 +48,10 @@
 @media all and (min-width: 350px) and (max-width: 600px) {
       #primaryHeading
       {
-          font-size: 2.2rem;
+          font-size: 1.5rem;
           padding-left: 1rem;  
           margin-top: 1.8rem;
+          margin-right: 0;
       }
 }
 
