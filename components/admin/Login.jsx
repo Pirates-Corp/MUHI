@@ -11,7 +11,7 @@ const Login = () => {
         e.preventDefault();
 
         const body = {
-            email: e.currentTarget.email.value,
+            id: e.currentTarget.username.value,
             password: e.currentTarget.password.value
         };
 
@@ -25,7 +25,7 @@ const Login = () => {
             alert("logged in")
         } else {
             isLoading(false);
-            setErrorMsg("Incorrect email or password. Try again!");
+            setErrorMsg("Incorrect username or password. Try again!");
         }
     }
 
@@ -41,7 +41,7 @@ const Login = () => {
                 {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
-                    <input type="text" id="email" name="email" placeholder="E-mail"  required />
+                    <input type="text" id="username" name="username" placeholder="Username"  required />
                    
                 </div>
                 <div className="TextBox">
