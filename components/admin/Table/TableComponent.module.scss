@@ -1,26 +1,38 @@
 /*-----------------------
         GLOBAL Module css
 -------------------------*/
+#tableHeader
+{
+  p
+  {
+    text-transform: capitalize;
+  }
+}
+
+
+
 #tableBox {
   min-height: 70vh;
 }
 
+
 .tableFeature {
-  form {
-    z-index: -1;
+  #form {
+    z-index: 0;
     position: relative;
     input[type="text"] {
       background: var(--white);
       border: none;
+      width: 100%;
       box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
       border-radius: 30px;
       padding: 0.8rem 2.8rem 0.8rem 0.8rem;
     }
-    button {
+    .searchBtn {
       position: absolute;
       right: 4px;
       top: 4px;
-      background: #eeeeee;
+      background: var(--white);
       border: none;
       width: 2rem;
       height: 2rem;
@@ -28,12 +40,22 @@
       outline: none;
       img {
         display: block;
-        margin: 0 auto;
+        margin:  25% auto;
         height: 1rem;
         width: 1rem;
       }
     }
   }
+}
+
+#noDataBox
+{
+  width: 100%;
+  display: block;
+  text-transform: capitalize;
+  font-family: TextRegular;
+  padding: 1rem;
+
 }
 
 /*-----------------------
@@ -43,6 +65,108 @@
 /*-----------------------
          Mixin
 -------------------------*/
+@mixin Desktop {
+
+  
+  #tableBox {
+    min-height: 75vh;
+    margin-bottom: 2rem;
+
+    .tableFeature {
+      margin-top: 0rem;
+      #form {
+        display: inline-block;
+        width: 30%;
+        input {
+          width: inherit;
+          padding: 0.8rem 2.8rem 0.8rem 0.8rem;
+          width: 100%;
+        }
+      }
+
+      #fbtn {
+        margin-left: 4rem;
+        display: inline-block;
+        padding: 1rem;
+        font-size: 1rem;
+      }
+    }
+
+    .tableScroll {
+    
+      border-radius: 10px;
+      display: block;
+      width: 100%;
+      max-height: 65vh;
+      overflow: hidden;
+      overflow-y: scroll;
+      padding: 0rem;
+  
+      .table {
+        
+        position: relative;
+        display: block;
+        max-height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+ 
+        #tableHeader {
+          z-index: 1;
+          position: sticky;
+          top: 0;
+          background: var(--white);
+          box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.25);
+          border-radius: 0px;
+          padding: 0 0.5rem;
+          font-family: HeadingMedium;
+          width: 100%;
+          display: grid;
+          grid-template-columns:  4.5rem  repeat(var(--col),1fr);
+
+          p {
+            padding: .3rem .2rem;
+            display: inline-block;
+            font-size: 1.1rem;
+          }
+        }
+
+        .row
+        { 
+              z-index: 0;
+              position: sticky;
+              margin-top: .8rem;
+              display: grid;
+              grid-template-columns: 4.5rem repeat(var(--col),1fr);
+              place-items: start;
+              gap: .3rem;
+              min-width: 70%;
+              padding: 0 .2rem;
+            p {
+                  padding: 0 0.5rem;
+                  font-family: TextRegular;
+                  display: inline-block;
+                  word-break: break-all;
+                  
+                } 
+            a
+            {
+                  padding: 1rem;
+                  margin-top: .8rem;
+                  margin-bottom: 0;
+                  font-size: .8rem;    
+            }   
+        }
+
+      }
+    }
+  }
+  
+}
+
+
 
 /*-----------------------
         Mobile - small
@@ -53,9 +177,10 @@
     margin-bottom: 2rem;
 
     .tableFeature {
-      form {
+     
+      #form {
         input {
-          padding: 0.8rem 2.8rem 0.8rem 0.8rem;
+          padding: 0.8rem 2.8rem 0.8rem 1rem;
           width: 100%;
         }
       }
@@ -73,9 +198,12 @@
       overflow: hidden;
       overflow-x: scroll;
       overflow-y: scroll;
-      padding: .1rem .1rem;
+      border-radius: 10px;
+      
 
       .table {
+        z-index: -1;
+        position: relative;
         display: block;
         min-height: 100%;
         min-width: 40rem;
@@ -85,14 +213,15 @@
         border-radius: 10px;
 
         #tableHeader {
+          position: sticky;
+          top: 0;
           background: var(--white);
           box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.25);
-          border-radius: 10px;
           padding: 0 0.5rem;
           font-family: HeadingMedium;
           min-width: 100%;
           display: grid;
-          grid-template-columns: repeat(5,1fr);
+          grid-template-columns: 4.5rem  repeat(var(--col),1fr);
 
           p {
             padding: 0 .2rem;
@@ -103,8 +232,9 @@
 
         .row
         { 
+              margin-top: .8rem;
               display: grid;
-              grid-template-columns: repeat(5,1fr);
+              grid-template-columns: 4.5rem  repeat(var(--col),1fr);
               place-items: start;
               gap: .3rem;
               width: 100%;
@@ -134,28 +264,323 @@
         Mobile - Large
 -------------------------*/
 @media all and (min-width: 350px) and (max-width: 600px) {
+
+
+  #tableBox {
+    min-height: 75vh;
+    margin-bottom: 2rem;
+
+    .tableFeature {
+      margin-top: 2rem;
+      #form {
+        
+        width: 100%;
+        input {
+          width: inherit;
+          padding: 0.8rem 2.8rem 0.8rem 0.8rem;
+          width: 100%;
+        }
+      }
+
+      #fbtn {
+        padding: 1rem;
+        font-size: 1rem;
+      }
+    }
+
+    .tableScroll {
+      display: block;
+      width: 100%;
+      max-height: 70vh;
+      overflow: hidden;
+      overflow-x: scroll;
+      overflow-y: scroll;
+      padding: 0;
+     
+
+      .table {
+        
+        position: relative;
+        display: block;
+        min-height: 100%;
+        min-width: 40rem;
+        margin: 0;
+        padding: 0;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+
+        #tableHeader {
+          position: sticky;
+          top: 0;
+          background: var(--white);
+          box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.25);
+          padding: .3rem 0.5rem;
+          font-family: HeadingMedium;
+          min-width: 100%;
+          display: grid;
+          grid-template-columns:  4.5rem repeat(var(--col),1fr);
+
+          p {
+            padding: .3rem .2rem;
+            display: inline-block;
+            
+          }
+        }
+
+        .row
+        { 
+              margin-top: .5rem;
+              display: grid;
+              grid-template-columns:  4.5rem repeat(var(--col),1fr);
+              place-items: start;
+              gap: .3rem;
+              width: 100%;
+              padding: 0 .2rem;
+            p {
+                  padding: 0 0.5rem;
+                  font-family: TextRegular;
+                  display: inline-block;
+                  word-break: break-all;
+                  
+                } 
+            a
+            {
+                  padding: 1rem;
+                  margin-top: .6rem;
+                  margin-bottom: 0;
+                  font-size: .6rem;    
+            }   
+        }
+
+      }
+    }
+  }
+
 }
 
 /*-----------------------
       Tablet - small
 -------------------------*/
 @media all and (min-width: 600px) and (max-width: 900px) {
+
+
+  
+  #tableBox {
+    min-height: 75vh;
+    margin-bottom: 2rem;
+
+    .tableFeature {
+      margin-top: 2rem;
+      #form {
+        
+        width: 50%;
+        input {
+          width: inherit;
+          padding: 0.8rem 2.8rem 0.8rem 0.8rem;
+          width: 100%;
+        }
+      }
+
+      #fbtn {
+        padding: 1rem;
+        font-size: 1rem;
+      }
+    }
+
+    .tableScroll {
+      border-radius: 10px;
+      display: block;
+      min-width: 70%;
+      max-height: 60vh;
+      overflow: hidden;
+      overflow-x: scroll;
+      overflow-y: scroll;
+      padding: 0rem;
+  
+      .table {
+  
+        position: relative;
+        display: block;
+        max-height: 100%;
+        min-width: 40rem;
+        margin: 0;
+        padding: 0;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+ 
+        #tableHeader {
+          position: sticky;
+          top: 0;
+          background: var(--white);
+          box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.25);
+          border-radius: 10px;
+          padding: 0 0.5rem;
+          font-family: HeadingMedium;
+          min-width: 70%;
+          display: grid;
+          grid-template-columns:  4.5rem  repeat(var(--col),1fr);
+
+          p {
+            padding: .3rem .2rem;
+            display: inline-block;
+            font-size: 1rem;
+          }
+        }
+
+        .row
+        { 
+              margin-top: .8rem;
+              display: grid;
+              grid-template-columns: 4.5rem  repeat(var(--col),1fr);
+              place-items: start;
+              gap: .3rem;
+              min-width: 70%;
+              padding: 0 .2rem;
+            p {
+                  padding: 0 0.5rem;
+                  font-family: TextRegular;
+                  display: inline-block;
+                  word-break: break-all;
+                  
+                } 
+            a
+            {
+                  padding: 1rem;
+                  margin-top: .8rem;
+                  margin-bottom: 0;
+                  font-size: .6rem;    
+            }   
+        }
+
+      }
+    }
+  }
+
 }
 
 /*-----------------------
       Tablet - Large
 -------------------------*/
 @media all and (min-width: 900px) and (max-width: 1200px) {
+
+  
+  
+  #tableBox {
+    min-height: 75vh;
+    margin-bottom: 2rem;
+
+    .tableFeature {
+      margin-top: 2rem;
+      #form {
+        
+        width: 40%;
+        input {
+          width: inherit;
+          padding: 0.8rem 2.8rem 0.8rem 0.8rem;
+          width: 100%;
+        }
+      }
+
+      #fbtn {
+        padding: 1rem;
+        font-size: 1rem;
+      }
+    }
+
+    .tableScroll {
+      border-radius: 10px;
+      display: block;
+      min-width: 70%;
+      max-height: 60vh;
+      overflow: hidden;
+      overflow-x: scroll;
+      overflow-y: scroll;
+      padding: 0rem;
+  
+      .table {
+      
+        position: relative;
+        display: block;
+        max-height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+ 
+        #tableHeader {
+          z-index: 1;
+          position: sticky;
+          top: 0;
+          background: var(--white);
+          box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.25);
+          
+          padding: 0 0.5rem;
+          font-family: HeadingMedium;
+          min-width: 70%;
+          display: grid;
+          grid-template-columns: 4.5rem  repeat(var(--col),1fr);
+
+          p {
+            padding: .3rem .2rem;
+            display: inline-block;
+            font-size: 1.1rem;
+          }
+        }
+
+        .row
+        { 
+              z-index: 0;
+              position: sticky;
+              margin-top: .8rem;
+              display: grid;
+              grid-template-columns: 4.5rem  repeat(var(--col),1fr);
+              place-items: start;
+              gap: .3rem;
+              min-width: 70%;
+              padding: 0 .2rem;
+            p {
+                  padding: 0 0.5rem;
+                  font-family: TextRegular;
+                  display: inline-block;
+                  word-break: break-all;
+                  
+                } 
+            a
+            {
+                  padding: 1rem;
+                  margin-top: .8rem;
+                  margin-bottom: 0;
+                  font-size: .6rem;    
+            }   
+        }
+
+      }
+    }
+  }
+
+
 }
 
 /*-----------------------
       Desktop - small
 -------------------------*/
 @media all and (min-width: 1200px) and (max-width: 1800px) {
+
+   @include Desktop();
+  
+
 }
 
 /*-----------------------
       Desktop - large
 -------------------------*/
 @media all and (min-width: 1800px) {
+
+  @include Desktop();
+  
+  .tableScroll
+  {
+    max-height: 95vh !important;
+  }
 }
