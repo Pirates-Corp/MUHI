@@ -229,7 +229,91 @@ export const handleDocumentReadAll = async (req, res) => {
   resCode === 200 ? res.json(resBody) : res.send(resBody);
 };
 
-export const handleDocumentInsert = async (req, res) => {};
+export const handleDocumentInsert = async (req, res) => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    if (req.method !== "PUT") {
+      resBody = "Invalid request";
+    } else {
+      const result = await authenticate(req);
+      if (result && result[0] === 200) {
+        const collection = decodeURIComponent(req.query?.collection);
+        const documentReceived = req.body;
+        const collectionDetails = collectionMap[collection];
+        if (
+          (result[1].role === moderator &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName) ||
+          (result[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName) ||
+          (result[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.report.collectionName)
+        ) {
+          resCode = 401;
+          resBody =
+            "Unauthorized action. Need admin handle to execute this operation";
+          console.log(resBody);
+        } else {
+          if (collectionDetails && documentReceived) {
+            let mongoDocument = {};
+            if (
+              collectionDetails.collectionName ===
+                collectionMap.user.collectionName ||
+              collectionDetails.collectionName ===
+                collectionMap.report.collectionName
+            ) {
+              mongoDocument._id = new String(documentReceived.id).toLowerCase();
+              delete documentReceived.id;
+            } else {
+              mongoDocument._id = new String(
+                documentReceived.title
+              ).toLowerCase();
+            }
+            mongoDocument = { ...mongoDocument, ...documentReceived };
+            const response = await insertDocument(
+              collectionDetails.collectionName,
+              collectionDetails.schema,
+              mongoDocument
+            );
+            if (response[0]) {
+              resCode = 201;
+              resBody =
+                "Insertion completed with the response => " +
+                response[0] +
+                " | " +
+                JSON.stringify(mongoDocument);
+            } else {
+              resBody =
+                "Insertion completed with the response => " +
+                response +
+                " | " +
+                JSON.stringify(mongoDocument);
+            }
+            console.log(resBody);
+          } else {
+            resBody = "Invalid Collection";
+            console.log(resBody);
+          }
+        }
+      } else if (result) {
+        resCode = result[0];
+        resBody = "Problem in authentication => " + result[1];
+        console.log(resBody);
+      } else {
+        resCode = 400;
+        resBody = "Unknown err while getting user details";
+        console.log(resBody);
+      }
+    }
+  } catch (err) {
+    console.log("Error inserting document =>  " + err);
+  }
+  res.statusCode = resCode;
+  res.send(resBody);
+};
 
 export const handleDocumentDelete = async (req, res) => {};
 

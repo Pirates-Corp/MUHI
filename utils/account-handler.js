@@ -553,7 +553,7 @@ export const updateLastAciveTimeForTheUser = async (id) => {
   try {
     const updateCondition = {
       $set: {
-        lastLogin: new Date(Date.now()),
+        lastLogin: Date.now(),
       },
     };
     const queryOptions = { upsert: false };

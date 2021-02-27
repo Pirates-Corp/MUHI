@@ -41,17 +41,20 @@ export const getDatabaseInstance = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     };
-
-    cached.promise = MongoClient.connect(uri, opts).then((client) => {
-      console.log("Mongo Client Initiated");
-      return {
-        client,
-        db: client.db(process.env.dbName),
-      };
-    });
+    cached.promise = MongoClient.connect(uri, opts)
+      .then((client) => {
+        console.log("Mongo Client Initiated");
+        return {
+          client,
+          db: client.db(process.env.dbName),
+        };
+      })
+      .catch((err) => {
+        console.log("Error while connectinng to db => " + err);
+      });
+    cached.conn = await cached.promise;
+    return cached.conn;
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
 };
 
 export const getCollection = async (collectionName, schema) => {
