@@ -145,6 +145,7 @@ export const login = async (httpReq, httpRes) => {
             console.log(resText);
           }
         } else {
+          resCode = 404
           resText = "User Not found =>" + userDetails.id;
           console.log(resCode);
         }
@@ -306,6 +307,7 @@ export const forgotPassword = async (httpReq, httpRes) => {
           resText = "Reset token sent to mail";
           console.log(resText);
         } else {
+          resCode = 404
           resText = "User Not Found => " + id;
           console.log(resText);
         }
@@ -581,9 +583,10 @@ export const updateUserPassword = async (id, password) => {
 export const getUser = async (id) => {
   const currentUser = getCurrentUser();
   if (currentUser && currentUser._id == id) return currentUser;
-  return await getDocument(accountsCollection, accountSchema, {
+  const queryResponse= await getDocument(accountsCollection, accountSchema, {
     _id: new String(id).toLowerCase(),
   });
+  return queryResponse[1]
 };
 
 export const updateUserDetails = async (id, updateConition, queryOptions) => {

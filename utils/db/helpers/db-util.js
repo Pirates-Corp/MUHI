@@ -169,29 +169,29 @@ export const processQuery = async (
       case createOne:
         return [true, await collection.insertOne(document)];
       case createMany:
-        return await collection.insertMany(document);
+        return [true, await collection.insertMany(document)];
       case readOne:
-        return await collection.findOne(document);
+        return [true, await collection.findOne(document)];
       case readMany:
-        return await collection.find(document);
+        return [true, await collection.find(document)];
       case updateOne:
-        return await collection.updateOne(
+        return [true,await collection.updateOne(
           document,
           updateConition,
           queryOptions
-        );
+        )];
       case updateMany:
-        return await collection.updateMany(
+        return [true, await collection.updateMany(
           document,
           updateConition,
           queryOptions
-        );
+        )];
       case deleteOne:
-        return await collection.deleteOne(document);
+        return [true, await collection.deleteOne(document)];
       case deleteMany:
-        return await collection.deleteMany(document);
+        return [true, await collection.deleteMany(document)];
       default:
-        return null;
+        return [false, "Invalid Query"];
     }
   } catch (err) {
     return [false, err];
