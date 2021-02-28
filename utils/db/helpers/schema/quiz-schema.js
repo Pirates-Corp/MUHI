@@ -83,9 +83,18 @@ export const quizSchema = {
                 },
               },
             },
-            correctOption: {
+            correctAnswer: {
               bsonType: "string",
             },
+            chapter : {
+              bsonType: "string",
+            },
+            section : {
+              bsonType: "string",
+            },
+            syllabus : {
+              bsonType: "string",
+            }
           },
         },
       },
