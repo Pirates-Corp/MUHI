@@ -94,23 +94,22 @@ export const handleDocumentReadById = async (req, res) => {
         console.log(resBody);
       } else {
         if (collectionDetails) {
-          let queryResult = null;
+          let document = null;
           if (
             collectionDetails.collectionName ===
             collectionMap.user.collectionName
           )
-            queryResult = await getUser(documentId);
+            document = await getUser(documentId);
           else {
             const query = {
               _id: new String(documentId).toLowerCase(),
             };
-            queryResult = await getDocument(
+            document = await getDocument(
               collectionDetails.collectionName,
               collectionDetails.schema,
               query
-            );
+            )[1];
           }
-          const document = queryResult[0] ? queryResult[1] : undefined
           if (document) {
             if (
               collectionDetails.collectionName ===
@@ -128,7 +127,7 @@ export const handleDocumentReadById = async (req, res) => {
                 JSON.stringify(resBody)
             );
           } else {
-            resCode = 404
+            resCode = 404;
             resBody =
               "Problem in document fetched from DB. Document may not be available in DB !";
             console.log(resBody);
@@ -185,7 +184,7 @@ export const handleDocumentReadAll = async (req, res) => {
             collectionDetails.schema,
             query
           );
-          const cursor = queryResponse[0] ? queryResponse[1] : undefined
+          const cursor = queryResponse[0] ? queryResponse[1] : undefined;
           if (cursor) {
             const collectionsArray = [];
             if ((await cursor.count()) === 0) {
@@ -347,7 +346,7 @@ export const handleDocumentDelete = async (req, res) => {
             "Unauthorized action. Need admin handle to execute this operation";
           console.log(resBody);
         } else {
-          const mongoDocument = { _id : new String(documentId).toLowerCase()}
+          const mongoDocument = { _id: new String(documentId).toLowerCase() };
           if (collectionDetails) {
             const queryResponse = await deleteDocument(
               collectionDetails.collectionName,
@@ -356,7 +355,7 @@ export const handleDocumentDelete = async (req, res) => {
             );
             if (queryResponse[0]) {
               resCode = 200;
-              resBody = "Deleted doc => "+documentId;
+              resBody = "Deleted doc => " + documentId;
             } else {
               resBody =
                 "Deletion completed with the response => " +

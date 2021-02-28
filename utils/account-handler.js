@@ -145,7 +145,7 @@ export const login = async (httpReq, httpRes) => {
             console.log(resText);
           }
         } else {
-          resCode = 404
+          resCode = 404;
           resText = "User Not found =>" + userDetails.id;
           console.log(resCode);
         }
@@ -307,7 +307,7 @@ export const forgotPassword = async (httpReq, httpRes) => {
           resText = "Reset token sent to mail";
           console.log(resText);
         } else {
-          resCode = 404
+          resCode = 404;
           resText = "User Not Found => " + id;
           console.log(resText);
         }
@@ -332,34 +332,42 @@ export const updatePassword = async (httpReq, httpRes) => {
       resCode = 401;
       resText = "";
     } else {
-      const userDetails = httpReq.body;
-      if (userDetails) {
-        const id = userDetails.id;
-        let newPassword = userDetails.password;
-        if (id && newPassword) {
-          const user = await getUser(id);
-          if (user) {
-            newPassword = bcrypt.hashSync(userDetails.password, saltRounds);
-            await updateUserPassword(id, newPassword);
-            const mailBody = getMailBody(httpReq, passwordResetNotification);
-            await sendMail(id, mailSubject_passwordResetNotification, mailBody);
-            updateCurrentUserInGlobalScope(user);
-            resCode = 200;
-            resText = "Password successfully updated !";
-            console.log(resText);
-          } else {
-            resCode = 400;
-            resText = "Error while updating password ! Please try again";
-            console.log(resText);
-          }
+      let id;
+      const authResult = await authenticate(httpReq);
+      if (authResult[0] === 200) {
+        id = authResult[1]._id;
+      } else {
+        const token = httpReq.body?.token;
+        if (token) {
+          const decoded = decodePayload(token);
+          id = decoded.id;
+        }
+      }
+      let newPassword = httpReq.body?.password;
+      if (id && newPassword) {
+        const user = await getUser(id);
+        if (user) {
+          let passwordHash = bcrypt.hashSync(newPassword, saltRounds);
+          await updateUserPassword(id, passwordHash);
+          const mailBody = getMailBody(httpReq, passwordResetNotification);
+          await sendMail(id, mailSubject_passwordResetNotification, mailBody);
+          const jwtToken = encodePayload(
+            { id, password: newPassword },
+            authTokenExpiryTime
+          );
+          updateTokenInCookie(httpRes, jwtToken);
+          updateCurrentUserInGlobalScope(user);
+          resCode = 200;
+          resText = "Password successfully updated !";
+          console.log(resText);
         } else {
           resCode = 400;
-          resText = "Error while updating password ! Invalid user => " + id;
+          resText = "Error while updating password ! Please try again";
           console.log(resText);
         }
       } else {
         resCode = 400;
-        resText = "Error parsing user details ! Please try again";
+        resText = "Error while updating password ! Invalid user => " + id;
         console.log(resText);
       }
     }
@@ -456,83 +464,6 @@ export const getUserById = async (httpReq, httpRes) => {
   resCode === 200 ? httpRes.json(resBody) : httpRes.send(resBody);
 };
 
-export const getAllusers = async () => {
-  let resCode = 400;
-  let resBody = "";
-  try {
-    const result = await authenticate(httpReq);
-    if (
-      result &&
-      result[0] === 200 &&
-      (result[1].role === admin || result[1].role === moderator)
-    ) {
-      const collection = req.query?.collection;
-      const collectionDetails = collectionMap[collection];
-      if (collectionDetails) {
-        const query = {};
-        const cursor = await getDocuments(
-          collectionDetails.collectionName,
-          collectionDetails.schema,
-          query
-        );
-        if (cursor) {
-          const collectionsArray = [];
-          if ((await cursor.count()) === 0) {
-            console.log(
-              "No documents found in the collection => " +
-                collectionDetails.collectionName
-            );
-          } else {
-            await cursor.forEach((doc) => {
-              if (
-                collectionDetails.collectionName ===
-                collectionMap[user].collectionName
-              ) {
-                delete doc.password;
-                delete doc.resetToken;
-              }
-              collectionsArray.push(doc);
-            });
-          }
-          resCode = 200;
-          resBody = collectionsArray;
-        } else {
-          resBody = "Problem in Cursor fetched from DB";
-          console.log(resBody);
-        }
-      } else {
-        resBody = "Invalid Collection";
-        console.log(resBody);
-      }
-    } else if (result && result[0] === 200) {
-      resCode = 401;
-      resBody =
-        "Unauthorized action. Need admin or moderator handle to execute this operation";
-      console.log(resText);
-    } else if (result) {
-      resCode = result[0];
-      resBody = "Problem in authentication => " + result[1];
-      console.log(resText);
-    } else {
-      resCode = 400;
-      resBody = "Unknown err while getting user details";
-      console.log(resText);
-    }
-  } catch (err) {
-    resCode = 400;
-    resBody = "Error getting user details " + err;
-    console.log(resBody);
-  }
-  httpRes.statusCode = resCode;
-  resCode === 200 ? httpRes.json(resBody) : httpRes.send(resBody);
-};
-
-export const terminateUser = (id) => {};
-
-export const activateAccount = (id) => {};
-
-export const suspendAccount = (id) => {};
-
 /**
  *  Helper functions
  */
@@ -583,10 +514,10 @@ export const updateUserPassword = async (id, password) => {
 export const getUser = async (id) => {
   const currentUser = getCurrentUser();
   if (currentUser && currentUser._id == id) return currentUser;
-  const queryResponse= await getDocument(accountsCollection, accountSchema, {
+  const queryResponse = await getDocument(accountsCollection, accountSchema, {
     _id: new String(id).toLowerCase(),
   });
-  return queryResponse[1]
+  return queryResponse[1];
 };
 
 export const updateUserDetails = async (id, updateConition, queryOptions) => {
@@ -606,6 +537,12 @@ export const getTokenFromCookie = (httpReq) => {
   let rawCookie = httpReq.headers?.cookie;
   return rawCookie[cookieName]; // jwt cookie
 };
+
+export const updateTokenInCookie = (httpRes, jwtToken) => {
+  deleteTokenFromCookie(httpRes);
+  saveTokenInCookie(httpRes,jwtToken)
+};
+
 
 export const saveTokenInCookie = (httpRes, jwtToken) => {
   const secure = isProductionEnv === "production" ? `Secure=true;` : "";

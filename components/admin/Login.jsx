@@ -11,7 +11,7 @@ const Login = () => {
         e.preventDefault();
 
         const body = {
-            email: e.currentTarget.email.value,
+            id: e.currentTarget.email.value,
             password: e.currentTarget.password.value
         };
 
