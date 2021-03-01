@@ -1,5 +1,5 @@
-export default async (req, res) => {    
-    console.log(req.query)
-    res.statusCode = 200
-    res.send("Dcument - enable")
-}
+import { handleDocumentUpdate } from "../../../../../utils/db/db-handler";
+
+export default async (req, res) => {
+  await handleDocumentUpdate(req,res)
+};
