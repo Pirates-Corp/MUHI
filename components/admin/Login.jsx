@@ -42,7 +42,6 @@ const Login = () => {
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
                     <input type="text" id="email" name="email" placeholder="E-mail"  required />
-                   
                 </div>
                 <div className="TextBox">
                     <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />

@@ -76,13 +76,33 @@ Text Box
 
 .TextBox {
   position: relative;
-  margin: 1.3rem auto;
+  margin: 2rem auto;
+
+
+  input[type="number"] {
+    background: #ffffff;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: none;
+    width: 95%;
+    padding: 12px 12px 12px 36px;
+    caret-color: var(--primary);
+    font-family: TextRegular;
+    color: var(--black);
+  }
+  input[type="number"]::-webkit-input-placeholder {
+    color: var(--black);
+    text-transform: capitalize;
+    opacity: 1 !important;
+  }
+
+
   input[type="text"] {
     background: #ffffff;
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     border: none;
-    width: 100%;
+    width: 95%;
     padding: 12px 12px 12px 36px;
     caret-color: var(--primary);
     font-family: TextRegular;
@@ -90,6 +110,7 @@ Text Box
   }
   input[type="text"]::-webkit-input-placeholder {
     color: var(--black);
+    text-transform: capitalize;
     opacity: 1 !important;
   }
   input[type="password"] {
@@ -97,7 +118,7 @@ Text Box
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     border: none;
-    width: 100%;
+    width: 95%;
     padding: 12px 12px 12px 36px;
     caret-color: var(--primary);
     font-family: TextRegular;
@@ -105,6 +126,7 @@ Text Box
   }
   input[type="password"]::-webkit-input-placeholder {
     color: var(--black);
+    text-transform: capitalize;
     opacity: 1 !important;
   }
   img {
@@ -114,7 +136,42 @@ Text Box
     margin-top: 12px;
     margin-left: 12px;
   }
+
+
+
+input[type="datetime-local"] {
+  background: #ffffff;
+  box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: none;
+  width: 95%;
+  padding: 12px 12px 12px 36px;
+  caret-color: var(--primary);
+  font-family: TextRegular;
+  color: var(--black);
+
+&::before{
+  color: var(--black);
+  content: attr(placeholder) " : ";
+  text-transform: capitalize;
 }
+&:focus::before {
+  content: "" !important;
+}
+&::-webkit-calendar-picker-indicator 
+{
+  position: absolute;
+  left: 0;
+  width: 95%;
+  height: 2rem;
+  outline: none;
+  margin-left: 8px;
+  opacity: 0;
+}
+
+}
+}
+
 
 /* 
  ==========
@@ -296,6 +353,10 @@ color buttons
   margin-left: 1rem;
 }
 
+.ml-3
+{
+  margin-left: 3rem;
+}
 .mb-1
 {
   margin-bottom: 1rem;
