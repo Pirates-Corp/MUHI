@@ -175,17 +175,15 @@ export const processQuery = async (
       case readMany:
         return [true, await collection.find(document)];
       case updateOne:
-        return [true,await collection.updateOne(
-          document,
-          updateConition,
-          queryOptions
-        )];
+        return [
+          true,
+          await collection.updateOne(document, updateConition, queryOptions),
+        ];
       case updateMany:
-        return [true, await collection.updateMany(
-          document,
-          updateConition,
-          queryOptions
-        )];
+        return [
+          true,
+          await collection.updateMany(document, updateConition, queryOptions),
+        ];
       case deleteOne:
         return [true, await collection.deleteOne(document)];
       case deleteMany:

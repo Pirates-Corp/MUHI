@@ -425,45 +425,6 @@ export const validateResetToken = async (httpReq, httpRes) => {
   httpRes.send(resText);
 };
 
-export const getUserById = async (httpReq, httpRes) => {
-  let resCode = 400;
-  let resBody = "";
-  try {
-    const result = await authenticate(httpReq);
-    if (result && result[0] === 200 && result[1].role === admin) {
-      const id = httpReq.body?.id;
-      if (id) {
-        const user = await getUser(id);
-        if (user) {
-          delete user.password;
-          delete user.resetToken;
-          resCode = 200;
-          resBody = user;
-        }
-      }
-    } else if (result && result[0] === 200) {
-      resCode = 401;
-      resBody =
-        "Unauthorized action. Need admin handle to execute this operation";
-      console.log(resText);
-    } else if (result) {
-      resCode = result[0];
-      resBody = "Problem in authentication => " + result[1];
-      console.log(resText);
-    } else {
-      resCode = 400;
-      resBody = "Unknown err while getting user details";
-      console.log(resText);
-    }
-  } catch (err) {
-    resCode = 400;
-    resBody = "Error getting user details " + err;
-    console.log(resBody);
-  }
-  httpRes.statusCode = resCode;
-  resCode === 200 ? httpRes.json(resBody) : httpRes.send(resBody);
-};
-
 /**
  *  Helper functions
  */
@@ -517,6 +478,11 @@ export const getUser = async (id) => {
   const queryResponse = await getDocument(accountsCollection, accountSchema, {
     _id: new String(id).toLowerCase(),
   });
+
+  if(queryResponse[0]) {
+    console.log('Error getting user => '+queryResponse[1]);
+  }
+
   return queryResponse[1];
 };
 
@@ -540,9 +506,8 @@ export const getTokenFromCookie = (httpReq) => {
 
 export const updateTokenInCookie = (httpRes, jwtToken) => {
   deleteTokenFromCookie(httpRes);
-  saveTokenInCookie(httpRes,jwtToken)
+  saveTokenInCookie(httpRes, jwtToken);
 };
-
 
 export const saveTokenInCookie = (httpRes, jwtToken) => {
   const secure = isProductionEnv === "production" ? `Secure=true;` : "";
