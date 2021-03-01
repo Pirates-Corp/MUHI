@@ -9,7 +9,7 @@ export default function quizzes() {
 
         <Link href='quiz/create-quiz'>
             <a  className='blueBtn'>
-               <img  className="mt-1" src="/imgs/svgs/AddQuestionPlus.svg"></img>
+               <img  className="mt-1" src="/imgs/svgs/OptionPlus.svg"></img>
                Create
             </a>
         </Link>

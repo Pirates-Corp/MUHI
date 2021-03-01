@@ -103,11 +103,17 @@ export const login = async (httpReq, httpRes) => {
   let resCode = 400;
   let resText = "";
   try {
+    const authResult = await authenticate(httpReq);
     if (httpReq.method !== "POST") {
       resCode = 401;
       resText = "";
-    } else if ((await authenticate(httpReq))[0] === 200) {
-      resText = "Already Logged In. Please logout and try again";
+    } else if (authResult[0] === 200) {
+      if (authResult[1].role === user) {
+        httpRes.redirect(routes.loginRedirectUser);
+      } else {
+        httpRes.redirect(routes.loginRedirectAdmin);
+      }
+      return;
     } else {
       let userDetails = httpReq.body;
       if (userDetails.id && userDetails.password) {
@@ -130,24 +136,26 @@ export const login = async (httpReq, httpRes) => {
             updateCurrentUserInGlobalScope(user);
             console.log(resText);
             if (user.role === admin) {
-              httpRes.redirect(routes.adminDashboard);
+              httpRes.redirect(307, routes.loginRedirectAdmin);
             } else if (user.role === moderator) {
-              httpRes.redirect(routes.adminDashboard);
+              httpRes.redirect(routes.loginRedirectAdmin);
             } else {
-              httpRes.redirect(routes.userDashboard);
+              httpRes.redirect(routes.loginRedirectUser);
             }
             return;
           } else {
-            resText =
-              "Login Failed due to incorrect password for the user => " +
-              userDetails.id;
-            resCode = 401;
-            console.log(resText);
+            console.log("Invalid password for the user => " + userDetails.id);
+            httpRes.redirect(
+              httpReq.headers.referer.split("?")[0] + routes.invalidPassword
+            );
+            return;
           }
         } else {
-          resCode = 404;
-          resText = "User Not found =>" + userDetails.id;
-          console.log(resCode);
+          console.log("User Not found => " + userDetails.id);
+          httpRes.redirect(
+            httpReq.headers.referer.split("?")[0] + routes.invalidUser
+          );
+          return;
         }
       } else {
         resText = "Required fields missing";
@@ -187,12 +195,17 @@ export const signup = async (httpReq, httpRes) => {
   let resCode = 400;
   let resText = "";
   try {
-    if (httpReq.method !== "PUT") {
+    const authResult = await authenticate(httpReq);
+    if (httpReq.method !== "POST") {
       resCode = 401;
       resText = "";
-    } else if ((await authenticate(httpReq))[0] === 200) {
-      resCode = 400;
-      resText = "Already Logged In. Please logout and try again";
+    } else if (authResult[0] === 200) {
+      if (authResult[1].role === user) {
+        httpRes.redirect(routes.loginRedirectUser);
+      } else {
+        httpRes.redirect(routes.loginRedirectAdmin);
+      }
+      return;
     } else {
       let userDetails = httpReq.body;
       let newUser = {};
@@ -479,8 +492,8 @@ export const getUser = async (id) => {
     _id: new String(id).toLowerCase(),
   });
 
-  if(!queryResponse[0]) {
-    console.log('Error getting user => '+queryResponse[1]);
+  if (!queryResponse[0]) {
+    console.log("Error getting user => " + queryResponse[1]);
   }
 
   return queryResponse[1];
@@ -513,7 +526,6 @@ export const saveTokenInCookie = (httpRes, jwtToken) => {
   const secure = isProductionEnv === "production" ? `Secure=true;` : "";
   const cookie = `${cookieName}=${jwtToken}; Max-Age=${cookieExpiryTime}; HttpOnly=true;${secure}Path=/;SameSite=Lax`;
   httpRes.setHeader("Set-cookie", [cookie]);
-  httpRes.setHeader("Access-Control-Allow-Origin", "htto://localhost/");
   return httpRes;
 };
 

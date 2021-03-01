@@ -1,0 +1,1023 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+
+#formBox
+{
+      background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+      border-radius: 20px;  
+      width: 100%;
+      height: 100%;  
+}
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+      #formBox
+      {
+        padding: 2rem .5rem;
+
+        
+        #fileForm
+        {
+              button
+              {
+                    margin-top: 1rem;
+              }
+        }
+       
+        .reviewBox
+        {
+            
+            
+            h5
+            {
+             font-family: TextRegular;
+             font-size: 1rem;
+            }
+    
+            .ScrollBox
+            {
+              display: block;
+              width: 100%;
+              height: 100vh;    
+              overflow: hidden;
+              overflow-y: scroll;
+              
+    
+    
+              #questionBox
+              {
+                  display: block;
+                  padding: 1rem;
+                  background: var(--white);
+                  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+                  width: 98%;
+                  border-radius: 20px;
+                  margin-top: 1rem;
+                  margin-left: .1rem;
+                  position: relative;
+
+
+                  #close
+                  {
+                    position: absolute;
+                    right: .5rem;
+                    top: .5rem;
+                  }
+
+                  .metaData
+                  {
+                    h3
+                    {
+                          font-family: TextBold;
+
+                    }
+
+                    input
+                    {
+                          padding: .5rem;
+                          width: 100%;
+                          margin-bottom: 1rem;
+                    }
+                  }
+
+                  textarea
+                  {
+                     
+                     width: 100%;
+                     resize: vertical; 
+                  }
+
+
+                  #options
+                  {
+                    .optionHeading 
+                    {
+                      margin-top: .5rem;
+                      p 
+                      {
+                       text-transform: uppercase;
+                       font-family: TextBold;
+                       display: inline-block;
+                       font-size: .4rem;
+                       margin-right: 1rem;
+                      }
+                     }
+
+                      #option
+                      {
+                       
+                       input[type="text"]
+                       {
+                         padding: .5rem !important;
+                         margin-left: 1.8rem;
+                         width:8rem;
+                        }
+                        button
+                        {
+                          display: inline-block;
+                          margin-left: .5rem;
+                        }
+                      }
+                    
+                    
+                  }
+
+                  input
+                  {
+                        padding: .5rem;
+                        width: 100%;
+                        margin-bottom: 1rem;
+                  }
+
+              }
+
+
+            }
+
+            #formFooter
+            {
+              margin-top: 2rem;
+              
+              a
+              {
+                 
+                  margin-bottom: 1rem; 
+                  
+              }
+              button
+              {
+                 display: block;
+                 padding: .5rem;
+                 margin-top: 1.5rem; 
+                 margin-bottom: 1rem;
+              }
+
+            }
+
+        }
+       
+
+      }
+
+
+      
+
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+      #formBox
+      {
+        padding: 2rem 1rem;
+
+        
+        #fileForm
+        {
+              button
+              {
+                    margin-top: 1rem;
+              }
+        }
+       
+        .reviewBox
+        {
+            
+            
+            h5
+            {
+             font-family: TextRegular;
+             font-size: 1rem;
+            }
+    
+            .ScrollBox
+            {
+              display: block;
+              width: 100%;
+              height: 100vh;    
+              overflow: hidden;
+              overflow-y: scroll;
+              padding: 0 .8rem;
+              
+    
+    
+              #questionBox
+              {
+                  display: block;
+                  padding: 1.3rem;
+                  background: var(--white);
+                  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+                  width: 100%;
+                  margin-top: 1rem;
+                  margin-bottom: 1rem;
+                  position: relative;
+                  border-radius: 15px;
+
+
+                  #close
+                  {
+                    position: absolute;
+                    right: .5rem;
+                    top: .5rem;
+                  }
+
+                  .metaData
+                  {
+                    h3
+                    {
+                          font-family: TextBold;
+
+                    }
+
+                    input
+                    {
+                          padding: .5rem;
+                          width: 100%;
+                          margin-bottom: 1rem;
+                    }
+                  }
+
+                  textarea
+                  {
+                     
+                     width: 100%;
+                     resize: vertical; 
+                  }
+
+
+                  #options
+                  {
+                    .optionHeading 
+                    {
+                      margin-top: .5rem;
+                      p 
+                      {
+                       text-transform: uppercase;
+                       font-family: TextBold;
+                       display: inline-block;
+                       font-size: .4rem;
+                       margin-right: 1rem;
+                      }
+                     }
+
+                      #option
+                      {
+                       
+                       input[type="text"]
+                       {
+                         padding: .5rem !important;
+                         margin-left: 1.8rem;
+                         width:8rem;
+                        }
+                        button
+                        {
+                          display: inline-block;
+                          margin-left: .5rem;
+                        }
+                      }
+                    
+                    
+                  }
+
+                  input
+                  {
+                        padding: .5rem;
+                        width: 100%;
+                        margin-bottom: 1rem;
+                  }
+
+              }
+
+
+            }
+
+            #formFooter
+            {
+              margin-top: 2rem;
+              
+              a
+              {
+                 
+                  margin-bottom: 1rem; 
+                  
+              }
+              button
+              {
+                 display: block;
+                 padding: .5rem;
+                 margin-top: 1.5rem; 
+                 margin-bottom: 1rem;
+              }
+
+            }
+
+        }
+       
+
+      }
+
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+      #formBox
+      {
+        padding: 2rem 1rem;
+
+        
+        #fileForm
+        {
+              button
+              {
+                    margin-top: 1rem;
+              }
+        }
+       
+        .reviewBox
+        {
+            
+            
+            h5
+            {
+             font-family: TextRegular;
+             font-size: 2rem;
+             margin-top: 1rem;
+             margin-bottom: 1rem;
+            }
+    
+            .ScrollBox
+            {
+              display: block;
+              width: 100%;
+              max-height: 60vh;    
+              overflow: hidden;
+              overflow-y: scroll;
+              padding: 0 .8rem;
+              
+    
+    
+              #questionBox
+              {
+                  display: block;
+                  padding: 1.3rem;
+                  background: var(--white);
+                  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+                  width: 100%;
+                  margin-top: 1rem;
+                  margin-bottom: 1rem;
+                  position: relative;
+                  border-radius: 15px;
+
+
+                  #close
+                  {
+                    position: absolute;
+                    right: .5rem;
+                    top: .5rem;
+                  }
+
+                  .metaData
+                  {
+                    h3
+                    {
+                          font-family: TextBold;
+                          display: inline-block;
+                          margin-right: 2rem;
+                    }
+
+                    input
+                    {
+                          padding: .5rem;
+                          display: inline-block;
+                          width: min-content;
+                          margin-right: 1rem;
+                    }
+                  }
+
+                  textarea
+                  {
+                     margin-top: .5rem;
+                     width: 100%;
+                     resize: vertical; 
+                  }
+
+
+                  #options
+                  {
+                        
+                    .optionHeading 
+                    {
+                      margin-top: .8rem;
+                      p 
+                      {
+                       text-transform: uppercase;
+                       font-family: TextBold;
+                       display: inline-block;
+                       font-size: .6rem;
+                       margin-right: 1rem;
+                      }
+                     }
+
+                      #option
+                      {
+                       
+                       label
+                       {
+                         margin-top: 1rem;
+                         margin-left: 2rem;
+                         position: absolute;
+                         transform: translateY(50%);
+                       }
+                       
+                       input[type="text"]
+                       {
+                         padding: .5rem !important;
+                         margin-left: 6rem;
+                         width:15rem;
+                        }
+                        button
+                        {
+                          display: inline-block;
+                          margin-left: .5rem;
+                        }
+                      }
+                    
+                    
+                  }
+
+                  input
+                  {     
+                        margin-top: .8rem;
+                        padding: .5rem;
+                        width: 100%;
+                        margin-bottom: 1rem;
+                  }
+
+              }
+
+
+            }
+
+            #formFooter
+            {
+              margin-top: 1rem;
+              
+              a
+              {
+                 
+                  margin-bottom: 1.5rem; 
+                  
+              }
+              button
+              {
+                 
+                
+                 margin: 1rem 1rem 1rem 0rem;
+
+              }
+
+            }
+
+        }
+       
+
+      }
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+    
+  #formBox
+  {
+    padding: 2rem 1rem;
+
+    
+    #fileForm
+    {
+          button
+          {
+                margin-top: 1rem;
+          }
+    }
+   
+    .reviewBox
+    {
+        
+        
+        h5
+        {
+         font-family: TextRegular;
+         font-size: 2rem;
+         margin-bottom: 1rem;
+        }
+
+        .ScrollBox
+        {
+          display: block;
+          width: 100%;
+          max-height: 60vh;    
+          overflow: hidden;
+          overflow-y: scroll;
+          padding: 0 4rem;
+
+          
+
+
+          #questionBox
+          {
+              display: block;
+              padding: 1.3rem;
+              background: var(--white);
+              box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+              width: 100%;
+              margin-top: 1rem;
+              margin-bottom: 1rem;
+              position: relative;
+              border-radius: 15px;
+
+
+              #close
+              {
+                position: absolute;
+                right: .5rem;
+                top: .5rem;
+              }
+
+              .metaData
+              {
+                h3
+                {
+                      font-family: TextBold;
+                      display: inline-block;
+                      margin-right: 2rem;
+                }
+
+                input
+                {
+                      padding: .8rem;
+                      display: inline-block;
+                      width: min-content;
+                      margin-right: 1rem;
+                }
+              }
+
+              textarea
+              {
+                 margin-top: .5rem;
+                 width: 100%;
+                 resize: vertical; 
+              }
+
+
+              #options
+              {
+                    
+                .optionHeading 
+                {
+                  margin-top: .8rem;
+                  p 
+                  {
+                   text-transform: uppercase;
+                   font-family: TextBold;
+                   display: inline-block;
+                   font-size: .6rem;
+                   margin-right: 1rem;
+                  }
+                 }
+
+                  #option
+                  {
+                   
+                   label
+                   {
+                     margin-top: 1rem;
+                     margin-left: 2rem;
+                     position: absolute;
+                     transform: translateY(50%);
+                   }
+                   
+                   input[type="text"]
+                   {
+                     padding: .8rem !important;
+                     margin-left: 6rem;
+                     width:15rem;
+                    }
+                    button
+                    {
+                      display: inline-block;
+                      margin-left: .5rem;
+                    }
+                  }
+                
+                
+              }
+
+              input
+              {     
+                    margin-top: .8rem;
+                    padding: .8rem;
+                    width: 100%;
+                    margin-bottom: 1rem;
+              }
+
+          }
+
+
+        }
+
+        #formFooter
+        {
+          margin-top: 1rem;
+          position: relative;
+          a
+          {
+             
+              margin-bottom: 1.5rem; 
+              
+          }
+
+          #save
+          {
+           position: absolute;
+           right: 0;
+          }
+          button
+          {
+             
+            
+             margin: 1rem 3rem 1rem 0rem;
+
+          }
+
+        }
+
+    }
+   
+
+  }
+
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+  #formBox
+  {
+    padding: 1rem 2rem;
+
+    
+    #fileForm
+    {
+          button
+          {
+                margin-top: 1rem;
+          }
+    }
+   
+    .reviewBox
+    {
+        
+        
+        h5
+        {
+         font-family: TextRegular;
+         font-size: 1rem;
+         margin: 0 0 .5rem 4rem;
+        }
+
+        .ScrollBox
+        {
+          display: block;
+          width: 100%;
+          max-height: 53vh;    
+          overflow: hidden;
+          overflow-y: scroll;
+          padding: 0 4rem;
+
+          
+
+
+          #questionBox
+          {
+              display: block;
+              padding: 1.3rem;
+              background: var(--white);
+              box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+              width: 100%;
+              margin-top: 1rem;
+              margin-bottom: 1rem;
+              position: relative;
+              border-radius: 15px;
+
+
+              #close
+              {
+                position: absolute;
+                right: .5rem;
+                top: .5rem;
+              }
+
+              .metaData
+              {
+                h3
+                {
+                      font-family: TextBold;
+                      display: inline-block;
+                      margin-right: 2rem;
+                }
+
+                input
+                {
+                      padding: .8rem;
+                      display: inline-block;
+                      width: min-content;
+                      margin-right: 1rem;
+                }
+              }
+
+              textarea
+              {
+                 margin-top: .5rem;
+                 width: 100%;
+                 resize: vertical; 
+              }
+
+
+              #options
+              {
+                    
+                .optionHeading 
+                {
+                  margin-top: .8rem;
+                  p 
+                  {
+                   text-transform: uppercase;
+                   font-family: TextBold;
+                   display: inline-block;
+                   font-size: .6rem;
+                   margin-right: 1rem;
+                  }
+                 }
+
+                  #option
+                  {
+                   
+                   label
+                   {
+                     margin-top: 1rem;
+                     margin-left: 2rem;
+                     position: absolute;
+                     transform: translateY(50%);
+                   }
+                   
+                   input[type="text"]
+                   {
+                     padding: .8rem !important;
+                     margin-left: 6.5rem;
+                     width:18rem;
+                    }
+                    button
+                    {
+                      display: inline-block;
+                      margin-left: .5rem;
+                    }
+                  }
+                
+                
+              }
+
+              input
+              {     
+                    margin-top: .8rem;
+                    padding: .8rem;
+                    width: 100%;
+                    margin-bottom: 0rem;
+              }
+
+          }
+
+
+        }
+
+        #formFooter
+        {
+          margin-top: 1rem;
+          position: relative;
+          a
+          {
+             
+              margin-bottom: 1.5rem; 
+              
+          }
+
+          #save
+          {
+           position: absolute;
+           right: 0;
+          }
+          button
+          {
+             
+            
+             margin: 1rem 3rem 1rem 0rem;
+
+          }
+
+        }
+
+    }
+   
+
+  }
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+  #formBox
+  {
+    padding: 1rem 2rem;
+
+    
+    #fileForm
+    {
+          button
+          {
+                margin-top: 1rem;
+          }
+    }
+   
+    .reviewBox
+    {
+        
+        
+        h5
+        {
+         font-family: TextRegular;
+         font-size: 1rem;
+         margin: 0 0 .5rem 4rem;
+        }
+
+        .ScrollBox
+        {
+          display: block;
+          width: 100%;
+          max-height: 55vh;    
+          overflow: hidden;
+          overflow-y: scroll;
+          padding: 0 4rem;
+
+          
+
+
+          #questionBox
+          {
+              display: block;
+              padding: 1.3rem;
+              background: var(--white);
+              box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+              width: 100%;
+              margin-top: 1rem;
+              margin-bottom: 1rem;
+              position: relative;
+              border-radius: 15px;
+
+
+              #close
+              {
+                position: absolute;
+                right: .5rem;
+                top: .5rem;
+              }
+
+              .metaData
+              {
+                h3
+                {
+                      font-family: TextBold;
+                      display: inline-block;
+                      margin-right: 2rem;
+                }
+
+                input
+                {
+                      padding: .8rem;
+                      display: inline-block;
+                      width: min-content;
+                      margin-right: 1rem;
+                }
+              }
+
+              textarea
+              {
+                 margin-top: .5rem;
+                 width: 100%;
+                 resize: vertical; 
+              }
+
+
+              #options
+              {
+                    
+                .optionHeading 
+                {
+                  margin-top: .8rem;
+                  p 
+                  {
+                   text-transform: uppercase;
+                   font-family: TextBold;
+                   display: inline-block;
+                   font-size: .6rem;
+                   margin-right: 1rem;
+                  }
+                 }
+
+                  #option
+                  {
+                   
+                   label
+                   {
+                     margin-top: 1rem;
+                     margin-left: 2rem;
+                     position: absolute;
+                     transform: translateY(50%);
+                   }
+                   
+                   input[type="text"]
+                   {
+                     padding: .8rem !important;
+                     margin-left: 6.5rem;
+                     width:18rem;
+                    }
+                    button
+                    {
+                      display: inline-block;
+                      margin-left: .5rem;
+                    }
+                  }
+                
+                
+              }
+
+              input
+              {     
+                    margin-top: .8rem;
+                    padding: .8rem;
+                    width: 100%;
+                    margin-bottom: 0rem;
+              }
+
+          }
+
+
+        }
+
+        #formFooter
+        {
+          margin-top: 1rem;
+          position: relative;
+          a
+          {
+             
+              margin-bottom: 1.5rem; 
+              
+          }
+
+          #save
+          {
+           position: absolute;
+           right: 0;
+          }
+          button
+          {
+             
+            
+             margin: 1rem 3rem 1rem 0rem;
+
+          }
+
+        }
+
+    }
+   
+
+  }
+}

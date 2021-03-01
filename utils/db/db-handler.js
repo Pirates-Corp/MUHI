@@ -99,13 +99,12 @@ export const handleDocumentReadById = async (req, res) => {
           if (
             collectionDetails.collectionName ===
             collectionMap.user.collectionName
-          ){
+          ) {
             const user = await getUser(documentId);
-            if(user){
-              document = {...user}
+            if (user) {
+              document = { ...user };
             }
-          }
-          else {
+          } else {
             const query = {
               _id: new String(documentId).toLowerCase(),
             };
@@ -113,9 +112,9 @@ export const handleDocumentReadById = async (req, res) => {
               collectionDetails.collectionName,
               collectionDetails.schema,
               query
-            )
-            if(queryResult[0]) {
-              document = queryResult[1]
+            );
+            if (queryResult[0]) {
+              document = queryResult[1];
             }
           }
           if (document) {
@@ -394,6 +393,7 @@ export const handleDocumentDelete = async (req, res) => {
   res.send(resBody);
 };
 
+//to do
 export const handleDocumentUpdate = async (req, res) => {
   let resCode = 400;
   let resBody = "";
@@ -405,7 +405,7 @@ export const handleDocumentUpdate = async (req, res) => {
       if (authResult && authResult[0] === 200) {
         const collection = decodeURIComponent(req.query?.collection);
         const documentId = decodeURIComponent(req.query?.document);
-        const document = req.body
+        const document = req.body;
         const collectionDetails = collectionMap[collection];
         if (
           (authResult[1].role === moderator &&
@@ -427,14 +427,27 @@ export const handleDocumentUpdate = async (req, res) => {
         } else {
           const filter = { _id: new String(documentId).toLowerCase() };
           const updateDoc = {
-            $set : {
+            $set: {
               ...document
             }
-          }
-          const options = {}
+          };
+          const options = {upsert:false};
           if (collectionDetails) {
-            const result = await updateDocument(collectionDetails.collectionName,collectionDetails.schema,updateDoc,filter,options);
-            console.log(result)
+            const queryResult = await updateDocument(
+              collectionDetails.collectionName,
+              collectionDetails.schema,
+              filter,
+              updateDoc,
+              options
+            );
+            if(queryResult[0]) {
+              resCode = 200;
+              resBody = 'Update Completed for the doc => '+documentId
+              console.log(resBody);
+            } {
+              resBody = 'Update Failed for the doc => '+documentId+' with error => '+err
+              console.log(resBody);
+            }
           } else {
             resBody = "Invalid Collection";
             console.log(resBody);
@@ -457,9 +470,68 @@ export const handleDocumentUpdate = async (req, res) => {
   res.send(resBody);
 };
 
-export const handleDocumentActivation = async (req, res) => {};
-
-export const handleDocumentDeactivation = async (req, res) => {};
+export const handleDocumentActivation = async (req, res, stateToBeChanged) => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    if (req.method !== "PUT") {
+      resBody = "Invalid request";
+    } else {
+      const authResult = await authenticate(req);
+      if (authResult && authResult[0] === 200) {
+        const collection = decodeURIComponent(req.query?.collection);
+        const documentId = decodeURIComponent(req.query?.document);
+        const collectionDetails = collectionMap[collection];
+        if (authResult[1].role === user) {
+          resCode = 401;
+          resBody =
+            "Unauthorized action. Need admin handle to execute this operation";
+          console.log(resBody);
+        } else {
+          const filter = { _id: new String(documentId).toLowerCase() };
+          const updateDoc = {
+            $set: {
+              state : stateToBeChanged
+            }
+          };
+          const options = {upsert:false};
+          if (collectionDetails) {
+            const queryResult = await updateDocument(
+              collectionDetails.collectionName,
+              collectionDetails.schema,
+              filter,
+              updateDoc,
+              options
+            );
+            if(queryResult[0]) {
+              resCode = 200;
+              resBody = 'state is changed to '+stateToBeChanged+' for the doc => '+documentId
+              console.log(resBody);
+            } {
+              resBody = 'changing state is changed to '+stateToBeChanged+' for the doc => '+documentId
+              console.log(resBody);
+            }
+          } else {
+            resBody = "Invalid Collection";
+            console.log(resBody);
+          }
+        }
+      } else if (authResult) {
+        resCode = authResult[0];
+        resBody = "Problem in authentication => " + authResult[1];
+        console.log(resBody);
+      } else {
+        resCode = 400;
+        resBody = "Unknown err while getting user details";
+        console.log(resBody);
+      }
+    }
+  } catch (err) {
+    console.log("Error changing state of the document =>  " + err);
+  }
+  res.statusCode = resCode;
+  res.send(resBody);
+};
 
 export const handleFieldRead = async (req, res) => {};
 

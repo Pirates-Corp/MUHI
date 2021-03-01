@@ -1,0 +1,170 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin phone {
+    #profile
+    {
+    margin-top: 2rem;
+      .updateAccount
+      {
+        margin-bottom: 2rem;
+        padding: 1.5rem .5rem;
+        background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+        border-radius: 20px;
+          #accountForm
+          {
+              button{
+                margin-left: .5rem;
+              }
+          }
+      }
+      .updatePassword
+      {
+        margin-bottom: 2rem;
+        padding: 1.5rem .5rem;
+        background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+        border-radius: 20px;
+
+        #passwordForm
+        {
+            button{
+                margin-left: .5rem;
+              }
+        }
+      }
+    }
+    
+}
+
+
+
+@mixin tablet {
+    #profile
+    {
+    margin-top: 2rem;
+      .updateAccount
+      {
+        margin-bottom: 2rem;
+        padding: 1.5rem ;
+        background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+        border-radius: 20px;
+          #accountForm
+          {
+
+              button{
+                margin-left: 1rem;
+              }
+          }
+      }
+      .updatePassword
+      {
+        margin-bottom: 2rem;
+        padding: 1.5rem ;
+        background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+        border-radius: 20px;
+
+        #passwordForm
+        {
+            button{
+                margin-left: .5rem;
+              }
+        }
+      }
+    }
+    
+}
+
+
+@mixin desktop {
+  #profile
+  {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    padding: 0  3rem 0 0;
+
+
+    .updateAccount
+    {
+      margin-bottom: 2rem;
+      padding: 1.5rem ;
+      background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+      border-radius: 20px;
+        #accountForm
+        {
+
+            button{
+              margin-left: 1rem;
+            }
+        }
+    }
+    .updatePassword
+    {
+      margin-bottom: 2rem;
+      padding: 1.5rem ;
+      background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+      border-radius: 20px;
+
+      #passwordForm
+      {
+          button{
+              margin-left: .5rem;
+            }
+      }
+    }
+  }
+  
+}
+
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+    @include phone();
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+  
+    @include phone();
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+    @include tablet();
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+  @include tablet();
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+  @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+  @include desktop(); 
+}

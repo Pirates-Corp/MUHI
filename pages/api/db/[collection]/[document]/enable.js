@@ -1,5 +1,5 @@
-import { handleDocumentUpdate } from "../../../../../utils/db/db-handler";
+import { handleDocumentActivation } from "../../../../../utils/db/db-handler";
 
 export default async (req, res) => {
-  await handleDocumentUpdate(req,res)
+  await handleDocumentActivation(req,res,'Active')
 };

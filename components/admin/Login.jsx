@@ -11,22 +11,23 @@ const Login = () => {
         e.preventDefault();
 
         const body = {
-            id: e.currentTarget.email.value,
+            id: e.currentTarget.username.value,
             password: e.currentTarget.password.value
         };
 
-        const res = await fetch("/api/auth/login", {
+        await fetch("/api/auth/login", {
             method: "POST",
+            redirect : "follow",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
 
-        if (res.status === 200) {
-            alert("logged in")
-        } else {
-            isLoading(false);
-            setErrorMsg("Incorrect email or password. Try again!");
-        }
+        // if (res.status === 200) {
+        //     alert("logged in")
+        // } else {
+        //     isLoading(false);
+        //     setErrorMsg("Incorrect username or password. Try again!");
+        // }
     }
 
   return (
@@ -37,11 +38,12 @@ const Login = () => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            <form method='POST' action='/admin/dashboard' >
+            <form method='POST' action='/api/auth/login' >
                 {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
-                    <input type="text" id="email" name="email" placeholder="E-mail"  required />
+                    <input type="text" id="username" name="id" placeholder="Username"  required />
+                   
                 </div>
                 <div className="TextBox">
                     <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
