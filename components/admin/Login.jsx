@@ -37,7 +37,7 @@ const Login = () => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            <form onSubmit={onSubmit}>
+            <form method='POST' action='/admin/dashboard' >
                 {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />

@@ -431,8 +431,9 @@ export const handleDocumentUpdate = async (req, res) => {
               ...document
             }
           }
+          const options = {}
           if (collectionDetails) {
-            const result = await collection.updateOne(filter, updateDoc);
+            const result = await updateDocument(collectionDetails.collectionName,collectionDetails.schema,updateDoc,filter,options);
             console.log(result)
           } else {
             resBody = "Invalid Collection";
@@ -450,7 +451,7 @@ export const handleDocumentUpdate = async (req, res) => {
       }
     }
   } catch (err) {
-    console.log("Error inserting document =>  " + err);
+    console.log("Error updating document =>  " + err);
   }
   res.statusCode = resCode;
   res.send(resBody);

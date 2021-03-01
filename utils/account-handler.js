@@ -479,7 +479,7 @@ export const getUser = async (id) => {
     _id: new String(id).toLowerCase(),
   });
 
-  if(queryResponse[0]) {
+  if(!queryResponse[0]) {
     console.log('Error getting user => '+queryResponse[1]);
   }
 
@@ -513,6 +513,7 @@ export const saveTokenInCookie = (httpRes, jwtToken) => {
   const secure = isProductionEnv === "production" ? `Secure=true;` : "";
   const cookie = `${cookieName}=${jwtToken}; Max-Age=${cookieExpiryTime}; HttpOnly=true;${secure}Path=/;SameSite=Lax`;
   httpRes.setHeader("Set-cookie", [cookie]);
+  httpRes.setHeader("Access-Control-Allow-Origin", "htto://localhost/");
   return httpRes;
 };
 
