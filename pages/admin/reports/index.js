@@ -13,17 +13,17 @@ export default function studentReport() {
       ['kitty','1w','400','3hr','5',"/admin/report/siva"],
       ['tharun','1w','400','3hr','4',"/admin/report/siva"],
       ['tharun','1w','400','3hr','4',"/admin/report/siva"]
-  ]
+]
 
   return (
     <div>
       <BaseLayout>
-        <PrimaryHeading heading="Student Reports" />
+        <PrimaryHeading heading="Reports" />
         <TableComponent
           col="6"
           colNames={["Student Name", "overall Rank","High score",' active ago',"test taken"]}
-          buttonColor="blue"
-          buttonText="View Report"
+          buttonColor="red"
+          buttonText="terminate"
           data={data}
         />
       </BaseLayout>

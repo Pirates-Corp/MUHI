@@ -15,18 +15,19 @@ const Login = () => {
             password: e.currentTarget.password.value
         };
 
-        const res = await fetch("/api/auth/login", {
+        await fetch("/api/auth/login", {
             method: "POST",
+            redirect : "follow",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
 
-        if (res.status === 200) {
-            alert("logged in")
-        } else {
-            isLoading(false);
-            setErrorMsg("Incorrect username or password. Try again!");
-        }
+        // if (res.status === 200) {
+        //     alert("logged in")
+        // } else {
+        //     isLoading(false);
+        //     setErrorMsg("Incorrect username or password. Try again!");
+        // }
     }
 
   return (

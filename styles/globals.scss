@@ -75,6 +75,13 @@ Text Box
 .TextBox {
   position: relative;
   margin: 2rem auto;
+  width: 95%;
+
+  input:disabled
+  {
+   opacity: 50%;
+  }
+
 
   input[type="number"] {
     background: #ffffff;
@@ -93,7 +100,7 @@ Text Box
     opacity: 1 !important;
   }
 
-  input[type="text"] {
+  input[type="email"] {
     background: #ffffff;
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
@@ -104,11 +111,36 @@ Text Box
     font-family: TextRegular;
     color: var(--black);
   }
+  input[type="email"]::-webkit-input-placeholder {
+    color: var(--black);
+    text-transform: capitalize;
+    opacity: 1 !important;
+  }
+
+  input[type="text"] {
+    background: #ffffff;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    border: none;
+    width: 95%;
+    padding: 1rem 1rem 1rem 2rem;
+    caret-color: var(--primary);
+    font-family: TextRegular;
+    color: var(--black);
+
+
+  
+
+  }
   input[type="text"]::-webkit-input-placeholder {
     color: var(--black);
     text-transform: capitalize;
     opacity: 1 !important;
   }
+ 
+  
+
+
   input[type="password"] {
     background: #ffffff;
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
@@ -125,6 +157,8 @@ Text Box
     text-transform: capitalize;
     opacity: 1 !important;
   }
+
+
   img {
     position: absolute;
     width: 1rem;
@@ -132,6 +166,21 @@ Text Box
     margin-top: 1rem;
     margin-left: .6rem;
   }
+
+
+    .editImg
+    {
+      filter: invert(57%) sepia(0%) saturate(5571%) hue-rotate(315deg) brightness(95%) contrast(119%);
+      position: absolute;
+      top: 1rem;
+      right: 8%;
+      height: 1.2rem;
+      width: 1.2rem;
+      margin: 0;;
+    }
+  
+ 
+ 
 
   input[type="datetime-local"] {
     background: #ffffff;

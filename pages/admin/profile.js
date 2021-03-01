@@ -1,11 +1,10 @@
-import PrimaryHeading from '../../components/common/Header/PrimaryHeading'
-import BaseLayout from '../../components/Layouts/BaseLayout.jsx'
+import UpdateProfile from '../../components/common/Profile/UpdateProfile'
+import BaseLayout from '../../components/Layouts/BaseLayout'
 export default function profile() {
   return (
-    <div>
-      <BaseLayout>
-      <PrimaryHeading heading="Profile"/>
-      </BaseLayout>
-    </div>
+   <BaseLayout>
+    <UpdateProfile />
+   </BaseLayout>
   )
 }
+
