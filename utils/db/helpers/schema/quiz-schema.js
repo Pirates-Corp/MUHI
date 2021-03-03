@@ -73,14 +73,7 @@ export const quizSchema = {
               uniqueItems: true,
               additionalItems: false,
               items: {
-                bsonType: ["object"],
-                required: ["option"],
-                additionalProperties: false,
-                properties: {
-                  option: {
-                    bsonType: "string",
-                  },
-                },
+                bsonType: ["string"]
               },
             },
             correctAnswer: {
