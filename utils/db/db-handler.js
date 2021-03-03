@@ -9,6 +9,7 @@ import {
   deleteDocuments,
   updateDocument,
   updateDocuments,
+  removeCollection,
 } from "./helpers/db-util";
 import { accountSchema } from "./helpers/schema/account-schema";
 import { quizSchema } from "./helpers/schema/quiz-schema";
@@ -300,7 +301,6 @@ export const handleDocumentInsert = async (req, res) => {
                 " | " +
                 JSON.stringify(mongoDocument);
             }
-            console.log(resBody);
           } else {
             resBody = "Invalid Collection";
             console.log(resBody);
@@ -354,26 +354,46 @@ export const handleDocumentDelete = async (req, res) => {
           console.log(resBody);
         } else {
           const mongoDocument = { _id: new String(documentId).toLowerCase() };
-          if (collectionDetails) {
-            const queryResponse = await deleteDocument(
+          if (mongoDocument._id === "all") {
+            const response = await removeCollection(
               collectionDetails.collectionName,
-              collectionDetails.schema,
-              mongoDocument
+              collectionDetails.schema
             );
-            if (queryResponse[0]) {
+            if (response[0] && response[1].result.n > 0) {
               resCode = 200;
-              resBody = "Deleted doc => " + documentId;
+              resBody =
+                "Deleted all documents from " +
+                collectionDetails.collectionName +
+                " collection";
             } else {
               resBody =
-                "Deletion completed with the response => " +
-                queryResponse +
-                " | " +
-                JSON.stringify(mongoDocument);
+                "Problem deleting all documents from " +
+                collectionDetails.collectionName +
+                " collection";
             }
-            console.log(resBody);
           } else {
-            resBody = "Invalid Collection";
-            console.log(resBody);
+            if (collectionDetails) {
+              const queryResponse = await deleteDocument(
+                collectionDetails.collectionName,
+                collectionDetails.schema,
+                mongoDocument
+              );
+              if (queryResponse[0] && queryResponse[1].deletedCount === 1) {
+                resCode = 200;
+                resBody =
+                  "Deleted doc => " +
+                  documentId +
+                  " from " +
+                  collectionDetails.collectionName +
+                  " collection";
+              } else {
+                resBody = "Problem deleting the document => " + documentId;
+              }
+              console.log(resBody);
+            } else {
+              resBody = "Invalid Collection";
+              console.log(resBody);
+            }
           }
         }
       } else if (authResult) {
@@ -428,10 +448,10 @@ export const handleDocumentUpdate = async (req, res) => {
           const filter = { _id: new String(documentId).toLowerCase() };
           const updateDoc = {
             $set: {
-              ...document
-            }
+              ...document,
+            },
           };
-          const options = {upsert:false};
+          const options = { upsert: false };
           if (collectionDetails) {
             const queryResult = await updateDocument(
               collectionDetails.collectionName,
@@ -440,12 +460,17 @@ export const handleDocumentUpdate = async (req, res) => {
               updateDoc,
               options
             );
-            if(queryResult[0]) {
+            if (queryResult[0] && queryResult[1].modifiedCount === 1) {
               resCode = 200;
-              resBody = 'Update Completed for the doc => '+documentId
-              console.log(resBody);
-            } {
-              resBody = 'Update Failed for the doc => '+documentId+' with error => '+err
+              const updatedDoc = await getDocument(
+                collectionDetails.collectionName,
+                collectionDetails.schema,
+                { _id: new String(documentId).toLowerCase() }
+              );
+              resBody = updatedDoc[1];
+              console.log("Document updated => " + resBody);
+            } else {
+              resBody = "Update Failed for the doc => " + documentId;
               console.log(resBody);
             }
           } else {
@@ -467,7 +492,7 @@ export const handleDocumentUpdate = async (req, res) => {
     console.log("Error updating document =>  " + err);
   }
   res.statusCode = resCode;
-  res.send(resBody);
+  resCode === 200 ? res.json(resBody) : res.send(resBody);
 };
 
 export const handleDocumentActivation = async (req, res, stateToBeChanged) => {
@@ -491,10 +516,10 @@ export const handleDocumentActivation = async (req, res, stateToBeChanged) => {
           const filter = { _id: new String(documentId).toLowerCase() };
           const updateDoc = {
             $set: {
-              state : stateToBeChanged
-            }
+              state: stateToBeChanged,
+            },
           };
-          const options = {upsert:false};
+          const options = { upsert: false };
           if (collectionDetails) {
             const queryResult = await updateDocument(
               collectionDetails.collectionName,
@@ -503,12 +528,21 @@ export const handleDocumentActivation = async (req, res, stateToBeChanged) => {
               updateDoc,
               options
             );
-            if(queryResult[0]) {
+            if (queryResult[0] && queryResult[1].modifiedCount === 1) {
+              console.log(queryResult[1].modifiedCount);
               resCode = 200;
-              resBody = 'state is changed to '+stateToBeChanged+' for the doc => '+documentId
+              resBody =
+                "state is changed to " +
+                stateToBeChanged +
+                " for the doc => " +
+                documentId;
               console.log(resBody);
-            } {
-              resBody = 'changing state is changed to '+stateToBeChanged+' for the doc => '+documentId
+            } else {
+              resBody =
+                "Problem changing state is changed to " +
+                stateToBeChanged +
+                " for the doc => " +
+                documentId;
               console.log(resBody);
             }
           } else {

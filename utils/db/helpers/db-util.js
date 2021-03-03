@@ -97,6 +97,17 @@ export const getCollection = async (collectionName, schema) => {
   return cached.collections[collectionName];
 };
 
+export const removeCollection = async (collectionName, schema) => {
+  try {
+    const collection = await getCollection(collectionName, schema);
+    const removedResponse = await collection.remove();
+    return [true, removedResponse];
+  } catch (err) {
+    console.error("problem removin collection =>" + err);
+    return [true, removedResponse];
+  }
+};
+
 export const getDocument = async (collectionName, schema, document) => {
   return await processQuery(readOne, collectionName, schema, document);
 };
