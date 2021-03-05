@@ -1,8 +1,6 @@
 /*-----------------------
         GLOBAL Module css
 -------------------------*/
-$color : var(--dark-light);
-
 
 
 
@@ -51,7 +49,6 @@ $color : var(--dark-light);
             min-height: .5rem;
             z-index: 300;
             position: absolute;
-            background-color:$color;
             border-radius: 10px;
             bottom: 2rem;
             left: 0; 
@@ -81,7 +78,6 @@ $color : var(--dark-light);
             min-height: .5rem;
             z-index: 300;
             position: absolute;
-            background-color:$color;
             border-radius: 10px;
             bottom: 5rem;
             left: 0; 
@@ -116,7 +112,6 @@ $color : var(--dark-light);
          min-height: 1rem;
          z-index: 300;
          position: absolute;
-         background-color: $color;
          bottom:0;
          left: 0;
          
@@ -146,7 +141,6 @@ $color : var(--dark-light);
             min-height: 1rem;
             z-index: 300;
             position: absolute;
-            background-color: $color;
             bottom:0;
             left: 0;
             

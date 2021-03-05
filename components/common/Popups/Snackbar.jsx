@@ -1,34 +1,30 @@
 import React from "react";
 import style from "../../common/Popups/Snackbar.module.scss";
 const Snackbar = (props) => {
-
-
-
-  const [show, setShow] = React.useState(0);
+const [show, setShow] = React.useState(0);
 
   const snackBoxStye = {
-    transition: "2s",
-    visibility: "hidden",
+   "animation-name": "fadeInDown",
+    "animation-duration": "0.5s",
+    "visibility": "hidden",
   };
-
   const getTimeout = () => {
     setTimeout(() => {
       setShow(1);
     }, Number(props.time));
   };
-
   return show == 0 ? (
-    <div id={style.snackBox} >
-      <p>{props.message + show}</p>
+    <div id={style.snackBox} className={props.color+"Bg"}>
+      <p>{props.message}</p>
       {getTimeout()}
     </div>
   ) : (
     <div style={snackBoxStye} id={style.snackBox}>
-      <p>{props.message + show}</p>
+      <p>{props.message}</p>
       {getTimeout()}
     </div>
   );
 };
-//Nikhil.sachdeva0401@gmail.com/8010666820
+
 
 export default Snackbar;

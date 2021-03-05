@@ -29,6 +29,30 @@ ul {
   --white: #fff;
 }
 
+
+//bg
+
+.blueBg
+{
+      background-color: var(--primary);
+}
+
+.greenBg
+{
+      background-color: var(--secondary);
+}
+
+.redBg
+{
+      background-color: var(--red);
+}
+
+.blackBg
+{
+      background-color: var(--dark-light);
+}
+
+
 /* fonts  */
 
 @font-face {
@@ -127,20 +151,14 @@ Text Box
     caret-color: var(--primary);
     font-family: TextRegular;
     color: var(--black);
-
-
-  
-
   }
+
   input[type="text"]::-webkit-input-placeholder {
     color: var(--black);
     text-transform: capitalize;
     opacity: 1 !important;
   }
  
-  
-
-
   input[type="password"] {
     background: #ffffff;
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
@@ -501,8 +519,6 @@ Round buttons
 }
 
 
-
-
 .greenRoundBtn
 {
   border: none;
@@ -607,3 +623,20 @@ File Uploader
 .mb-1 {
   margin-bottom: 1rem !important;
 }
+
+//animations
+
+@keyframes fadeInDown {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 200%, 0);
+  }
+}
+
+
+
