@@ -38,11 +38,11 @@ const Login = () => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            <form  action="/admin/dashboard" method="POST" >
+            <form  action="/api/auth/login" method="POST" >
                 {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
-                    <input type="text" id="username" name="username" placeholder="Username"  required />
+                    <input type="text" id="id" name="id" placeholder="Username"  required />
                    
                 </div>
                 <div className="TextBox">

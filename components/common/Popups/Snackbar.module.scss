@@ -1,0 +1,191 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+$color : var(--dark-light);
+
+
+
+
+#snackBox{
+      animation-name: fadeInUp;
+      animation-duration: 0.5s;
+}
+/*-----------------------
+        Animations
+-------------------------*/
+@keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+      }
+    
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    
+      to {
+        opacity: 0;
+        transform: translate3d(0, 200%, 0);
+      }
+    }
+    
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin  tablet {
+      #snackBox
+      {
+           
+            display: grid;
+            place-content: center;
+            place-items: center;
+            width: 40vw;
+            min-height: .5rem;
+            z-index: 300;
+            position: absolute;
+            background-color:$color;
+            border-radius: 10px;
+            bottom: 2rem;
+            left: 0; 
+            right: 0; 
+            margin-left: auto; 
+            margin-right: auto;
+   
+            p{
+               line-height: 1rem;
+               color: var(--white);
+               font-family: TextRegular;
+               font-size: .8rem;
+               padding: .3rem 1rem;
+               word-wrap: break-word;
+            }
+      }
+}
+
+
+@mixin  desktop {
+      #snackBox
+      {
+            display: grid;
+            place-content: center;
+            place-items: center;
+            max-width: 25vw;
+            min-height: .5rem;
+            z-index: 300;
+            position: absolute;
+            background-color:$color;
+            border-radius: 10px;
+            bottom: 5rem;
+            left: 0; 
+            right: 0; 
+            margin-left: auto; 
+            margin-right: auto;
+            transition: 0.5s;
+            
+        
+   
+            p{
+               line-height: 1rem;
+               color: var(--white);
+               font-family: TextRegular;
+               font-size: .8rem;
+               padding: .3rem 1rem;
+               word-wrap: break-word;
+            }
+      }
+}
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+   #snackBox
+   {
+         display: grid;
+         place-content: center;
+         place-items: center;
+         width: 100vw;
+         min-height: 1rem;
+         z-index: 300;
+         position: absolute;
+         background-color: $color;
+         bottom:0;
+         left: 0;
+         
+         
+
+         p{
+            line-height: 1rem;
+            color: var(--white);
+            font-family: TextRegular;
+            font-size: .9rem;
+            padding: .3rem;
+            word-wrap: break-word;
+         }
+   }
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+      #snackBox
+      {
+            display: grid;
+            place-content: center;
+            place-items: center;
+            width: 100vw;
+            min-height: 1rem;
+            z-index: 300;
+            position: absolute;
+            background-color: $color;
+            bottom:0;
+            left: 0;
+            
+   
+            p{
+               line-height: 1rem;
+               color: var(--white);
+               font-family: TextRegular;
+               font-size: .9rem;
+               padding: .3rem;
+               word-wrap: break-word;
+            }
+      }
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+      @include tablet();
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+      @include tablet();
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+      @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+
+}
