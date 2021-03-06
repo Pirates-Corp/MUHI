@@ -417,7 +417,7 @@
     padding: 1rem .8rem;
     transition: 0.5s;
 
-    li:nth-child(1)
+    li:first-child
     {
       position: absolute;
       top: 1rem;
@@ -431,7 +431,7 @@
       margin-bottom: 1rem;
     }
 
-    li:nth-child(7)
+    li:last-child
     {
       position: absolute;
       bottom: 1rem;

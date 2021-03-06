@@ -6,7 +6,7 @@ export default function dashborad() {
     <div>
       <BaseLayout>
          <GreetingHeader/>
-         <Snackbar message="Yaa done 😎😎" time="2000" color="green" />
+         <Snackbar message="Yaa done 😎😎" time="4000" color="green" />
       </BaseLayout>
     </div>
   )
