@@ -41,17 +41,20 @@ export const getDatabaseInstance = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     };
-
-    cached.promise = MongoClient.connect(uri, opts).then((client) => {
-      console.log("Mongo Client Initiated");
-      return {
-        client,
-        db: client.db(process.env.dbName),
-      };
-    });
+    cached.promise = MongoClient.connect(uri, opts)
+      .then((client) => {
+        console.log("Mongo Client Initiated");
+        return {
+          client,
+          db: client.db(process.env.dbName),
+        };
+      })
+      .catch((err) => {
+        console.log("Error while connectinng to db => " + err);
+      });
+    cached.conn = await cached.promise;
+    return cached.conn;
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
 };
 
 export const getCollection = async (collectionName, schema) => {
@@ -166,29 +169,27 @@ export const processQuery = async (
       case createOne:
         return [true, await collection.insertOne(document)];
       case createMany:
-        return await collection.insertMany(document);
+        return [true, await collection.insertMany(document)];
       case readOne:
-        return await collection.findOne(document);
+        return [true, await collection.findOne(document)];
       case readMany:
-        return await collection.find(document);
+        return [true, await collection.find(document)];
       case updateOne:
-        return await collection.updateOne(
-          document,
-          updateConition,
-          queryOptions
-        );
+        return [
+          true,
+          await collection.updateOne(document, updateConition, queryOptions),
+        ];
       case updateMany:
-        return await collection.updateMany(
-          document,
-          updateConition,
-          queryOptions
-        );
+        return [
+          true,
+          await collection.updateMany(document, updateConition, queryOptions),
+        ];
       case deleteOne:
-        return await collection.deleteOne(document);
+        return [true, await collection.deleteOne(document)];
       case deleteMany:
-        return await collection.deleteMany(document);
+        return [true, await collection.deleteMany(document)];
       default:
-        return null;
+        return [false, "Invalid Query"];
     }
   } catch (err) {
     return [false, err];

@@ -15,6 +15,7 @@ import { quizSchema } from "./helpers/schema/quiz-schema";
 import { reportSchema } from "./helpers/schema/report-schema";
 import { newsLetterSchema } from "./helpers/schema/newsletter-schema";
 import { authenticate, getUser, getUserById } from "../account-handler";
+import { use } from "passport";
 
 const admin = "admin",
   moderator = "moderator",
@@ -73,20 +74,20 @@ export const handleDocumentReadById = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    const result = await authenticate(req);
-    if (result && result[0] === 200) {
+    const authResult = await authenticate(req);
+    if (authResult && authResult[0] === 200) {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const collectionDetails = collectionMap[collection];
       if (
-        (result[1].role !== admin &&
+        (authResult[1].role !== admin &&
           collectionDetails.collectionName ===
             collectionMap.user.collectionName &&
-          result[1].email !== documentId) ||
-        (result[1].role === user &&
+          authResult[1].email !== documentId) ||
+        (authResult[1].role === user &&
           collectionDetails.collectionName ===
             collectionMap.report.collectionName &&
-          result[1].email !== documentId)
+          authResult[1].email !== documentId)
       ) {
         resCode = 401;
         resBody =
@@ -94,31 +95,38 @@ export const handleDocumentReadById = async (req, res) => {
         console.log(resBody);
       } else {
         if (collectionDetails) {
-          let result = null;
+          let document = null;
           if (
             collectionDetails.collectionName ===
             collectionMap.user.collectionName
-          )
-            result = await getUser(documentId);
+          ){
+            const user = await getUser(documentId);
+            if(user){
+              document = {...user}
+            }
+          }
           else {
             const query = {
               _id: new String(documentId).toLowerCase(),
             };
-            result = await getDocument(
+            const queryResult = await getDocument(
               collectionDetails.collectionName,
               collectionDetails.schema,
               query
-            );
+            )
+            if(queryResult[0]) {
+              document = queryResult[1]
+            }
           }
-          if (result) {
+          if (document) {
             if (
               collectionDetails.collectionName ===
               collectionMap.user.collectionName
             ) {
-              delete result.password;
-              delete result.resetToken;
+              delete document.password;
+              delete document.resetToken;
             }
-            resBody = result;
+            resBody = document;
             resCode = 200;
             console.log(
               "returning the document for the id " +
@@ -127,6 +135,7 @@ export const handleDocumentReadById = async (req, res) => {
                 JSON.stringify(resBody)
             );
           } else {
+            resCode = 404;
             resBody =
               "Problem in document fetched from DB. Document may not be available in DB !";
             console.log(resBody);
@@ -136,9 +145,9 @@ export const handleDocumentReadById = async (req, res) => {
           console.log(resBody);
         }
       }
-    } else if (result) {
-      resCode = result[0];
-      resBody = "Problem in authentication => " + result[1];
+    } else if (authResult) {
+      resCode = authResult[0];
+      resBody = "Problem in authentication => " + authResult[1];
       console.log(resBody);
     } else {
       resCode = 400;
@@ -178,11 +187,12 @@ export const handleDocumentReadAll = async (req, res) => {
       } else {
         if (collectionDetails) {
           const query = {};
-          const cursor = await getDocuments(
+          const queryResponse = await getDocuments(
             collectionDetails.collectionName,
             collectionDetails.schema,
             query
           );
+          const cursor = queryResponse[0] ? queryResponse[1] : undefined;
           if (cursor) {
             const collectionsArray = [];
             if ((await cursor.count()) === 0) {
@@ -229,11 +239,222 @@ export const handleDocumentReadAll = async (req, res) => {
   resCode === 200 ? res.json(resBody) : res.send(resBody);
 };
 
-export const handleDocumentInsert = async (req, res) => {};
+export const handleDocumentInsert = async (req, res) => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    if (req.method !== "PUT") {
+      resBody = "Invalid request";
+    } else {
+      const authResult = await authenticate(req);
+      if (authResult && authResult[0] === 200) {
+        const collection = decodeURIComponent(req.query?.collection);
+        const documentReceived = req.body;
+        const collectionDetails = collectionMap[collection];
+        if (
+          (authResult[1].role === moderator &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName) ||
+          (authResult[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName) ||
+          (authResult[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.report.collectionName)
+        ) {
+          resCode = 401;
+          resBody =
+            "Unauthorized action. Need admin handle to execute this operation";
+          console.log(resBody);
+        } else {
+          if (collectionDetails && documentReceived) {
+            let mongoDocument = {};
+            if (
+              collectionDetails.collectionName ===
+                collectionMap.user.collectionName ||
+              collectionDetails.collectionName ===
+                collectionMap.report.collectionName
+            ) {
+              mongoDocument._id = new String(documentReceived.id).toLowerCase();
+              delete documentReceived.id;
+            } else {
+              mongoDocument._id = new String(
+                documentReceived.title
+              ).toLowerCase();
+            }
+            mongoDocument = { ...mongoDocument, ...documentReceived };
+            const queryResponse = await insertDocument(
+              collectionDetails.collectionName,
+              collectionDetails.schema,
+              mongoDocument
+            );
+            if (queryResponse[0]) {
+              resCode = 201;
+              resBody = { ...mongoDocument };
+            } else {
+              if (queryResponse[1].code == 11000) {
+                resCode = 409;
+              }
+              resBody =
+                "Insertion completed with the response => " +
+                queryResponse +
+                " | " +
+                JSON.stringify(mongoDocument);
+            }
+            console.log(resBody);
+          } else {
+            resBody = "Invalid Collection";
+            console.log(resBody);
+          }
+        }
+      } else if (authResult) {
+        resCode = authResult[0];
+        resBody = "Problem in authentication => " + authResult[1];
+        console.log(resBody);
+      } else {
+        resCode = 400;
+        resBody = "Unknown err while getting user details";
+        console.log(resBody);
+      }
+    }
+  } catch (err) {
+    console.log("Error inserting document =>  " + err);
+  }
+  res.statusCode = resCode;
+  resCode === 201 ? res.json(resBody) : res.send(resBody);
+};
 
-export const handleDocumentDelete = async (req, res) => {};
+export const handleDocumentDelete = async (req, res) => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    if (req.method !== "DELETE") {
+      resBody = "Invalid request";
+    } else {
+      const authResult = await authenticate(req);
+      if (authResult && authResult[0] === 200) {
+        const collection = decodeURIComponent(req.query?.collection);
+        const documentId = decodeURIComponent(req.query?.document);
+        const collectionDetails = collectionMap[collection];
+        if (
+          (authResult[1].role === moderator &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName) ||
+          (authResult[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName &&
+            authResult[1].email !== documentId) ||
+          (authResult[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.report.collectionName &&
+            authResult[1].email !== documentId)
+        ) {
+          resCode = 401;
+          resBody =
+            "Unauthorized action. Need admin handle to execute this operation";
+          console.log(resBody);
+        } else {
+          const mongoDocument = { _id: new String(documentId).toLowerCase() };
+          if (collectionDetails) {
+            const queryResponse = await deleteDocument(
+              collectionDetails.collectionName,
+              collectionDetails.schema,
+              mongoDocument
+            );
+            if (queryResponse[0]) {
+              resCode = 200;
+              resBody = "Deleted doc => " + documentId;
+            } else {
+              resBody =
+                "Deletion completed with the response => " +
+                queryResponse +
+                " | " +
+                JSON.stringify(mongoDocument);
+            }
+            console.log(resBody);
+          } else {
+            resBody = "Invalid Collection";
+            console.log(resBody);
+          }
+        }
+      } else if (authResult) {
+        resCode = authResult[0];
+        resBody = "Problem in authentication => " + authResult[1];
+        console.log(resBody);
+      } else {
+        resCode = 400;
+        resBody = "Unknown err while getting user details";
+        console.log(resBody);
+      }
+    }
+  } catch (err) {
+    console.log("Error inserting document =>  " + err);
+  }
+  res.statusCode = resCode;
+  res.send(resBody);
+};
 
-export const handleDocumentUpdate = async (req, res) => {};
+export const handleDocumentUpdate = async (req, res) => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    if (req.method !== "PUT") {
+      resBody = "Invalid request";
+    } else {
+      const authResult = await authenticate(req);
+      if (authResult && authResult[0] === 200) {
+        const collection = decodeURIComponent(req.query?.collection);
+        const documentId = decodeURIComponent(req.query?.document);
+        const document = req.body
+        const collectionDetails = collectionMap[collection];
+        if (
+          (authResult[1].role === moderator &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName) ||
+          (authResult[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.user.collectionName &&
+            authResult[1].email !== documentId) ||
+          (authResult[1].role === user &&
+            collectionDetails.collectionName ===
+              collectionMap.report.collectionName &&
+            authResult[1].email !== documentId)
+        ) {
+          resCode = 401;
+          resBody =
+            "Unauthorized action. Need admin handle to execute this operation";
+          console.log(resBody);
+        } else {
+          const filter = { _id: new String(documentId).toLowerCase() };
+          const updateDoc = {
+            $set : {
+              ...document
+            }
+          }
+          if (collectionDetails) {
+            const result = await collection.updateOne(filter, updateDoc);
+            console.log(result)
+          } else {
+            resBody = "Invalid Collection";
+            console.log(resBody);
+          }
+        }
+      } else if (authResult) {
+        resCode = authResult[0];
+        resBody = "Problem in authentication => " + authResult[1];
+        console.log(resBody);
+      } else {
+        resCode = 400;
+        resBody = "Unknown err while getting user details";
+        console.log(resBody);
+      }
+    }
+  } catch (err) {
+    console.log("Error inserting document =>  " + err);
+  }
+  res.statusCode = resCode;
+  res.send(resBody);
+};
 
 export const handleDocumentActivation = async (req, res) => {};
 

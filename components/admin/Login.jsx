@@ -15,18 +15,19 @@ const Login = () => {
             password: e.currentTarget.password.value
         };
 
-        const res = await fetch("/api/auth/login", {
+        await fetch("/api/auth/login", {
             method: "POST",
+            redirect : "follow",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
 
-        if (res.status === 200) {
-            alert("logged in")
-        } else {
-            isLoading(false);
-            setErrorMsg("Incorrect username or password. Try again!");
-        }
+        // if (res.status === 200) {
+        //     alert("logged in")
+        // } else {
+        //     isLoading(false);
+        //     setErrorMsg("Incorrect username or password. Try again!");
+        // }
     }
 
   return (
@@ -37,11 +38,11 @@ const Login = () => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            <form onSubmit={onSubmit}>
+            <form  action="/api/auth/login" method="POST" >
                 {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
-                    <input type="text" id="username" name="username" placeholder="Username"  required />
+                    <input type="text" id="id" name="id" placeholder="Username"  required />
                    
                 </div>
                 <div className="TextBox">
