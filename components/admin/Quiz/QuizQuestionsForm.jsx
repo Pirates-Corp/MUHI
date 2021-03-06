@@ -4,12 +4,28 @@ import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
 
 const QuizQuestionsForm = () => {
+
+
+  const loadDoc = (e)=>{
+    document
+      .getElementById("file")
+      .setAttribute(
+        "data",
+        e.target.value.replace(/.*(\/|\\)/, "")
+      );
+
+
+      // handel the excel file
+
+
+  }
+
+
   return (
     <CenterLayout>
       <PrimaryHeading heading="Add Questions" />
       <div id={style.formBox}>
         <div id={style.fileForm}>
-          <form>
             <div
               className="fileUploader"
               id="file"
@@ -18,21 +34,9 @@ const QuizQuestionsForm = () => {
               <img src="/imgs/svgs/File.svg" alt="" />
               <input
                 type="file"
-                onChange={(e) => {
-                  document
-                    .getElementById("file")
-                    .setAttribute(
-                      "data",
-                      e.target.value.replace(/.*(\/|\\)/, "")
-                    );
-                }}
+                onChange={(e) => loadDoc(e)}
               />
             </div>
-            <button className="blueBtn" type="submit">
-              
-              Submit
-            </button>
-          </form>
         </div>
 
         <div className={style.reviewBox}>
