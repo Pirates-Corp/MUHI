@@ -455,7 +455,7 @@ export const updateUserPassword = async (id, password) => {
 export const getUser = async (id) => {
   const currentUser = getCurrentUser();
   if (currentUser && currentUser._id == id) return currentUser;
-  const queryResponse = await getDocument(constants.collectionMap.user.collectionName, accountSchema, {
+  const queryResponse = await getDocument(constants.collectionMap.user.collectionName, constants.collectionMap.user.schema, {
     _id: new String(id).toLowerCase(),
   });
 
@@ -469,7 +469,7 @@ export const getUser = async (id) => {
 export const updateUserDetails = async (id, updateConition, queryOptions) => {
   return updateDocument(
     constants.collectionMap.user.collectionName,
-    accountSchema,
+    constants.collectionMap.user.schema,
     { _id: new String(id).toLowerCase() },
     updateConition,
     queryOptions
