@@ -15,31 +15,8 @@ import { accountSchema } from "./helpers/schema/account-schema";
 import { quizSchema } from "./helpers/schema/quiz-schema";
 import { reportSchema } from "./helpers/schema/report-schema";
 import { newsLetterSchema } from "./helpers/schema/newsletter-schema";
-import { authenticate, getUser, getUserById } from "../account-handler";
-import { use } from "passport";
-
-const admin = "admin",
-  moderator = "moderator",
-  user = "user";
-
-const collectionMap = {
-  user: {
-    collectionName: process.env.userCollection,
-    schema: accountSchema,
-  },
-  quiz: {
-    collectionName: process.env.quizCollection,
-    schema: quizSchema,
-  },
-  newsletter: {
-    collectionName: process.env.newsletterCollection,
-    schema: newsLetterSchema,
-  },
-  report: {
-    collectionName: process.env.reportsCollection,
-    schema: reportSchema,
-  },
-};
+import { authenticate, getUser } from "../account-handler";
+import { constants } from "../constants";
 
 /**
  * For now, default document option will be used only with Accounts collection. So returing current user details here.
@@ -79,15 +56,15 @@ export const handleDocumentReadById = async (req, res) => {
     if (authResult && authResult[0] === 200) {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
-      const collectionDetails = collectionMap[collection];
+      const collectionDetails = constants.collectionMap[collection];
       if (
-        (authResult[1].role !== admin &&
+        (authResult[1].role !== constants.roles.admin &&
           collectionDetails.collectionName ===
-            collectionMap.user.collectionName &&
+            constants.collectionMap.user.collectionName &&
           authResult[1].email !== documentId) ||
-        (authResult[1].role === user &&
+        (authResult[1].role === constants.roles.user &&
           collectionDetails.collectionName ===
-            collectionMap.report.collectionName &&
+            constants.collectionMap.report.collectionName &&
           authResult[1].email !== documentId)
       ) {
         resCode = 401;
@@ -99,7 +76,7 @@ export const handleDocumentReadById = async (req, res) => {
           let document = null;
           if (
             collectionDetails.collectionName ===
-            collectionMap.user.collectionName
+            constants.collectionMap.user.collectionName
           ) {
             const user = await getUser(documentId);
             if (user) {
@@ -121,7 +98,7 @@ export const handleDocumentReadById = async (req, res) => {
           if (document) {
             if (
               collectionDetails.collectionName ===
-              collectionMap.user.collectionName
+              constants.collectionMap.user.collectionName
             ) {
               delete document.password;
               delete document.resetToken;
@@ -168,17 +145,17 @@ export const handleDocumentReadAll = async (req, res) => {
     const result = await authenticate(req);
     if (result && result[0] === 200) {
       const collection = decodeURIComponent(req.query?.collection);
-      const collectionDetails = collectionMap[collection];
+      const collectionDetails = constants.collectionMap[collection];
       if (
-        (result[1].role === moderator &&
+        (result[1].role === constants.roles.moderator &&
           collectionDetails.collectionName ===
-            collectionMap.user.collectionName) ||
-        (result[1].role === user &&
+            constants.collectionMap.user.collectionName) ||
+        (result[1].role === constants.roles.user &&
           collectionDetails.collectionName ===
-            collectionMap.user.collectionName) ||
-        (result[1].role === user &&
+            constants.collectionMap.user.collectionName) ||
+        (result[1].role === constants.roles.user &&
           collectionDetails.collectionName ===
-            collectionMap.report.collectionName)
+            constants.collectionMap.report.collectionName)
       ) {
         resCode = 401;
         resBody =
@@ -204,7 +181,7 @@ export const handleDocumentReadAll = async (req, res) => {
               await cursor.forEach((doc) => {
                 if (
                   collectionDetails.collectionName ===
-                  collectionMap[user].collectionName
+                  constants.collectionMap[constants.roles.user].collectionName
                 ) {
                   delete doc.password;
                   delete doc.resetToken;
@@ -250,17 +227,17 @@ export const handleDocumentInsert = async (req, res) => {
       if (authResult && authResult[0] === 200) {
         const collection = decodeURIComponent(req.query?.collection);
         const documentReceived = req.body;
-        const collectionDetails = collectionMap[collection];
+        const collectionDetails = constants.collectionMap[collection];
         if (
-          (authResult[1].role === moderator &&
+          (authResult[1].role === constants.roles.moderator &&
             collectionDetails.collectionName ===
-              collectionMap.user.collectionName) ||
-          (authResult[1].role === user &&
+              constants.collectionMap.user.collectionName) ||
+          (authResult[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
-              collectionMap.user.collectionName) ||
-          (authResult[1].role === user &&
+              constants.collectionMap.user.collectionName) ||
+          (authResult[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
-              collectionMap.report.collectionName)
+              constants.collectionMap.report.collectionName)
         ) {
           resCode = 401;
           resBody =
@@ -271,9 +248,9 @@ export const handleDocumentInsert = async (req, res) => {
             let mongoDocument = {};
             if (
               collectionDetails.collectionName ===
-                collectionMap.user.collectionName ||
+                constants.collectionMap.user.collectionName ||
               collectionDetails.collectionName ===
-                collectionMap.report.collectionName
+                constants.collectionMap.report.collectionName
             ) {
               mongoDocument._id = new String(documentReceived.id).toLowerCase();
               delete documentReceived.id;
@@ -334,18 +311,18 @@ export const handleDocumentDelete = async (req, res) => {
       if (authResult && authResult[0] === 200) {
         const collection = decodeURIComponent(req.query?.collection);
         const documentId = decodeURIComponent(req.query?.document);
-        const collectionDetails = collectionMap[collection];
+        const collectionDetails = constants.collectionMap[collection];
         if (
-          (authResult[1].role === moderator &&
+          (authResult[1].role === constants.roles.moderator &&
             collectionDetails.collectionName ===
-              collectionMap.user.collectionName) ||
-          (authResult[1].role === user &&
+              constants.collectionMap.user.collectionName) ||
+          (authResult[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
-              collectionMap.user.collectionName &&
+              constants.collectionMap.user.collectionName &&
             authResult[1].email !== documentId) ||
-          (authResult[1].role === user &&
+          (authResult[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
-              collectionMap.report.collectionName &&
+              constants.collectionMap.report.collectionName &&
             authResult[1].email !== documentId)
         ) {
           resCode = 401;
@@ -426,18 +403,18 @@ export const handleDocumentUpdate = async (req, res) => {
         const collection = decodeURIComponent(req.query?.collection);
         const documentId = decodeURIComponent(req.query?.document);
         const document = req.body;
-        const collectionDetails = collectionMap[collection];
+        const collectionDetails = constants.collectionMap[collection];
         if (
-          (authResult[1].role === moderator &&
+          (authResult[1].role === constants.roles.moderator &&
             collectionDetails.collectionName ===
-              collectionMap.user.collectionName) ||
-          (authResult[1].role === user &&
+              constants.collectionMap.user.collectionName) ||
+          (authResult[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
-              collectionMap.user.collectionName &&
+              constants.collectionMap.user.collectionName &&
             authResult[1].email !== documentId) ||
-          (authResult[1].role === user &&
+          (authResult[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
-              collectionMap.report.collectionName &&
+              constants.collectionMap.report.collectionName &&
             authResult[1].email !== documentId)
         ) {
           resCode = 401;
@@ -506,8 +483,8 @@ export const handleDocumentActivation = async (req, res, stateToBeChanged) => {
       if (authResult && authResult[0] === 200) {
         const collection = decodeURIComponent(req.query?.collection);
         const documentId = decodeURIComponent(req.query?.document);
-        const collectionDetails = collectionMap[collection];
-        if (authResult[1].role === user) {
+        const collectionDetails = constants.collectionMap[collection];
+        if (authResult[1].role === constants.roles.user) {
           resCode = 401;
           resBody =
             "Unauthorized action. Need admin handle to execute this operation";
@@ -567,12 +544,108 @@ export const handleDocumentActivation = async (req, res, stateToBeChanged) => {
   res.send(resBody);
 };
 
-export const handleFieldRead = async (req, res) => {};
+export const handleFieldRead = async (req, res) => {
+  let resCode = 400;
+  let resBody = "";
+  try {
+    const authResult = await authenticate(req);
+    if (authResult && authResult[0] === 200) {
+      const collection = decodeURIComponent(req.query?.collection);
+      const documentId = decodeURIComponent(req.query?.document);
+      const collectionDetails = constants.collectionMap[collection];
+      if (
+        (authResult[1].role !== constants.roles.admin &&
+          collectionDetails.collectionName ===
+            constants.collectionMap.user.collectionName &&
+          authResult[1].email !== documentId) ||
+        (authResult[1].role === constants.roles.user &&
+          collectionDetails.collectionName ===
+            constants.collectionMap.report.collectionName &&
+          authResult[1].email !== documentId)
+      ) {
+        resCode = 401;
+        resBody =
+          "Unauthorized action. Need admin handle to execute this operation";
+        console.log(resBody);
+      } else {
+        if (collectionDetails) {
+          // let document = null;
+          // if (
+          //   collectionDetails.collectionName ===
+          //   constants.collectionMap.user.collectionName
+          // ) {
+          //   const user = await getUser(documentId);
+          //   if (user) {
+          //     document = { ...user };
+          //   }
+          // } else {
+          //   const query = {
+          //     _id: new String(documentId).toLowerCase(),
+          //   };
+          //   const queryResult = await getDocument(
+          //     collectionDetails.collectionName,
+          //     collectionDetails.schema,
+          //     query
+          //   );
+          //   if (queryResult[0]) {
+          //     document = queryResult[1];
+          //   }
+          // }
+          if (document) {
+            // if (
+            //   collectionDetails.collectionName ===
+            //   constants.collectionMap.user.collectionName
+            // ) {
+            //   delete document.password;
+            //   delete document.resetToken;
+            // }
+            // resBody = document;
+            // resCode = 200;
+            // console.log(
+            //   "returning the document for the id " +
+            //     documentId +
+            //     " =>" +
+            //     JSON.stringify(resBody)
+            // );
+          } else {
+            resCode = 404;
+            resBody =
+              "Problem in document fetched from DB. Document may not be available in DB !";
+            console.log(resBody);
+          }
+        } else {
+          resBody = "Invalid Collection";
+          console.log(resBody);
+        }
+      }
+    } else if (authResult) {
+      resCode = authResult[0];
+      resBody = "Problem in authentication => " + authResult[1];
+      console.log(resBody);
+    } else {
+      resCode = 400;
+      resBody = "Unknown err while getting user details";
+      console.log(resBody);
+    }
+  } catch (err) {
+    console.log("Error getting all documents =>  " + err);
+  }
+  res.statusCode = resCode;
+  resCode === 200 ? res.json(resBody) : res.send(resBody);
+};
 
 export const handleFieldInsert = async (req, res) => {};
 
 export const handleFieldDelete = async (req, res) => {};
 
 export const handleFieldUpdate = async (req, res) => {};
+
+export const handleSubFieldRead = async (req, res) => {};
+
+export const handleSubFieldInsert = async (req, res) => {};
+
+export const handleSubFieldDelete = async (req, res) => {};
+
+export const handleSubFieldUpdate = async (req, res) => {};
 
 // export const getDocumentOverview = async (req, res) => {};
