@@ -454,7 +454,7 @@ export const handleFieldRead = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -496,9 +496,9 @@ export const handleFieldInsert = async (req, res) => {
       const collectionDetails = constants.collectionMap[collection];
       const doc = req.body;
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
-        console.log(doc);
+        console.log(document);
         document[fieldName].push(doc);
         console.log(document);
         const updateResponse = await updateDoc(
@@ -532,7 +532,7 @@ export const handleFieldDelete = async (req, res) => {
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const collectionDetails = constants.collectionMap[collection];
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           console.log(doc);
@@ -571,9 +571,10 @@ export const handleFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const newDoc = req.body;
+      newDoc.id = newDoc.id ? newDoc.id : parseInt(fieldId)
       const collectionDetails = constants.collectionMap[collection];
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const modifiedArray = document[fieldName].map((doc) => {
           if (doc.id == fieldId) {
@@ -614,7 +615,7 @@ export const handleSubFieldRead = async (req, res) => {
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const subFieldId = decodeURIComponent(req.query?.subFieldId);
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -667,7 +668,7 @@ export const handleSubFieldInsert = async (req, res) => {
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const newDoc = req.body;
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -716,7 +717,7 @@ export const handleSubFieldDelete = async (req, res) => {
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const subFieldId = decodeURIComponent(req.query?.subFieldId);
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -772,7 +773,7 @@ export const handleSubFieldUpdate = async (req, res) => {
       const subFieldId = decodeURIComponent(req.query?.subFieldId);
       const newDoc = req.body;
       const result = await getDoc(req);
-      if (result && result[0]) {
+      if (result && result[0]===200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;

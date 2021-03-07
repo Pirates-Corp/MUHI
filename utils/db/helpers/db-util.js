@@ -103,13 +103,13 @@ export const getCollection = async (collectionName, schema) => {
 export const removeCollection = async (collectionName, schema) => {
   try {
     const collection = await getCollection(collectionName, schema);
-    const removedResponse = await collection.drop({});
-    console.log(removedResponse);
+    const removedResponse = await collection.drop({});    
+    cached.collections[collectionName] = null
     return removedResponse;
   } catch (err) {
     console.error("problem removin collection =>" + err);
-    return removedResponse;
   }
+  return false
 };
 
 export const getDocument = async (collectionName, schema, document) => {
