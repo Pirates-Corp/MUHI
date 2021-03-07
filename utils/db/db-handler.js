@@ -11,10 +11,6 @@ import {
   updateDocuments,
   removeCollection,
 } from "./helpers/db-util";
-import { accountSchema } from "./helpers/schema/account-schema";
-import { quizSchema } from "./helpers/schema/quiz-schema";
-import { reportSchema } from "./helpers/schema/report-schema";
-import { newsLetterSchema } from "./helpers/schema/newsletter-schema";
 import { authenticate, getUser } from "../account-handler";
 import { constants } from "../constants";
 

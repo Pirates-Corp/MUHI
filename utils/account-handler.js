@@ -76,9 +76,9 @@ export const login = async (httpReq, httpRes) => {
       resText = "";
     } else if (authResult[0] === 200) {
       if (authResult[1].role === constants.roles.user) {
-        httpRes.redirect(constants.routes.loginRedirectUser);
+        httpRes.redirect(process.env.routes.loginRedirectUser);
       } else {
-        httpRes.redirect(constants.routes.loginRedirectAdmin);
+        httpRes.redirect(process.env.routes.loginRedirectAdmin);
       }
       return;
     } else {
@@ -95,7 +95,7 @@ export const login = async (httpReq, httpRes) => {
             resText = "Login Successfull for user => " + userDetails.id;
             const jwtToken = encodePayload(
               { id: user._id, password: userDetails.password },
-              constants.authTokenExpiryTime
+              process.env.authTokenExpiryTime
             );
             saveTokenInCookie(httpRes, jwtToken);
             resCode = 200;
@@ -103,24 +103,24 @@ export const login = async (httpReq, httpRes) => {
             updateCurrentUserInGlobalScope(user);
             console.log(resText);
             if (user.role === constants.roles.admin) {
-              httpRes.redirect(307, constants.routes.loginRedirectAdmin);
+              httpRes.redirect(307, process.env.routes.loginRedirectAdmin);
             } else if (user.role === constants.roles.moderator) {
-              httpRes.redirect(constants.routes.loginRedirectAdmin);
+              httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else {
-              httpRes.redirect(constants.routes.loginRedirectUser);
+              httpRes.redirect(process.env.routes.loginRedirectUser);
             }
             return;
           } else {
             console.log("Invalid password for the user => " + userDetails.id);
             httpRes.redirect(
-              httpReq.headers.referer.split("?")[0] + constants.routes.invalidPassword
+              httpReq.headers.referer.split("?")[0] + process.env.routes.invalidPassword
             );
             return;
           }
         } else {
           console.log("User Not found => " + userDetails.id);
           httpRes.redirect(
-            httpReq.headers.referer.split("?")[0] + constants.routes.invalidUser
+            httpReq.headers.referer.split("?")[0] + process.env.routes.invalidUser
           );
           return;
         }
@@ -168,9 +168,9 @@ export const signup = async (httpReq, httpRes) => {
       resText = "";
     } else if (authResult[0] === 200) {
       if (authResult[1].role === constants.roles.user) {
-        httpRes.redirect(constants.routes.loginRedirectUser);
+        httpRes.redirect(process.env.routes.loginRedirectUser);
       } else {
-        httpRes.redirect(constants.routes.loginRedirectAdmin);
+        httpRes.redirect(process.env.routes.loginRedirectAdmin);
       }
       return;
     } else {
@@ -195,7 +195,7 @@ export const signup = async (httpReq, httpRes) => {
           resText = "Unusual email pattern. Signup request rejected";
           console.log(resText);
         } else {
-          newUser.password = bcrypt.hashSync(userDetails.password, constants.saltRounds);
+          newUser.password = bcrypt.hashSync(userDetails.password, process.env.hashSaltRounds);
           newUser.lastLogin = new Date(Date.now());
           const result = await createUser(newUser);
           if (result.length >= 2 && result[0]) {
@@ -205,23 +205,23 @@ export const signup = async (httpReq, httpRes) => {
               ";";
             const jwtToken = encodePayload(
               { id: newUser._id, password: userDetails.password },
-              constants.authTokenExpiryTime
+              process.env.authTokenExpiryTime
             );
             saveTokenInCookie(httpRes, jwtToken);
             resCode = 201;
             updateCurrentUserInGlobalScope(userDetails);
             await sendMail(
               userDetails.email,
-              constants.mailSubject_accountCreationNotification,
-              getMailBody(httpReq, constants.accountCreationNotification)
+              process.env.mailSubject_accountCreationNotification,
+              getMailBody(httpReq, process.env.accountCreationNotification)
             );
             console.log(resText);
             if (userDetails.role === constants.roles.admin) {
-              httpRes.redirect(constants.routes.adminDashboard);
+              httpRes.redirect(process.env.routes.adminDashboard);
             } else if (userDetails.role === constants.roles.moderator) {
-              httpRes.redirect(constants.routes.adminDashboard);
+              httpRes.redirect(process.env.routes.adminDashboard);
             } else {
-              httpRes.redirect(constants.routes.userDashboard);
+              httpRes.redirect(process.env.routes.userDashboard);
             }
             return;
           } else if (result.length >= 1 && !result[0]) {
@@ -274,15 +274,15 @@ export const forgotPassword = async (httpReq, httpRes) => {
           } else {
             email = id;
           }
-          const encodedToken = encodePayload({ id }, constants.resetTokenExpiryTime);
+          const encodedToken = encodePayload({ id }, process.env.resetTokenExpiryTime);
           await updatePasswordResetTokenForTheUser(id, encodedToken);
           const mailBody = getMailBody(
             httpReq,
-            constants.passwordResetRequest,
-            constants.routes.passwordResetPath,
+            process.env.passwordResetRequest,
+            process.env.routes.passwordResetPath,
             encodedToken
           );
-          await sendMail(email, constants.mailSubject_passwordResetRequest, mailBody);
+          await sendMail(email, process.env.mailSubject_passwordResetRequest, mailBody);
           resCode = 200;
           resText = "Reset token sent to mail";
           console.log(resText);
@@ -327,13 +327,13 @@ export const updatePassword = async (httpReq, httpRes) => {
       if (id && newPassword) {
         const user = await getUser(id);
         if (user) {
-          let passwordHash = bcrypt.hashSync(newPassword, constants.saltRounds);
+          let passwordHash = bcrypt.hashSync(newPassword, process.env.hashSaltRounds);
           await updateUserPassword(id, passwordHash);
-          const mailBody = getMailBody(httpReq, constants.passwordResetNotification);
-          await sendMail(id, constants.mailSubject_passwordResetNotification, mailBody);
+          const mailBody = getMailBody(httpReq, process.env.passwordResetNotification);
+          await sendMail(id, process.env.mailSubject_passwordResetNotification, mailBody);
           const jwtToken = encodePayload(
             { id, password: newPassword },
-            constants.authTokenExpiryTime
+            process.env.authTokenExpiryTime
           );
           updateTokenInCookie(httpRes, jwtToken);
           updateCurrentUserInGlobalScope(user);
@@ -478,10 +478,10 @@ export const updateUserDetails = async (id, updateConition, queryOptions) => {
 
 export const getTokenFromCookie = (httpReq) => {
   if (httpReq.cookies) {
-    return httpReq.cookies[constants.cookieName];
+    return httpReq.cookies[process.env.cookieName];
   }
   let rawCookie = httpReq.headers?.cookie;
-  return rawCookie[constants.cookieName]; // jwt cookie
+  return rawCookie[process.env.cookieName]; // jwt cookie
 };
 
 export const updateTokenInCookie = (httpRes, jwtToken) => {
@@ -491,13 +491,13 @@ export const updateTokenInCookie = (httpRes, jwtToken) => {
 
 export const saveTokenInCookie = (httpRes, jwtToken) => {
   const secure = isProductionEnv === "production" ? `Secure=true;` : "";
-  const cookie = `${constants.cookieName}=${jwtToken}; Max-Age=${constants.cookieExpiryTime}; HttpOnly=true;${secure}Path=/;SameSite=Lax`;
+  const cookie = `${process.env.cookieName}=${jwtToken}; Max-Age=${process.env.cookieExpiryTime}; HttpOnly=true;${secure}Path=/;SameSite=Lax`;
   httpRes.setHeader("Set-cookie", [cookie]);
   return httpRes;
 };
 
 export const deleteTokenFromCookie = (httpRes) => {
-  let cookie = `${constants.cookieName}='';Max-Age=0;Path=/;SameSite=Lax`;
+  let cookie = `${process.env.cookieName}='';Max-Age=0;Path=/;SameSite=Lax`;
   httpRes.setHeader("Set-cookie", cookie);
   console.log("Rmoved token from the cookie");
   return httpRes;
@@ -508,7 +508,7 @@ export const encodePayload = (payload, expiryTime) => {
     return encodeURIComponent(
       jwt.sign(
         payload,
-        constants.hashSecret,
+        process.env.hashSecret,
         { expiresIn: expiryTime },
         { algorithm: "RS256" }
       )
@@ -521,7 +521,7 @@ export const encodePayload = (payload, expiryTime) => {
 
 export const decodePayload = (token) => {
   try {
-    var decoded = jwt.verify(decodeURIComponent(token), constants.hashSecret);
+    var decoded = jwt.verify(decodeURIComponent(token), process.env.hashSecret);
     return decoded;
   } catch (err) {
     console.log("Error while decodind JWT => " + err);
