@@ -36,7 +36,7 @@ export default function Signup() {
                  <h3>Create MUHI Account</h3>
             </div>
            
-            <form id={style.loginForm}>
+            <form id={style.loginForm} >
 
                 <div className="TextBox" id={style.TextBox}>
                     <img src="/imgs/svgs/UserName.svg" alt="user" />
@@ -53,9 +53,6 @@ export default function Signup() {
                     <input type="password"  name="password" placeholder="Password"  required />
                 </div>
 
-               
-
-
                 <div className="TextBox" id={style.TextBox}>
                     <img src="/imgs/svgs/MobileNumber.svg" alt="password" />
                     <input type="number"  name="mobileNo" placeholder="Mobile Number"  required />
@@ -64,6 +61,7 @@ export default function Signup() {
                 <div id={style.btnHolder}>
                      <input className="prBtn" type="submit" onSubmit={e=>{handleSubmit(e)}} value="Sign Up"/>
                 </div>
+
              </form>
              
              <div id={style.otherOptions}>
