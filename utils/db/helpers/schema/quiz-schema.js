@@ -52,7 +52,7 @@ export const quizSchema = {
         items: {
           bsonType: ["object"],
           required: [
-            "qNo",
+            "id",
             "question",
             "options",
             "correctAnswer",
@@ -62,7 +62,7 @@ export const quizSchema = {
           ],
           additionalProperties: false,
           properties: {
-            qNo: {
+            id: {
               bsonType: "number",
             },
             question: {
@@ -73,14 +73,7 @@ export const quizSchema = {
               uniqueItems: true,
               additionalItems: false,
               items: {
-                bsonType: ["object"],
-                required: ["option"],
-                additionalProperties: false,
-                properties: {
-                  option: {
-                    bsonType: "string",
-                  },
-                },
+                bsonType: ["string"]
               },
             },
             correctAnswer: {

@@ -19,10 +19,10 @@ export const reportSchema = {
         additionalItems: false,
         items: {
           bsonType: "object",
-          required: ["quizId", "rank", "status", "time", "score", "report"],
+          required: ["id", "rank", "status", "time", "score", "report"],
           additionalProperties: false,
           properties: {
-            quizId: {
+            id: {
               bsonType: "string",
             },
             rank: {
@@ -79,10 +79,10 @@ export const reportSchema = {
               additionalItems: false,
               items: {
                 bsonType: "object",
-                required: ["qNo", "chapter", "section", "result"],
+                required: ["id", "chapter", "section", "result"],
                 additionalProperties: false,
                 properties: {
-                  qNo: {
+                  id: {
                     bsonType: "number",
                   },
                   chapter: {

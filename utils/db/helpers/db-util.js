@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import { constants } from "../../constants";
 
 const uri = process.env.dbConnectionString
   .replace("<dbHost>", process.env.dbHost)
@@ -6,14 +7,16 @@ const uri = process.env.dbConnectionString
   .replace("<dbUser>", encodeURIComponent(process.env.dbUser))
   .replace("<dbPass>", encodeURIComponent(process.env.dbPass));
 
-const updateOne = "UPDATE_ONE",
-  updateMany = "UPDATE_MANY",
-  deleteOne = "DELETE_ONE",
-  deleteMany = "DELETE_MANY",
-  createOne = "CREATE_ONE",
-  createMany = "CREATE_MANY",
-  readOne = "READ_ONE",
-  readMany = "READ_MANY";
+  const dbOperation= {
+    updateOne: "UPDATE_ONE",
+    updateMany: "UPDATE_MANY",
+    deleteOne: "DELETE_ONE",
+    deleteMany: "DELETE_MANY",
+    createOne: "CREATE_ONE",
+    createMany: "CREATE_MANY",
+    readOne: "READ_ONE",
+    readMany: "READ_MANY",
+  }
 
 let cached = global.mongo;
 
@@ -97,12 +100,34 @@ export const getCollection = async (collectionName, schema) => {
   return cached.collections[collectionName];
 };
 
+export const removeCollection = async (collectionName, schema) => {
+  try {
+    const collection = await getCollection(collectionName, schema);
+    const removedResponse = await collection.drop({});    
+    cached.collections[collectionName] = null
+    return removedResponse;
+  } catch (err) {
+    console.error("problem removin collection =>" + err);
+  }
+  return false
+};
+
 export const getDocument = async (collectionName, schema, document) => {
-  return await processQuery(readOne, collectionName, schema, document);
+  return await processQuery(
+    dbOperation.readOne,
+    collectionName,
+    schema,
+    document
+  );
 };
 
 export const getDocuments = async (collectionName, schema, document) => {
-  return await processQuery(readMany, collectionName, schema, document);
+  return await processQuery(
+    dbOperation.readMany,
+    collectionName,
+    schema,
+    document
+  );
 };
 
 export const updateDocument = async (
@@ -113,7 +138,7 @@ export const updateDocument = async (
   queryOptions
 ) => {
   return await processQuery(
-    updateOne,
+    dbOperation.updateOne,
     collectionName,
     schema,
     document,
@@ -130,7 +155,7 @@ export const updateDocuments = async (
   queryOptions
 ) => {
   return await processQuery(
-    updateMany,
+    dbOperation.updateMany,
     collectionName,
     schema,
     document,
@@ -140,19 +165,39 @@ export const updateDocuments = async (
 };
 
 export const deleteDocument = async (collectionName, schema, document) => {
-  return await processQuery(deleteOne, collectionName, schema, document);
+  return await processQuery(
+    dbOperation.deleteOne,
+    collectionName,
+    schema,
+    document
+  );
 };
 
 export const deleteDocuments = async (collectionName, schema, document) => {
-  return await processQuery(deleteMany, collectionName, schema, document);
+  return await processQuery(
+    dbOperation.deleteMany,
+    collectionName,
+    schema,
+    document
+  );
 };
 
 export const insertDocument = async (collectionName, schema, document) => {
-  return await processQuery(createOne, collectionName, schema, document);
+  return await processQuery(
+    dbOperation.createOne,
+    collectionName,
+    schema,
+    document
+  );
 };
 
 export const insertDocuments = async (collectionName, schema, document) => {
-  return await processQuery(createMany, collectionName, schema, document);
+  return await processQuery(
+    dbOperation.createMany,
+    collectionName,
+    schema,
+    document
+  );
 };
 
 export const processQuery = async (
@@ -166,27 +211,27 @@ export const processQuery = async (
   try {
     const collection = await getCollection(collectionName, schema);
     switch (action) {
-      case createOne:
+      case dbOperation.createOne:
         return [true, await collection.insertOne(document)];
-      case createMany:
+      case dbOperation.createMany:
         return [true, await collection.insertMany(document)];
-      case readOne:
+      case dbOperation.readOne:
         return [true, await collection.findOne(document)];
-      case readMany:
+      case dbOperation.readMany:
         return [true, await collection.find(document)];
-      case updateOne:
+      case dbOperation.updateOne:
         return [
           true,
           await collection.updateOne(document, updateConition, queryOptions),
         ];
-      case updateMany:
+      case dbOperation.updateMany:
         return [
           true,
           await collection.updateMany(document, updateConition, queryOptions),
         ];
-      case deleteOne:
+      case dbOperation.deleteOne:
         return [true, await collection.deleteOne(document)];
-      case deleteMany:
+      case dbOperation.deleteMany:
         return [true, await collection.deleteMany(document)];
       default:
         return [false, "Invalid Query"];
