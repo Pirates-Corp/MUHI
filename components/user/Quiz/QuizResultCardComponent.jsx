@@ -33,7 +33,9 @@ const QuizResultCard = () =>
                         <h1 id={style.mark}>23/30</h1>
                     </div>
                     <div id={style.btnHolder}>
-                        <input type="button" className="redBtn" value="Close"/>
+                        <Link href="/dashboard">
+                            <a className="redBtn">Close</a>
+                        </Link>
                     </div>
                 </div>
        </div>

@@ -41,8 +41,8 @@
     }
 
     #syllabus
-    {
-      width: 70%;
+    {margin-top: 2.5rem;
+      width: 65%;
       height: 15rem;
       display: block;
       
@@ -531,8 +531,8 @@
   {
     background: var(--primary-light);
     border-radius: 20px;
-    margin : 10rem 12rem;
-    padding: 1.5rem .8rem;
+    margin : 5rem 12rem;
+    padding: 2rem;
     min-height: 30rem;
 
     .header
