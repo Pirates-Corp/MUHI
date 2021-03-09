@@ -179,23 +179,30 @@ export const handleDocumentInsert = async (req, res) => {
               ).toLowerCase();
             }
             mongoDocument = { ...mongoDocument, ...documentReceived };
-            const queryResponse = await insertDocument(
-              collectionDetails.collectionName,
-              collectionDetails.schema,
-              mongoDocument
-            );
-            if (queryResponse[0]) {
-              resCode = 201;
-              resBody = { ...mongoDocument };
-            } else {
-              if (queryResponse[1].code == 11000) {
-                resCode = 409;
+            const internalValidationResp = validateDoc([mongoDocument]);
+            if (internalValidationResp) {
+              const queryResponse = await insertDocument(
+                collectionDetails.collectionName,
+                collectionDetails.schema,
+                mongoDocument
+              );
+              if (queryResponse[0]) {
+                resCode = 201;
+                resBody = { ...mongoDocument };
+              } else {
+                if (queryResponse[1].code == 11000) {
+                  resCode = 409;
+                }
+                resBody =
+                  "Insertion completed with the response => " +
+                  queryResponse +
+                  " | " +
+                  JSON.stringify(mongoDocument);
               }
-              resBody =
-                "Insertion completed with the response => " +
-                queryResponse +
-                " | " +
-                JSON.stringify(mongoDocument);
+            } else {
+              resCode = 409;
+              resBody = "Duplicate id found in the doc";
+              console.log(resBody);
             }
           } else {
             resBody = "Invalid Collection";
@@ -454,7 +461,7 @@ export const handleFieldRead = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -496,7 +503,7 @@ export const handleFieldInsert = async (req, res) => {
       const collectionDetails = constants.collectionMap[collection];
       const doc = req.body;
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         console.log(document);
         document[fieldName].push(doc);
@@ -532,7 +539,7 @@ export const handleFieldDelete = async (req, res) => {
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const collectionDetails = constants.collectionMap[collection];
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           console.log(doc);
@@ -571,10 +578,10 @@ export const handleFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const newDoc = req.body;
-      newDoc.id = newDoc.id ? newDoc.id : parseInt(fieldId)
+      newDoc.id = newDoc.id ? newDoc.id : parseInt(fieldId);
       const collectionDetails = constants.collectionMap[collection];
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const modifiedArray = document[fieldName].map((doc) => {
           if (doc.id == fieldId) {
@@ -615,7 +622,7 @@ export const handleSubFieldRead = async (req, res) => {
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const subFieldId = decodeURIComponent(req.query?.subFieldId);
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -668,7 +675,7 @@ export const handleSubFieldInsert = async (req, res) => {
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const newDoc = req.body;
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -717,7 +724,7 @@ export const handleSubFieldDelete = async (req, res) => {
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const subFieldId = decodeURIComponent(req.query?.subFieldId);
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -773,7 +780,7 @@ export const handleSubFieldUpdate = async (req, res) => {
       const subFieldId = decodeURIComponent(req.query?.subFieldId);
       const newDoc = req.body;
       const result = await getDoc(req);
-      if (result && result[0]===200) {
+      if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
@@ -924,28 +931,35 @@ const updateDoc = async (collectionDetails, documentId, document) => {
     };
     const options = { upsert: false };
     if (collectionDetails) {
-      const queryResult = await updateDocument(
-        collectionDetails.collectionName,
-        collectionDetails.schema,
-        filter,
-        updateDoc,
-        options
-      );
-      if (queryResult[0] && queryResult[1].modifiedCount >= 1) {
-        resCode = 200;
-        const updatedDoc = await getDocument(
+      const internalValidationResp = validateDoc([document]);
+      if (internalValidationResp) {
+        const queryResult = await updateDocument(
           collectionDetails.collectionName,
           collectionDetails.schema,
-          { _id: new String(documentId).toLowerCase() }
+          filter,
+          updateDoc,
+          options
         );
-        resBody = updatedDoc[1];
-        console.log("Document updated => " + JSON.stringify(resBody));
+        if (queryResult[0] && queryResult[1].modifiedCount >= 1) {
+          resCode = 200;
+          const updatedDoc = await getDocument(
+            collectionDetails.collectionName,
+            collectionDetails.schema,
+            { _id: new String(documentId).toLowerCase() }
+          );
+          resBody = updatedDoc[1];
+          console.log("Document updated => " + JSON.stringify(resBody));
+        } else {
+          resBody =
+            "Update Failed for the doc => " +
+            documentId +
+            " Error" +
+            queryResult[1];
+        }
       } else {
-        resBody =
-          "Update Failed for the doc => " +
-          documentId +
-          " Error" +
-          queryResult[1];
+        resCode = 409;
+        resBody = "Duplicate id found in the doc";
+        console.log(resBody);
       }
     } else {
       resBody = "Invalid Collection";
@@ -955,4 +969,38 @@ const updateDoc = async (collectionDetails, documentId, document) => {
     console.log("Error updating document =>  " + err);
   }
   return [resCode, resBody];
+};
+
+const validateDoc = (array) => {
+  const documentArray = [...array];
+  const validator = [];
+  for (let doc of documentArray) {
+    for (let key in doc) {
+      if (
+        Array.isArray(doc[key]) &&
+        doc[key].length > 0 &&
+        doc[key][0].hasOwnProperty("id")
+      ) {
+        console.log("Has Id Property and is array");
+        if (validateDoc(doc[key]) === false) {
+          return false;
+        }
+      }
+    }
+    if (doc.hasOwnProperty("id")) {
+      console.log("Has Id Property and is object");
+      const tempId = doc.id;
+      if (!validator.includes(tempId)) {
+        validator.push(tempId);
+        console.log(validator);
+      } else {
+        console.log(
+          "Duplicate id found in the doc. Document validation failed. Returning false."
+        );
+        return false;
+      }
+    }
+  }
+  console.log("Internal Document validation succeeded. Returning true.");
+  return true;
 };
