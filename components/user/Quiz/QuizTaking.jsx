@@ -1,4 +1,5 @@
 import PrimaryHeading from "../../common/Header/PrimaryHeading";
+import Link from "next/link"
 import style from "../../user/Quiz/QuizTaking.module.scss";
 const QuizTaking = () => {
   return (
@@ -75,9 +76,13 @@ const QuizTaking = () => {
                 </ul>
              </div>
 
-            <button id={style.exitBtn} className="redBtn">
+            {/* <button id={style.exitBtn} className="redBtn">
              End Quiz
-            </button>
+            </button> */}
+
+            <Link href="congratulations">
+                <a  id={style.exitBtn} className="redBtn">End Quiz</a>
+            </Link>
             
                 
           </div>

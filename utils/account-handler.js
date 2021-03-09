@@ -217,11 +217,11 @@ export const signup = async (httpReq, httpRes) => {
             );
             console.log(resText);
             if (userDetails.role === constants.roles.admin) {
-              httpRes.redirect(process.env.routes.adminDashboard);
+              httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else if (userDetails.role === constants.roles.moderator) {
-              httpRes.redirect(process.env.routes.adminDashboard);
+              httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else {
-              httpRes.redirect(process.env.routes.userDashboard);
+              httpRes.redirect(process.env.routes.loginRedirectUser);
             }
             return;
           } else if (result.length >= 1 && !result[0]) {
