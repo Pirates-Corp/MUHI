@@ -21,7 +21,7 @@ export default function () {
       <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
           <div id={style.header}>
-            <img src="imgs/svgs/MuhiLogo.svg" />
+            <img src="imgs/svgs/muhiLogo.svg" />
             <h3>Student Login</h3>
           </div>
 

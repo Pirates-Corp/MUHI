@@ -8,7 +8,7 @@ export default function Signup() {
          <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
             <div id={style.header}>
-                 <img src="imgs/svgs/MuhiLogo.svg"/>
+                 <img src="imgs/svgs/muhiLogo.svg"/>
                  <h3>Create MUHI Account</h3>
             </div>
            
