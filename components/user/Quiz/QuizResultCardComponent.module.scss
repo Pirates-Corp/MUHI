@@ -1,0 +1,668 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin desktop {
+  #conCard
+  {
+    background: var(--primary-light);
+    border-radius: 20px;
+    margin : 5rem 12rem;
+    padding: 2rem;
+    min-height: 30rem;
+
+    .header
+    {
+      h1
+      {
+        font-family: TextMedium;
+        font-size: 2.5rem;
+      }     
+    }
+
+    #msg
+    {
+      p
+      {
+        font-size: 1.2rem;
+        margin-bottom: 1.2rem;
+       a
+        {
+          color: var(--primary);
+        }
+      } 
+    }
+
+    #syllabus
+    {
+      width: 70%;
+      height: 15rem;
+      display: block;
+      
+      
+      h4
+       {
+         font-size: 1rem;
+         font-family: TextBold;
+         margin: 0 0 .5rem 0;
+       }
+
+       #syllabusScroll
+       {
+         width: 100%;
+         height: 100%;
+         background-color: var(--white);
+         border-radius: 5px;
+         overflow: hidden;
+         overflow-y: scroll;
+         padding: .8rem 1rem;
+      
+         li
+         {
+            width: 100%;
+            display: grid;
+            grid-template-columns:  70% 30%;
+            margin-bottom: 2rem;
+            place-content: center;
+            align-items: center;
+            height: 1rem;
+
+            p
+            {
+              font-size: 1rem;
+              margin: 0;
+              display: inline-block;
+            }
+            a
+              {
+                text-align: center;
+                display: inline-block;
+                font-size: .7rem;
+                margin: 0;
+              }
+             
+            
+         }
+       }
+    }
+
+    #footer
+    {
+      display: grid;
+      width: 100%;
+      margin-top: 3rem;
+      grid-template-columns: 1fr 1fr;
+      place-content: center;
+      align-items: center;
+      
+      #markHolder
+      {
+            place-self: start;
+        p
+        {
+          margin:0 ;
+          font-size: 1rem;
+        }
+        #mark
+        {
+          margin: .5rem 0  0 0 ;
+          font-family: TextBold;
+        }
+       
+      }
+
+      #btnHolder
+      {
+       place-self: end;
+       input
+       {
+          
+          margin: 0;    
+       }
+        
+      }
+
+    }
+
+
+
+  }
+}
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+  #conCard
+  {
+    background: var(--primary-light);
+    border-radius: 20px;
+    margin-top: 4.5rem;
+    padding: 1.5rem .8rem;
+    min-height: 15rem;
+
+    .header
+    {
+      h1
+      {
+        font-family: TextMedium;
+        font-size: 1.6rem;
+      }     
+    }
+
+    #msg
+    {
+      p
+      {
+       a
+        {
+          color: var(--primary);
+        }
+      } 
+    }
+
+    #syllabus
+    {
+      width: 100%;
+      height: 12rem;
+      display: block;
+      
+      
+      h4
+       {
+         font-size: 1rem;
+         font-family: TextBold;
+         margin: 0 0 .5rem 0;
+       }
+
+       #syllabusScroll
+       {
+         width: 100%;
+         height: 100%;
+         background-color: var(--white);
+         border-radius: 5px;
+         overflow: hidden;
+         overflow-y: scroll;
+         padding: .5rem;
+      
+         li
+         {
+            width: 100%;
+            display: grid;
+            grid-template-columns:  70% 30%;
+            margin-bottom: 2rem;
+            place-content: center;
+            align-items: center;
+            height: 1rem;
+
+            p
+            {
+              font-size: .8rem;
+              margin: 0;
+              display: inline-block;
+            }
+            a
+              {
+                text-align: center;
+                display: inline-block;
+                font-size: .7rem;
+                margin: 0;
+              }
+             
+            
+         }
+       }
+    }
+
+    #footer
+    {
+      display: grid;
+      width: 100%;
+      margin-top: 3rem;
+      grid-template-columns: 1fr 1fr;
+      place-content: center;
+      align-items: center;
+      
+      #markHolder
+      {
+            place-self: start;
+        p
+        {
+          margin:0 ;
+          font-size: 1rem;
+        }
+        #mark
+        {
+          margin: .5rem 0  0 0 ;
+          font-family: TextBold;
+        }
+       
+      }
+
+      #btnHolder
+      {
+       place-self: center;
+       input
+       {
+          
+          margin: 0;    
+       }
+        
+      }
+
+    }
+
+
+
+  }
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+      #conCard
+      {
+        background: var(--primary-light);
+        border-radius: 20px;
+        margin-top: 6rem;
+        padding: 1.5rem .8rem;
+        min-height: 15rem;
+    
+        .header
+        {
+          h1
+          {
+            font-family: TextMedium;
+            font-size: 2.5rem;
+          }     
+        }
+    
+        #msg
+        {
+          p
+          {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+           a
+            {
+              color: var(--primary);
+            }
+          } 
+        }
+    
+        #syllabus
+        {
+          width: 100%;
+          height: 12rem;
+          display: block;
+          
+          
+          h4
+           {
+             font-size: 1rem;
+             font-family: TextBold;
+             margin: 0 0 .5rem 0;
+           }
+    
+           #syllabusScroll
+           {
+             width: 100%;
+             height: 100%;
+             background-color: var(--white);
+             border-radius: 5px;
+             overflow: hidden;
+             overflow-y: scroll;
+             padding: .5rem 1.5rem;
+          
+             li
+             {
+                width: 100%;
+                display: grid;
+                grid-template-columns:  70% 30%;
+                margin-bottom: 2rem;
+                place-content: center;
+                align-items: center;
+                height: 1rem;
+    
+                p
+                {
+                  font-size: 1rem;
+                  margin: 0;
+                  display: inline-block;
+                }
+                a
+                  {
+                    text-align: center;
+                    display: inline-block;
+                    font-size: .7rem;
+                    margin: 0;
+                  }
+                 
+                
+             }
+           }
+        }
+    
+        #footer
+        {
+          display: grid;
+          width: 100%;
+          margin-top: 3rem;
+          grid-template-columns: 1fr 1fr;
+          place-content: center;
+          align-items: center;
+          
+          #markHolder
+          {
+                place-self: start;
+            p
+            {
+              margin:0 ;
+              font-size: 1rem;
+            }
+            #mark
+            {
+              margin: .5rem 0  0 0 ;
+              font-family: TextBold;
+            }
+           
+          }
+    
+          #btnHolder
+          {
+           place-self: end;
+           input
+           {
+              
+              margin: 0;    
+           }
+            
+          }
+    
+        }
+    
+    
+    
+      }
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+  #conCard
+      {
+        background: var(--primary-light);
+        border-radius: 20px;
+        margin : 6rem 5rem;
+        padding: 1.5rem .8rem;
+        min-height: 15rem;
+    
+        .header
+        {
+          h1
+          {
+            font-family: TextMedium;
+            font-size: 2.5rem;
+          }     
+        }
+    
+        #msg
+        {
+          p
+          {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+           a
+            {
+              color: var(--primary);
+            }
+          } 
+        }
+    
+        #syllabus
+        {
+          width: 100%;
+          height: 12rem;
+          display: block;
+          
+          
+          h4
+           {
+             font-size: 1rem;
+             font-family: TextBold;
+             margin: 0 0 .5rem 0;
+           }
+    
+           #syllabusScroll
+           {
+             width: 100%;
+             height: 100%;
+             background-color: var(--white);
+             border-radius: 5px;
+             overflow: hidden;
+             overflow-y: scroll;
+             padding: .5rem 1.5rem;
+          
+             li
+             {
+                width: 100%;
+                display: grid;
+                grid-template-columns:  70% 30%;
+                margin-bottom: 2rem;
+                place-content: center;
+                align-items: center;
+                height: 1rem;
+    
+                p
+                {
+                  font-size: 1rem;
+                  margin: 0;
+                  display: inline-block;
+                }
+                a
+                  {
+                    text-align: center;
+                    display: inline-block;
+                    font-size: .7rem;
+                    margin: 0;
+                  }
+                 
+                
+             }
+           }
+        }
+    
+        #footer
+        {
+          display: grid;
+          width: 100%;
+          margin-top: 3rem;
+          grid-template-columns: 1fr 1fr;
+          place-content: center;
+          align-items: center;
+          
+          #markHolder
+          {
+                place-self: start;
+            p
+            {
+              margin:0 ;
+              font-size: 1rem;
+            }
+            #mark
+            {
+              margin: .5rem 0  0 0 ;
+              font-family: TextBold;
+            }
+           
+          }
+    
+          #btnHolder
+          {
+           place-self: end;
+           input
+           {
+              
+              margin: 0;    
+           }
+            
+          }
+    
+        }
+    
+    
+    
+      }
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+  #conCard
+  {
+    background: var(--primary-light);
+    border-radius: 20px;
+    margin : 10rem 12rem;
+    padding: 1.5rem .8rem;
+    min-height: 30rem;
+
+    .header
+    {
+      h1
+      {
+        font-family: TextMedium;
+        font-size: 2.5rem;
+      }     
+    }
+
+    #msg
+    {
+      p
+      {
+        font-size: 1.2rem;
+        margin-bottom: 1.2rem;
+       a
+        {
+          color: var(--primary);
+        }
+      } 
+    }
+
+    #syllabus
+    {
+      width: 100%;
+      height: 15rem;
+      display: block;
+      
+      
+      h4
+       {
+         font-size: 1rem;
+         font-family: TextBold;
+         margin: 0 0 .5rem 0;
+       }
+
+       #syllabusScroll
+       {
+         width: 100%;
+         height: 100%;
+         background-color: var(--white);
+         border-radius: 5px;
+         overflow: hidden;
+         overflow-y: scroll;
+         padding: .5rem 1.5rem;
+      
+         li
+         {
+            width: 100%;
+            display: grid;
+            grid-template-columns:  70% 30%;
+            margin-bottom: 2rem;
+            place-content: center;
+            align-items: center;
+            height: 1rem;
+
+            p
+            {
+              font-size: 1rem;
+              margin: 0;
+              display: inline-block;
+            }
+            a
+              {
+                text-align: center;
+                display: inline-block;
+                font-size: .7rem;
+                margin: 0;
+              }
+             
+            
+         }
+       }
+    }
+
+    #footer
+    {
+      display: grid;
+      width: 100%;
+      margin-top: 3rem;
+      grid-template-columns: 1fr 1fr;
+      place-content: center;
+      align-items: center;
+      
+      #markHolder
+      {
+            place-self: start;
+        p
+        {
+          margin:0 ;
+          font-size: 1rem;
+        }
+        #mark
+        {
+          margin: .5rem 0  0 0 ;
+          font-family: TextBold;
+        }
+       
+      }
+
+      #btnHolder
+      {
+       place-self: end;
+       input
+       {
+          
+          margin: 0;    
+       }
+        
+      }
+
+    }
+
+
+
+  }
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+  @include desktop()
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+  @include desktop() 
+}

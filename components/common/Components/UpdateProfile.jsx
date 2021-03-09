@@ -1,7 +1,7 @@
 import React from "react";
-import style from '../../common/Profile/UpdateProfile.module.scss'
-import PrimaryHeading from "../../common/Header/PrimaryHeading"
-import SubHeading from "../../common/Header/SubHeading"
+import style from './UpdateProfile.module.scss'
+import PrimaryHeading from "../Header/PrimaryHeading"
+import SubHeading from "../Header/SubHeading"
 
 const UpdateProfile = () =>{
 

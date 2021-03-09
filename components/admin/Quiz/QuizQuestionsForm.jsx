@@ -24,7 +24,11 @@ const QuizQuestionsForm = () => {
   return (
     <CenterLayout>
       <PrimaryHeading heading="Add Questions" />
+
+
       <div id={style.formBox}>
+
+        
         <div id={style.fileForm}>
             <div
               className="fileUploader"

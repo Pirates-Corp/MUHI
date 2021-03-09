@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  
 }
 html,
 body {
@@ -31,6 +32,8 @@ ul {
   --dark-light: #7a7979;
   --black: #000;
   --white: #fff;
+  --adminColor : linear-gradient(92.56deg, rgba(0, 104, 194, 0.1) 5.51%, rgba(163, 120, 255, 0.1) 76.93%);
+  --userColor : linear-gradient(92.56deg, rgba(0, 104, 194, 0.1) 5.51%, rgba(163, 120, 255, 0.1) 76.93%);
 }
 
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import Link from "next/link";
+import style from "../user/Signup.module.scss"
 
 export default function Signup() {
     const [errorMsg, setErrorMsg] = useState("");
@@ -28,35 +29,63 @@ export default function Signup() {
     };
     return (
         <>
-          {loading && "Loading"}
-          <form onSubmit={handleSubmit}>
-             {errorMsg && ( <p style={{ color: "red" }}>{errorMsg}</p> )}
-                <div>
-                    <input id="name" type="text" required />
-                    <label htmlFor="name">name</label>
+         <div id={style.loginBox}>
+        <div id={style.loginInnerBox}>
+            <div id={style.header}>
+                 <img src="imgs/svgs/MuhiLogo.svg"/>
+                 <h3>Create MUHI Account</h3>
+            </div>
+           
+            <form id={style.loginForm}>
+
+                <div className="TextBox" id={style.TextBox}>
+                    <img src="/imgs/svgs/UserName.svg" alt="user" />
+                    <input type="text"  name="name" placeholder="username"  required />
                 </div>
-                <div>
-                    <input id="email" type="email" required />
-                    <label htmlFor="email">email</label>
+
+                <div className="TextBox" id={style.TextBox}>
+                    <img src="/imgs/svgs/Email.svg" alt="email" />
+                    <input type="email"  name="email" placeholder="E - mail"  required />
                 </div>
-                <div>
-                    <input id="password" type="password" required />
-                    <label htmlFor="password">Password</label>
+
+                <div className="TextBox" id={style.TextBox}>
+                    <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
+                    <input type="password"  name="password" placeholder="Password"  required />
                 </div>
-                <div>
-                    <input id="cpassword" type="cpassword" required />
-                    <label htmlFor="cpassword">Confirm Password</label>
+
+               
+
+
+                <div className="TextBox" id={style.TextBox}>
+                    <img src="/imgs/svgs/MobileNumber.svg" alt="password" />
+                    <input type="number"  name="mobileNo" placeholder="Mobile Number"  required />
                 </div>
-                <div>
-                    <button type="submit">Sign up</button>
+
+                <div id={style.btnHolder}>
+                     <input className="prBtn" type="submit" onSubmit={e=>{handleSubmit(e)}} value="Sign Up"/>
                 </div>
-                <div> 
-                    <p>Start with Google</p>
-                </div>
-                <div>
-                    <p>Already have an account<Link href="/login"> Login here.</Link></p>
-                </div>
-            </form>
+             </form>
+             
+             <div id={style.otherOptions}>
+
+             <div id={style.line}></div>  
+                <button className="blueBtn" id={style.gBtn}>
+                    <img src="imgs/svgs/Google.svg"/>
+                    Start with Google
+                </button>
+
+                <p>Already have an account ? </p> 
+                <Link href="/">
+                    <a className={style.forgetPassword} id={style.signUp}>Login </a>
+                </Link>
+
+
+               
+            
+             </div>
+
+        </div>
+      </div>
         </>
     );
 }

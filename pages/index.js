@@ -1,34 +1,8 @@
-
-import BaseLayout from '../components/Layouts/BaseLayout.jsx'
-export default function Home() {
+import Login from "../components/user/Login"
+export default function index() {
   return (
-    <div>
-      <BaseLayout>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2> 
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-         <h2>Hello</h2>
-      </BaseLayout>
-    </div>
+    <>
+     <Login/>
+    </>
   )
 }

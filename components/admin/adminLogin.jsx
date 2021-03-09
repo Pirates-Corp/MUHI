@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import style from "../admin/Login.module.scss";
+import style from "../admin/adminLogin.module.scss";
 
 const Login = () => {
     const [loading, isLoading] = useState(false);
@@ -43,7 +43,6 @@ const Login = () => {
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
                     <input type="text" id="id" name="id" placeholder="Username"  required />
-                   
                 </div>
                 <div className="TextBox">
                     <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />

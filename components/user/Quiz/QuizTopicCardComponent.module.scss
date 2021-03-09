@@ -1,7 +1,26 @@
 /*-----------------------
         GLOBAL Module css
 -------------------------*/
-
+.quizBtn 
+{
+   color: var(--white);
+   border: 2px solid var(--white);
+   font-size: 1rem;
+   background-color: transparent;
+   padding: .4rem .6rem;
+   border-radius: 10px;
+   transition: .2s;
+}
+.quizBtn:hover
+{
+      background-color: var(--white);
+      color: var(--primary);
+      cursor: pointer;
+}
+.quizBtn:focus
+{
+  outline: 0;
+}
 /*-----------------------
         Animations
 -------------------------*/
@@ -9,45 +28,319 @@
 /*-----------------------
          Mixin
 -------------------------*/
+@mixin phone {
+      #quizCardsHolder
+      {
+            
+            padding: .5rem .5rem 0 .5rem;
+            width: 100%;
+            height: 85vh;
+            overflow: hidden;
+            overflow-y: scroll;
 
+
+            .quizCard
+            {
+              background: linear-gradient(252.63deg, #6DC7E9 6.4%, #0E67B4 100.5%);
+              border-radius: 10px;
+              padding:  1rem;
+              margin-bottom: 2rem;
+
+              h2
+              {
+                font-family: TextBold;
+                color: var(--white);
+              }
+              ul
+              {
+                display: block;
+                width: 100%;
+                padding: 0;
+                margin: 1rem 0 1rem 0;
+                li
+                {
+                  display: grid;
+                  align-items: center;
+                  grid-template-columns: 10% 85%;
+                  grid-row-gap: 2rem;
+                  margin-bottom: 1rem;
+                  img{
+                     width: 1.5rem;
+                     height: 1.5rem;
+                  }
+                  p
+                  {
+                        font-family: TextRegular;
+                        color: var(--white);
+                        display: inline-block;
+                        margin: 0;
+                  }
+                }
+              }
+               #quizBtnHolder
+               {
+                  width: 100%;
+                  height: 2.5rem;
+                  .quizBtn
+                  {
+                    float: right;
+
+                  }
+               }
+            }
+
+
+      }
+}
+
+
+@mixin desktop {
+      #quizCardsHolder
+      {
+            
+            display: grid;
+            grid-template-columns: repeat(3,30%) ;
+            grid-column-gap: 2rem;
+            
+            
+            
+            padding: .5rem .5rem 0 .5rem;
+            width: 100%;
+            height: 85vh;
+            overflow: hidden;
+            overflow-y: scroll;
+
+
+            .quizCard
+            {
+              position: relative;
+              background: linear-gradient(252.63deg, #6DC7E9 6.4%, #0E67B4 100.5%);
+              border-radius: 10px;
+              padding:  1.5rem;
+              margin-bottom: 2rem;
+              height: 18rem;
+
+
+              h2
+              {
+                font-family: TextBold;
+                color: var(--white);
+                font-size: 1.4rem;
+                word-wrap: break-word;
+              }
+              ul
+              {
+                display: block;
+                width: 100%;
+                padding: 0;
+                margin: 2rem 0 1rem 0;
+                li
+                {
+                  display: grid;
+                  align-items: center;
+                  grid-template-columns: 10% 85%;
+                  grid-row-gap: 2rem;
+                  margin-bottom: 1rem;
+                  img{
+                     width: 1.5rem;
+                     height: 1.5rem;
+                  }
+                  p
+                  {
+                        font-family: TextRegular;
+                        color: var(--white);
+                        display: inline-block;
+                        margin: 0;
+                  }
+                }
+              }
+               #quizBtnHolder
+               { 
+                  position: absolute;
+                  bottom: .8rem;
+                  right: 1.2rem;
+                  display: block;
+                  margin-top: 1rem;
+                  width: 100%;
+                  height: 2.5rem;
+                  .quizBtn
+                  {
+                    float: right;
+
+                  }
+               }
+            }
+
+
+      }
+}
 /*-----------------------
         Mobile - small
 -------------------------*/
 @media all and (max-width: 350px) {
-
+    @include phone();
 }
 
 /*-----------------------
         Mobile - Large
 -------------------------*/
 @media all and (min-width: 350px) and (max-width: 600px) {
-  
+    @include phone();  
 }
 
 /*-----------------------
       Tablet - small
 -------------------------*/
 @media all and (min-width: 600px) and (max-width: 900px) {
- 
+      #quizCardsHolder
+      {
+            
+            padding: .5rem .5rem 0 .5rem;
+            width: 100%;
+            height: 85vh;
+            overflow: hidden;
+            overflow-y: scroll;
+
+
+            .quizCard
+            {
+              background: linear-gradient(252.63deg, #6DC7E9 6.4%, #0E67B4 100.5%);
+              border-radius: 10px;
+              padding:  1.5rem;
+              margin-bottom: 2rem;
+
+              h2
+              {
+                font-family: TextBold;
+                color: var(--white);
+              }
+              ul
+              {
+                display: block;
+                width: 100%;
+                padding: 0;
+                margin: 1rem 0 1rem 0;
+                li
+                {
+                  display: grid;
+                  align-items: center;
+                  grid-template-columns: 7% 85%;
+                  grid-row-gap: 2rem;
+                  margin-bottom: 1rem;
+                  img{
+                     width: 1.5rem;
+                     height: 1.5rem;
+                  }
+                  p
+                  {
+                        font-family: TextRegular;
+                        color: var(--white);
+                        display: inline-block;
+                        margin: 0;
+                  }
+                }
+              }
+               #quizBtnHolder
+               {
+                  width: 100%;
+                  height: 2.5rem;
+                  .quizBtn
+                  {
+                    font-size: 1rem;
+                    float: right;
+
+                  }
+               }
+            }
+
+
+      }
 }
 
 /*-----------------------
       Tablet - Large
 -------------------------*/
 @media all and (min-width: 900px) and (max-width: 1200px) {
-  
+      #quizCardsHolder
+      {
+            
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-column-gap: 1.5rem;
+
+            padding: .5rem .5rem 0 .5rem;
+            width: 100%;
+            height: 85vh;
+            overflow: hidden;
+            overflow-y: scroll;
+
+
+            .quizCard
+            {
+              background: linear-gradient(252.63deg, #6DC7E9 6.4%, #0E67B4 100.5%);
+              border-radius: 10px;
+              padding:  1rem;
+              height: 16rem;
+              grid-row-gap: 1rem; 
+              margin-bottom: 1rem;
+
+              h2
+              {
+                font-family: TextBold;
+                color: var(--white);
+              }
+              ul
+              {
+                display: block;
+                width: 100%;
+                padding: 0;
+                margin: 1rem 0 1rem 0;
+                li
+                {
+                  display: grid;
+                  align-items: center;
+                  grid-template-columns: 8% 85%;
+                  grid-row-gap: 2rem;
+                  margin-bottom: 1rem;
+                  img{
+                     width: 1.5rem;
+                     height: 1.5rem;
+                  }
+                  p
+                  {
+                        font-family: TextRegular;
+                        color: var(--white);
+                        display: inline-block;
+                        margin: 0;
+                  }
+                }
+              }
+               #quizBtnHolder
+               {
+                  width: 100%;
+                  height: 2.5rem;
+                  .quizBtn
+                  {
+                    float: right;
+
+                  }
+               }
+            }
+
+
+      }
 }
 
 /*-----------------------
       Desktop - small
 -------------------------*/
 @media all and (min-width: 1200px) and (max-width: 1800px) {
-
+    @include desktop();
 }
 
 /*-----------------------
       Desktop - large
 -------------------------*/
 @media all and (min-width: 1800px) {
-    
+      @include desktop();
 }

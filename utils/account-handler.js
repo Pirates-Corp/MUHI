@@ -138,13 +138,13 @@ export const login = async (httpReq, httpRes) => {
             }
             return;
           } else {
-            // httpRes.redirect("/admin/login?incorrect");
-            // return;
-            resText =
-              "Login Failed due to incorrect password for the user => " +
-              userDetails.id;
-            resCode = 401;
-            console.log(resText);
+            httpRes.redirect("/admin/login?incorrect");
+            return;
+            // resText =
+            //   "Login Failed due to incorrect password for the user => " +
+            //   userDetails.id;
+            // resCode = 401;
+            // console.log(resText);
           }
         } else {
           resCode = 404;
