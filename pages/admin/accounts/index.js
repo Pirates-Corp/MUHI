@@ -27,7 +27,7 @@ export default function accounts() {
           col="4"
           colNames={["Student Name", "email","phone"]}
           buttonColor="red"
-          buttonText="Teminate"
+          buttonText="Terminate"
           data={data}
         />
       </BaseLayout>
