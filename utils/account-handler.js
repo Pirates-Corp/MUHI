@@ -107,7 +107,8 @@ export const login = async (httpReq, httpRes) => {
             } else if (user.role === constants.roles.moderator) {
               httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else {
-              httpRes.redirect(process.env.routes.loginRedirectUser);
+              //httpRes.redirect(process.env.routes.loginRedirectUser);
+              window.location.href = `https://muhi.vercel.app/${process.env.routes.loginRedirectUser}`
             }
             return;
           } else {
