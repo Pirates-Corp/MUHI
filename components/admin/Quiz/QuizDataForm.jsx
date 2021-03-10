@@ -12,6 +12,8 @@ const QuizDataForm = () => {
     const AddQuestions=(e)=>
     {
       e.preventDefault();
+    
+      window.location.href = "/admin/quiz/questions"
     }
 
 
@@ -63,7 +65,7 @@ const QuizDataForm = () => {
               </div>
 
               <div className="TextBox">
-                <img src="/imgs/svgs/endDate.svg" alt="date" />
+                <img src="/imgs/svgs/EndDate.svg" alt="date" />
                 <input
                   disabled
                   type="datetime-local"
@@ -93,14 +95,14 @@ const QuizDataForm = () => {
 
           <div className={style.buttonHolder}>
             <Link href="/admin/quiz">
-              <a className="redBtn">Exit</a>
+              <a id={style.exit} className="redBtn">Exit</a>
             </Link>
             <input
               type="submit"
               className="blueBtn"
               name="Add Questions"
               value="Add Questions"
-              onSubmit={e=> AddQuestions(e)}
+              onClick={e=> AddQuestions(e)}
             />
           </div>
         </form>

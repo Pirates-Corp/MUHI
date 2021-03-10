@@ -2,6 +2,7 @@ import Link from "next/link";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
+import QuizDataForm from "./QuizDataForm";
 
 const QuizQuestionsForm = () => {
 
@@ -18,6 +19,12 @@ const QuizQuestionsForm = () => {
       // handel the excel file
 
 
+  }
+
+  const QuizDataFrom = (e) =>
+  {
+    e.preventDefault();
+    window.location.href="/admin/quiz";
   }
 
 
@@ -234,7 +241,7 @@ const QuizQuestionsForm = () => {
                 Add Question
               </button>
 
-              <button className="greenBtn" id={style.save} type="submit">
+              <button className="greenBtn" id={style.save} onClick={e=>{QuizDataFrom(e)}} type="submit">
                 <img src="/imgs/svgs/tick.svg"></img>
                 Save & Finish
               </button>
