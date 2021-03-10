@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt, { decode } from "jsonwebtoken";
 import {
   getCollection,
