@@ -2,12 +2,14 @@ import BaseLayout from '../Layouts/BaseLayout'
 import PropPass from '../Layouts/PropPass'
 import GreetingHeader from '../common/Header/GreetingHeader'
 import OverallRowCard from '../common/Cards/OverallRowCards'
+import QuizInformationCard from '../common/Cards/QuizInformationCard'
 const userDashboard = () => {
   return (
     <BaseLayout>
       <PropPass type="user" />
       <GreetingHeader for="user" />
       <OverallRowCard />
+      <QuizInformationCard />
     </BaseLayout>
   );
 };

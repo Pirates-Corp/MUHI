@@ -465,11 +465,12 @@ Round buttons
   display: block;
   border-radius: 50% !important;
   height: 1.5rem;
-  padding-top: 5;
+  padding: 0;
   width: 1.5rem;
   background: var(--primary-light);
   color: var(--primary);
-
+  cursor: pointer;
+ 
    img
    {
     display: block;
@@ -478,11 +479,17 @@ Round buttons
     margin: 0 auto;
    }
 
+   svg
+   {
+    height: .8rem;
+    width: .8rem;
+    fill: aquamarine;
+   }
+
    &:hover
    {
     background: var(--primary);
     color: var(--white);
-
       img
       {
         filter: invert(0%) sepia(0%) saturate(7481%) hue-rotate(145deg) brightness(105%) contrast(97%);
@@ -499,7 +506,7 @@ Round buttons
   display: block;
   border-radius: 50% !important;
   height: 1.5rem;
-  padding-top: 5;
+  padding: 0;
   width: 1.5rem;
   background: var(--red-light);
   color: var(--red);
@@ -510,7 +517,6 @@ Round buttons
     height: .8rem;
     width: .8rem;
     margin: 0 auto;
-    filter: invert(52%) sepia(7%) saturate(7438%) hue-rotate(321deg) brightness(86%) contrast(118%);
    }
 
    &:hover
@@ -532,8 +538,8 @@ Round buttons
   display: block;
   border-radius: 50% !important;
   height: 1.5rem;
-  padding-top: 5;
   width: 1.5rem;
+  padding: 0;
   background: var(--secondary-light);
   color: var(--secondary);
 
