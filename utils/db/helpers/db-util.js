@@ -85,7 +85,7 @@ export const getCollection = async (collectionName, schema) => {
   if (collectionNames.length > 0) {
     console.log(
       collectionName +
-        "- Collection already exists in the Database. Returning the collection"
+        "- Collection exists in the Database. Returning the collection"
     );
     cached.collections[collectionName] = db.collection(collectionName);
   } else {
@@ -205,7 +205,7 @@ export const processQuery = async (
   collectionName,
   schema,
   document,
-  updateConition = undefined,
+  updateCondition = undefined,
   queryOptions = undefined
 ) => {
   try {
@@ -222,12 +222,12 @@ export const processQuery = async (
       case dbOperation.updateOne:
         return [
           true,
-          await collection.updateOne(document, updateConition, queryOptions),
+          await collection.updateOne(document, updateCondition, queryOptions),
         ];
       case dbOperation.updateMany:
         return [
           true,
-          await collection.updateMany(document, updateConition, queryOptions),
+          await collection.updateMany(document, updateCondition, queryOptions),
         ];
       case dbOperation.deleteOne:
         return [true, await collection.deleteOne(document)];
@@ -237,6 +237,7 @@ export const processQuery = async (
         return [false, "Invalid Query"];
     }
   } catch (err) {
+    console.log("Error in process query function => "+err);
     return [false, err];
   }
 };
