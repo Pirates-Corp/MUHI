@@ -19,7 +19,7 @@ const Login = () => {
       body: JSON.stringify(body),
     });
 
-    if (res.status == 400 && body.id == "afzal" && body.password == "demo123" ) {
+    if (body.id == "afzal" && body.password == "demo123" ) {
       router.push("/admin/dashboard");
     } else {
       setErr(1);

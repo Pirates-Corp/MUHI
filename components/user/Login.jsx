@@ -24,7 +24,7 @@ export default function Login() {
       })
     
 
-      if(res.status == 400 && body.id == "afzal@muhi.org" && body.password == "demo123" )
+      if( body.id == "afzal@muhi.org" && body.password == "demo123" )
       {
         router.push("/dashboard")
       }
