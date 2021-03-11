@@ -4,8 +4,8 @@ const Snackbar = (props) => {
 const [show, setShow] = React.useState(0);
 
   const snackBarStyle = {
-   "animation-name": "fadeInDown",
-    "animation-duration": "1s",
+   "animationName": "fadeInDown",
+    "animationDuration": "1s",
     "visibility": "hidden",
   };
   const getTimeout = () => {

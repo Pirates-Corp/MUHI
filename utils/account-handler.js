@@ -103,26 +103,37 @@ export const login = async (httpReq, httpRes) => {
             updateCurrentUserInGlobalScope(user);
             console.log(resText);
             if (user.role === constants.roles.admin) {
-              httpRes.redirect(307, process.env.routes.loginRedirectAdmin);
+              //httpRes.redirect(307, process.env.routes.loginRedirectAdmin);
+
+              resCode  = 200;
+              resText  = "login"
+
             } else if (user.role === constants.roles.moderator) {
-              httpRes.redirect(process.env.routes.loginRedirectAdmin);
+              //httpRes.redirect(process.env.routes.loginRedirectAdmin);
+               
+              resCode  = 200;
+              resText  = "login"
+
             } else {
-              httpRes.redirect(process.env.routes.loginRedirectUser);
+              //httpRes.redirect(process.env.routes.loginRedirectUser);
+              resCode  = 200;
+              resText  = "login"
             }
-            return;
+            //return;
           } else {
             console.log("Invalid password for the user => " + userDetails.id);
-            httpRes.redirect(
-              httpReq.headers.referer.split("?")[0] + process.env.routes.invalidPassword
-            );
-            return;
+            //httpRes.redirect(httpReq.headers.referer.split("?")[0] + process.env.routes.invalidPassword);
+            //return;
+            resText  = "invalid"
+
           }
         } else {
           console.log("User Not found => " + userDetails.id);
           httpRes.redirect(
-            httpReq.headers.referer.split("?")[0] + process.env.routes.invalidUser
+            //httpReq.headers.referer.split("?")[0] + process.env.routes.invalidUser
+            resText  = "invalid"
           );
-          return;
+          //return;
         }
       } else {
         resText = "Required fields missing";

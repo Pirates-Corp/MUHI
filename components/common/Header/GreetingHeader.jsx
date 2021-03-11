@@ -39,8 +39,12 @@ const GreetingHeader = (props) => {
 
   
   useEffect(async () => {
-    const result = await fetch("/api/db/user", { method: "GET" });
-    const data = await result.json();
+    // const result = await fetch("/api/db/user", { method: "GET" });
+    // await result.json();
+    const data = {
+      name : "Afzal",
+      role : "Admin"
+    }
     setUserData(data)
   }, []);
 

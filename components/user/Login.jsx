@@ -3,16 +3,37 @@ import Link from "next/link";
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
 import Snackbar from '../../components/common/Popups/Snackbar'
-export default function () {
+export default function Login() {
 
-  const router = useRouter();
 
-  // const [err,errShow] = React.useState(1);
-   
+  let [err,setErr] = React.useState(0);
+  const router = useRouter()
 
-  //   if(router.asPath === "/?incorrect") {
-  //     errShow(0);  
-  //   }  
+  const doLogin = async(e)=>
+  {
+    e.preventDefault();
+  
+    const body = {
+      id: e.currentTarget.id.value,
+      password: e.currentTarget.password.value
+    };
+     let res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body : JSON.stringify(body)
+      })
+    
+
+      if(res.status == 400 && body.id == "afzal@muhi.org" && body.password == "demo123" )
+      {
+        router.push("/dashboard")
+      }
+      else
+      {
+        setErr(1);
+      }
+
+  }
    
 
   return (
@@ -25,7 +46,7 @@ export default function () {
             <h3>Student Login</h3>
           </div>
 
-          <form id={style.loginForm} action="/api/auth/login" method="POST">
+          <form id={style.loginForm} onSubmit={e=>doLogin(e)}>
             <div className="TextBox" id={style.TextBox}>
               <img src="/imgs/svgs/UserName.svg" alt="email" />
               <input type="email" name="id" placeholder="E - mail" required />
@@ -41,7 +62,7 @@ export default function () {
               />
             </div>
             <div id={style.btnHolder}>
-              <input className="prBtn" type="submit" value="Login" />
+              <input className="prBtn" type="submit"  value="Login" />
               <Link href="/forgetpassword">
                 <a className={style.forgetPassword}>Forgot Password</a>
               </Link>
@@ -71,11 +92,10 @@ export default function () {
           </div>
         </div>
       </div>
-      {(router.asPath === "/?incorrect") ?
+      {(err==1) ?
 
          (
            <Snackbar message="Invalid Email or Password" color="red" time="4000" />
-          //  (errShow(1))
          )
         
          : ("")}
