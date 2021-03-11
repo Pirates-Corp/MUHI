@@ -12,7 +12,6 @@ import {
   updateDocument,
   updateDocuments,
 } from "./db/helpers/db-util";
-import { accountSchema } from "./db/helpers/schema/account-schema";
 import nodemailer from "nodemailer";
 import { constants } from "./constants";
 
@@ -163,7 +162,7 @@ export const signup = async (httpReq, httpRes) => {
   let resText = "";
   try {
     const authResult = await authenticate(httpReq);
-    if (httpReq.method !== "POST") {
+    if (httpReq.method !== "PUT") {
       resCode = 401;
       resText = "";
     } else if (authResult[0] === 200) {
@@ -175,19 +174,16 @@ export const signup = async (httpReq, httpRes) => {
       return;
     } else {
       let userDetails = httpReq.body;
-      let newUser = {};
       if (userDetails.name && userDetails.email && userDetails.role) {
-        newUser.name = userDetails.name;
-        newUser.email = userDetails.email;
-        newUser.mobileNo = userDetails.mobileNo;
-        newUser.role = new String(userDetails.role).toLowerCase();
-        newUser._id = new String(
+        userDetails._id = new String(
           userDetails.role === constants.roles.admin ? userDetails.name : userDetails.email
         ).toLowerCase();
-        newUser.state = userDetails.state ? userDetails.state : "active";
-        newUser.accountType = userDetails.accountType
+        userDetails.mobileNo = userDetails.mobileNo;
+        userDetails.role = new String(userDetails.role).toLowerCase();
+        userDetails.state = new String(userDetails.state ? userDetails.state : "active").toLowerCase()
+        userDetails.accountType = new String(userDetails.accountType
           ? userDetails.accountType
-          : "muhi";
+          : "muhi").toLowerCase()
         if (userDetails.accountType !== "google" && !userDetails.password) {
           resText = "Please provide the password";
           console.log(resText);
@@ -195,16 +191,17 @@ export const signup = async (httpReq, httpRes) => {
           resText = "Unusual email pattern. Signup request rejected";
           console.log(resText);
         } else {
-          newUser.password = bcrypt.hashSync(userDetails.password, process.env.hashSaltRounds);
-          newUser.lastLogin = new Date(Date.now());
-          const result = await createUser(newUser);
-          if (result.length >= 2 && result[0]) {
+          const plainPassword = userDetails.password
+          userDetails.password = bcrypt.hashSync(userDetails.password, process.env.hashSaltRounds);
+          userDetails.lastLogin = Date.now();
+          const result = await createUser(userDetails);
+          if (result.length >= 1 && result[0] === true) {
             resText =
               "Account created for the user : " +
               JSON.stringify(userDetails) +
               ";";
             const jwtToken = encodePayload(
-              { id: newUser._id, password: userDetails.password },
+              { id: userDetails._id, password: plainPassword },
               process.env.authTokenExpiryTime
             );
             saveTokenInCookie(httpRes, jwtToken);
@@ -215,7 +212,6 @@ export const signup = async (httpReq, httpRes) => {
               process.env.mailSubject_accountCreationNotification,
               getMailBody(httpReq, process.env.accountCreationNotification)
             );
-            console.log(resText);
             if (userDetails.role === constants.roles.admin) {
               httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else if (userDetails.role === constants.roles.moderator) {
@@ -224,17 +220,18 @@ export const signup = async (httpReq, httpRes) => {
               httpRes.redirect(process.env.routes.loginRedirectUser);
             }
             return;
-          } else if (result.length >= 1 && !result[0]) {
+          } else if (result.length >= 1 && result[0] === false) {
             if (result[1].code == 11000) {
               resCode = 409;
               resText = "account already exists : " + result[1];
-              console.log("Account already exists : " + result[1]);
+              console.log(resText);
             } else {
               resText =
                 "Account creation failed for the user : " +
                 JSON.stringify(userDetails) +
                 ";  Error : " +
                 JSON.stringify(result[1]);
+              console.log(resText);
             }
           } else {
             console.log("Unknown error ocured while signing up => " + result);
@@ -275,17 +272,22 @@ export const forgotPassword = async (httpReq, httpRes) => {
             email = id;
           }
           const encodedToken = encodePayload({ id }, process.env.resetTokenExpiryTime);
-          await updatePasswordResetTokenForTheUser(id, encodedToken);
-          const mailBody = getMailBody(
-            httpReq,
-            process.env.passwordResetRequest,
-            process.env.routes.passwordResetPath,
-            encodedToken
-          );
-          await sendMail(email, process.env.mailSubject_passwordResetRequest, mailBody);
-          resCode = 200;
-          resText = "Reset token sent to mail";
-          console.log(resText);
+          const result = await updatePasswordResetTokenForTheUser(id, encodedToken);
+          if(result && result[0]===true) {
+            const mailBody = getMailBody(
+              httpReq,
+              process.env.passwordResetRequest,
+              process.env.routes.passwordResetPath,
+              encodedToken
+            );
+            await sendMail(email, process.env.mailSubject_passwordResetRequest, mailBody);
+            resCode = 200;
+            resText = "Reset token sent to mail";
+            console.log(resText);
+          } else {
+            resText = result[1]
+            console.log(result);
+          }
         } else {
           resCode = 404;
           resText = "User Not Found => " + id;
@@ -372,7 +374,7 @@ export const validateResetToken = async (httpReq, httpRes) => {
       if (token) {
         const decoded = decodePayload(token);
         if (decoded) {
-          const user = await getUser(decoded.id);
+          const user = await getUser(decoded.id,true);
           console.log(user);
           if (user && token === user.resetToken) {
             console.log("User found in DB => " + user._id);
@@ -420,7 +422,7 @@ export const updatePasswordResetTokenForTheUser = async (id, encodedToken) => {
     },
   };
   const queryOptions = { upsert: false };
-  await updateUserDetails(id, updateCondition, queryOptions);
+  return await updateUserDetails(id, updateCondition, queryOptions);
 };
 
 export const updateLastAciveTimeForTheUser = async (id) => {
@@ -452,9 +454,9 @@ export const updateUserPassword = async (id, password) => {
   }
 };
 
-export const getUser = async (id) => {
+export const getUser = async (id,isDbReq = false) => {
   const currentUser = getCurrentUser();
-  if (currentUser && currentUser._id == id) return currentUser;
+  if (currentUser && currentUser._id == id && isDbReq===false) return currentUser;
   const queryResponse = await getDocument(constants.collectionMap.user.collectionName, constants.collectionMap.user.schema, {
     _id: new String(id).toLowerCase(),
   });

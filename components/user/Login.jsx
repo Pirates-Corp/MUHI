@@ -3,7 +3,7 @@ import Link from "next/link";
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
 import Snackbar from '../../components/common/Popups/Snackbar'
-export default function () {
+export default function Login() {
 
   const router = useRouter();
 
