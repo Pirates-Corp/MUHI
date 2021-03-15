@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import QuizQuestionsForm from "../../../components/admin/Quiz/QuizQuestionsForm";
+import QuizQuestionsFormPage from "../../../components/admin/Quiz/QuizQuestionsFormPage";
 
 
 const questions = () => {
-    
+  
 
     return(
         <>
-           <QuizQuestionsForm />
+
+           <QuizQuestionsFormPage />
        </>
     )
 }
