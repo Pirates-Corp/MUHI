@@ -8,7 +8,9 @@ const QuizQuestionsForm = (props) => {
   return (
 
               <div id={style.questionBox}>
-
+                <button id={style.close} className="redRoundBtn">
+                      <img src="/imgs/svgs/CloseMenu.svg" alt="X" />
+                    </button>
                 <div className={style.metaData}>
                   <h3>Q{qNo}</h3>
                   <input

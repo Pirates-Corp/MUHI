@@ -104,9 +104,7 @@ const QuizQuestionsFormPage = () => {
                 <h5>Review</h5>
                 <div className={style.ScrollBox}>
                   <div id={style.questionBox}>
-                    <button id={style.close} className="redRoundBtn">
-                      <img src="/imgs/svgs/CloseMenu.svg" alt="X" />
-                    </button>
+                    
 
                   {importedQuestions && importedQuestions.map(question => 
                       <QuizQuestionForm 
@@ -124,10 +122,10 @@ const QuizQuestionsFormPage = () => {
                       />
                     )}
 
-                  {questionsToBeSubmit.map(question => 
+                  {questionsToBeSubmit.map((index,question) => 
                       <QuizQuestionForm 
                         qNo={question.qNo}
-                        question={question.question}
+                        
                         chapter={question.chapter}
                         section={question.section}
                         syllabus={question.syllabus}
