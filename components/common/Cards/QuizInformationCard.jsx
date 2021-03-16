@@ -36,9 +36,18 @@ const quizInformationCard = ( ) => {
                             </div>
                         </div>
 
+                        <div className={style.quizInfoItem}>
+                            <p className={style.infoHeading}>total score</p>
+                            <div className={style.infoDataBox}>
+                                <img src="/imgs/svgs/Rank.svg" />
+                                <h5>25/30</h5>
+                            </div>
+                        </div>
+
+
                 </div>
 
-                <div id={style.tagReport}>
+                <div id={style.tagReport} style={{"display" : "none"}}>
 
                     <div id={style.tagReportHeader}>
                         <h6>Tag Report</h6>
@@ -68,7 +77,7 @@ const quizInformationCard = ( ) => {
                 </div>
 
             </div>
-            <div id={style.footer} >
+            <div id={style.footer} style={{"display" : "none"}}>
                <button id={style.editBtn} className="greenRoundBtn">
                    <img src="/imgs/svgs/Edit.svg"/>
                </button>

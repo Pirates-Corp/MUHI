@@ -1,12 +1,11 @@
-import PrimaryHeading from '../../../components/common/Header/PrimaryHeading'
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx'
-import Newsletter from "../../../components/user/Newsletter/NewsletterInformationCard"
+import AdminNewsletterCard from "../../../components/admin/Newsletter/AdminNewsletterCard"
 export default function accounts() {
   return (
     <div>
 
       <BaseLayout>
-      <Newsletter/>    
+      <AdminNewsletterCard/>    
       </BaseLayout>
     </div>
   )

@@ -1,0 +1,173 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+#window
+{
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.26);
+  position: absolute !important;
+  z-index: 4000;
+  display: grid;
+  place-content: center;
+  align-items: center;
+  #confirmationDiv
+  {
+      p
+      {
+        word-wrap: break-word;
+      }
+  }
+}
+
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin phone {
+      #confirmationDiv
+      {
+         margin: 0 1rem;
+         padding: 1.5rem;
+         border-radius: 20px;
+         background-color: var(--white);
+
+
+         #alterBtnHolder
+         {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            #yes,#no
+            {
+               padding: .5rem;
+               font-size: 1rem;
+               margin: 0;
+               
+            }
+
+            #yes
+            {
+                  
+                  margin-right: 1.5rem;
+            }
+
+         }
+
+      }   
+}
+
+@mixin  tablet {
+      #confirmationDiv
+      {
+         margin: 0 2rem;
+         padding: 1.5rem;
+         border-radius: 20px;
+         background-color: var(--white);
+
+
+         #alterBtnHolder
+         {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            #yes,#no
+            {
+               padding: .5rem;
+               font-size: 1rem;
+               margin: 0;
+               
+            }
+
+            #yes
+            {
+                  
+                  margin-right: 1.5rem;
+            }
+
+         }
+
+      }   
+}
+
+@mixin desktop {
+      #confirmationDiv
+      {
+         margin: 0 2rem;
+         padding: 2rem;
+         border-radius: 20px;
+         background-color: var(--white);
+         width: 30vw;
+
+
+         #alterBtnHolder
+         {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            #yes,#no
+            {
+               padding: .5rem;
+               font-size: 1rem;
+               margin: 0;
+               
+            }
+
+            #yes
+            {
+
+                  margin-right: 1.5rem;
+            }
+
+         }
+
+      }  
+}
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+   @include phone();
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+   @include phone();    
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+   @include tablet();
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+   @include tablet();
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+    @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+    @include desktop(); 
+}

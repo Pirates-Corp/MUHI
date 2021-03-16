@@ -38,6 +38,7 @@
           display: block;
           padding-left: 1rem;  
           margin-top: .6rem;
+          width: 4rem;
       }
 }
 
@@ -47,9 +48,10 @@
 @media all and (min-width: 350px) and (max-width: 600px) {
       #primaryHeading
       {
-          font-size: 1.4rem;
+          font-size: 1.8rem;
           padding-left: 1rem;  
           margin-top: 1.8rem;
+          width: 3.5rem;
           margin-right: 0;
       }
 }

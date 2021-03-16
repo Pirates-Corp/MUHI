@@ -1,11 +1,10 @@
-import PrimaryHeading from '../../../components/common/Header/PrimaryHeading'
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx'
+import StudentAccount from "../../../components/admin/AccountManagement/StudentAccounts"
 export default function accounts() {
   return (
     <div>
       <BaseLayout>
-      <PrimaryHeading heading="student"/>
-    
+        <StudentAccount />
       </BaseLayout>
     </div>
   )

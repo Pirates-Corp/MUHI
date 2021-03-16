@@ -5,21 +5,21 @@ import { useRouter } from "next/router";
 import style from "../../common/Components/SideBar.module.scss"
 
 const adminSideBarItems = [
-    {id : 1, href: "profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
-    {id : 2, href: "dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
-    {id : 3, href: "newsletter", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
-    {id : 4, href: "quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
-    {id : 5, href: "reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Reports"},
-    {id : 6, href: "accounts", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"}
+    {id : 1, href: "/admin/profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
+    {id : 2, href: "/admin/dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
+    {id : 3, href: "/admin/newsletter", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
+    {id : 4, href: "/admin/quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
+    {id : 5, href: "/admin/reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Reports"},
+    {id : 6, href: "/admin/accounts", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"}
     
 ]
 
 
 const userSideBarItems = [
-    {id : 1, href: "profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
-    {id : 2, href: "dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
-    {id : 3, href: "newsletters", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletters"},
-    {id : 4, href: "quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"}   
+    {id : 1, href: "/profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
+    {id : 2, href: "/dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
+    {id : 3, href: "/newsletters", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletters"},
+    {id : 4, href: "/quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"}   
 ]
 
 let cssStyle = {}; 
@@ -54,7 +54,7 @@ export default function AdminSideBar(props){
                         <li >
                             <Link href={item.href}>
                                 <a>
-                                    <div className={router.pathname === '/' + item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
+                                    <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
                                     <div className={style.navText}>{item.text}</div>
                                 </a> 
                             </Link>
@@ -64,7 +64,7 @@ export default function AdminSideBar(props){
                         <li >
                             <Link href={item.href}>
                                 <a>
-                                    <div className={router.pathname === '/admin/' + item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
+                                    <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
                                     <div className={style.navText}>{item.text}</div>
                                 </a> 
                             </Link>

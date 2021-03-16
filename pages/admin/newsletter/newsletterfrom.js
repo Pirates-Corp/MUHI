@@ -1,10 +1,11 @@
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx'
-import ManageAccounts from "../../../components/admin/AccountManagement/ManageAccounts";
+import NewsLetterFrom from "../../../components/admin/Newsletter/NewsLetterForm"
 export default function accounts() {
   return (
     <div>
+
       <BaseLayout>
-       <ManageAccounts/>
+      <NewsLetterFrom/>    
       </BaseLayout>
     </div>
   )

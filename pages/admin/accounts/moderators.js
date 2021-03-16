@@ -1,11 +1,10 @@
-import PrimaryHeading from '../../../components/common/Header/PrimaryHeading'
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx'
+import ModeratorAccount from "../../../components/admin/AccountManagement/ModeratorAccount"
 export default function accounts() {
   return (
     <div>
       <BaseLayout>
-      <PrimaryHeading heading="Moderator"/>
-    
+      <ModeratorAccount/>
       </BaseLayout>
     </div>
   )

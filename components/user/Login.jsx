@@ -50,10 +50,10 @@ export default function Login() {
 
           <div id={style.otherOptions}>
 
-            {/* <button className="blueBtn" id={style.gBtn}>
+            <button className="blueBtn" id={style.gBtn}>
               <img src="imgs/svgs/Google.svg" />
               Continue with Google
-            </button> */}
+            </button>
 
             <p>Don't have an account ? </p>
             <Link href="/signup">
