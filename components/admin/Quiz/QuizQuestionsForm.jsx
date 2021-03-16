@@ -2,12 +2,16 @@ import Link from "next/link";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
-import QuizDataForm from "./QuizDataForm";
+import {OutTable, ExcelRenderer} from 'react-excel-renderer';
+
+let fileData;
+let quizQuestion = [];
 
 const QuizQuestionsForm = () => {
-
+   
 
   const loadDoc = (e)=>{
+    console.log("booo");
     document
       .getElementById("file")
       .setAttribute(
@@ -15,10 +19,38 @@ const QuizQuestionsForm = () => {
         e.target.value.replace(/.*(\/|\\)/, "")
       );
 
+      let fileObj = e.target.files[0];
 
-      // handel the excel file
 
+      ExcelRenderer(fileObj, (err, resp) => {
+        if(err){
+          console.log(err);            
+        }
+        else{
+          
+           fileData = resp.rows.slice(1);
+           fileData.map(questions=>{
+           
+          let  data =   {
+                  id: questions[0],
+                  question : questions[1],
+                  options : questions.slice(2,questions.length-4),
+                  correctAnswer : questions[questions.length-4],
+                  chapter: questions[questions.length-3],
+                  section : questions[questions.length-2],
+                  syllabus : questions[questions.length-1]
+                }
+                quizQuestion.push(data)
+           } 
+           
+        
+            )
+            
+         
+        }
+      });     
 
+     console.log(quizQuestion);
   }
 
   const QuizDataFrom = (e) =>

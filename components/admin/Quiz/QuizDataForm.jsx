@@ -1,19 +1,31 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizDataForm.module.scss";
+
+
+
 const QuizDataForm = () => {
+  const router = useRouter();
   const currentTime =
     new Date().toISOString().split(":")[0] +
     ":" +
     new Date().toISOString().split(":")[1];
-
+    
+    let QuizData;
 
     const AddQuestions=(e)=>
     {
       e.preventDefault();
-    
-      window.location.href = "/admin/quiz/questions"
+       
+      QuizData = {
+        title : e.currentTarget.quizName.value
+      }
+
+      router.push("questions")
+      
+      console.log(QuizData);
     }
 
 
@@ -21,7 +33,7 @@ const QuizDataForm = () => {
     <CenterLayout>
       <PrimaryHeading heading="Create Quiz" />
       <div id={style.formBox}>
-        <form >
+        <form  onSubmit={e=> AddQuestions(e)} >
           <div id={style.dataForm}>
             <div className={style.left}>
               <div className="TextBox">
@@ -44,6 +56,14 @@ const QuizDataForm = () => {
                   required
                 />
               </div>
+
+
+             <label class="container" id={style.checkbox}>
+                 Hide score
+              <input type="checkbox" />
+              <span class="checkmark"></span>
+             </label>
+
             </div>
             <div className={style.right}>
               <div className="TextBox">
@@ -102,7 +122,7 @@ const QuizDataForm = () => {
               className="blueBtn"
               name="Add Questions"
               value="Add Questions"
-              onClick={e=> AddQuestions(e)}
+             
             />
           </div>
         </form>
