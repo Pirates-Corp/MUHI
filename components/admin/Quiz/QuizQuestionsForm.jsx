@@ -2,84 +2,77 @@ import Link from "next/link";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
-import {OutTable, ExcelRenderer} from 'react-excel-renderer';
+import { OutTable, ExcelRenderer } from "react-excel-renderer";
 
 let fileData;
 let quizQuestion = [];
 
 const QuizQuestionsForm = () => {
-   
-
-  const loadDoc = (e)=>{
-    console.log("booo");
+  const loadDoc = (e) => {
     document
       .getElementById("file")
-      .setAttribute(
-        "data",
-        e.target.value.replace(/.*(\/|\\)/, "")
-      );
+      .setAttribute("data", e.target.value.replace(/.*(\/|\\)/, ""));
 
-      let fileObj = e.target.files[0];
+    let fileObj = e.target.files[0];
 
+    ExcelRenderer(fileObj, (err, resp) => {
+      if (err) {
+        console.log(err);
+      } else {
+        fileData = resp.rows.slice(1);
+        fileData.map((questions) => {
+          let data = {
+            id: questions[0],
+            question: questions[1],
+            options: questions.slice(2, questions.length - 4),
+            correctAnswer: questions[questions.length - 4],
+            chapter: questions[questions.length - 3],
+            section: questions[questions.length - 2],
+            syllabus: questions[questions.length - 1],
+          };
+          quizQuestion.push(data);
+        });
+      }
+    });
+  };
 
-      ExcelRenderer(fileObj, (err, resp) => {
-        if(err){
-          console.log(err);            
-        }
-        else{
-          
-           fileData = resp.rows.slice(1);
-           fileData.map(questions=>{
-           
-          let  data =   {
-                  id: questions[0],
-                  question : questions[1],
-                  options : questions.slice(2,questions.length-4),
-                  correctAnswer : questions[questions.length-4],
-                  chapter: questions[questions.length-3],
-                  section : questions[questions.length-2],
-                  syllabus : questions[questions.length-1]
-                }
-                quizQuestion.push(data)
-           } 
-           
-        
-            )
-            
-         
-        }
-      });     
+  const QuizDataFrom =  async(e) => {
+  let  quiz = {
+      title: "otha poi thola 1",
+      quizTag: "Fek Tag",
+      state: "active",
+      schedule: {
+        startTime: 1614419276373,
+        endTime: 1614419276373,
+      },
+      totalMarks: 15,
+      questions: quizQuestion,
+    };
 
-     console.log(quizQuestion);
-  }
+    console.log(JSON.stringify(quiz));
 
-  const QuizDataFrom = (e) =>
-  {
-    e.preventDefault();
-    window.location.href="/admin/quiz";
-  }
+    let res =  await fetch('/api/db/quiz/add',{
+       method : 'PUT',
+       headers: {
+        'Content-Type': 'application/json'
+      },
+      body : JSON.stringify(quiz)
+       })
 
+       console.log(res);
+
+  };
 
   return (
     <CenterLayout>
       <PrimaryHeading heading="Add Questions" />
 
-
       <div id={style.formBox}>
-
-        
         <div id={style.fileForm}>
-            <div
-              className="fileUploader"
-              id="file"
-              data="Upload Questions"
-            >
-              <img src="/imgs/svgs/File.svg" alt="" />
-              <input
-                type="file"
-                onChange={(e) => loadDoc(e)}
-              />
-            </div>
+          <div className="fileUploader" id="file" data="Upload Questions">
+            <img src="/imgs/svgs/File.svg" alt="" />
+            <input type="file" onChange={(e) => loadDoc(e)} />
+          </div>
         </div>
 
         <div className={style.reviewBox}>
@@ -120,10 +113,6 @@ const QuizQuestionsForm = () => {
                     <p>Options</p>
                   </div>
 
-
-
-                  
-                  
                   <div id={style.option}>
                     <label className="radio">
                       <input type="radio" name="type" />
@@ -139,11 +128,7 @@ const QuizQuestionsForm = () => {
                       {" "}
                       <img src="/imgs/svgs/OptionMinus.svg" alt="-" />
                     </button>
-                  
                   </div>
-
-
-
 
                   <div id={style.option}>
                     <label className="radio">
@@ -165,9 +150,6 @@ const QuizQuestionsForm = () => {
                       <img src="/imgs/svgs/OptionPlus.svg" alt="+" />
                     </button>
                   </div>
-
-
-
                 </div>
 
                 <input
@@ -273,7 +255,14 @@ const QuizQuestionsForm = () => {
                 Add Question
               </button>
 
-              <button className="greenBtn" id={style.save} onClick={e=>{QuizDataFrom(e)}} type="submit">
+              <button
+                className="greenBtn"
+                id={style.save}
+                onClick={(e) => {
+                  QuizDataFrom(e);
+                }}
+                type="submit"
+              >
                 <img src="/imgs/svgs/tick.svg"></img>
                 Save & Finish
               </button>

@@ -236,6 +236,34 @@ Text Box
       opacity: 0;
     }
   }
+
+
+  .suggestion
+  {
+    background: #ffffff;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 0 0 5px 5px;
+    border: none;
+    width: 95%;
+    font-family: TextRegular;
+    color: var(--black);
+    overflow: hidden;
+    margin: 0;
+    position: absolute;
+    z-index: 50;
+    li
+    {
+      
+      padding: .5rem;
+    }
+    li:hover
+    {
+     background-color: var(--primary-light);
+     cursor: pointer;
+     
+    }
+  }
+
 }
 
 //textBox without Image
@@ -668,6 +696,7 @@ File Uploader
   -ms-user-select: none;
   user-select: none;
   font-family: TextRegular;
+  margin: 2rem auto;
 }
 
 /* Hide the browser's default checkbox */

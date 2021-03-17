@@ -1,34 +1,32 @@
-import React, {useState} from 'react';
-
+import { useRouter } from 'next/router'
 import style from "../admin/adminLogin.module.scss";
 
 const Login = () => {
-    // const [loading, isLoading] = useState(false);
-    // const [errorMsg, setErrorMsg] = useState("");
+    const router = useRouter();
 
-    // const onSubmit = async (e) => {
-    //     isLoading(true);
-    //     e.preventDefault();
+    const onSubmit = async (e) => {
+        
+        e.preventDefault();
 
-    //     const body = {
-    //         id: e.currentTarget.username.value,
-    //         password: e.currentTarget.password.value
-    //     };
+        const body = {
+            id: e.currentTarget.id.value,
+            password: e.currentTarget.password.value
+        };
 
-    //     await fetch("/api/auth/login", {
-    //         method: "POST",
-    //         redirect : "follow",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify(body)
-    //     });
+        console.log(body);
 
-    //     // if (res.status === 200) {
-    //     //     alert("logged in")
-    //     // } else {
-    //     //     isLoading(false);
-    //     //     setErrorMsg("Incorrect username or password. Try again!");
-    //     // }
-    // }
+        let res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        console.log(res);
+        if (res.status === 200) {
+           router.push("dashboard")
+        } else {
+            
+        }
+    }
 
   return (
     <div id={style.loginBox} >
@@ -38,7 +36,7 @@ const Login = () => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            <form  action="/api/auth/login" method="POST" >
+            <form onSubmit={e=>onSubmit(e)}>
                 {/* {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null} */}
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
