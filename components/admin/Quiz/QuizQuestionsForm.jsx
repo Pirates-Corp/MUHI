@@ -1,13 +1,21 @@
 import Link from "next/link";
+import { useState , useContext} from "react"
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
-import { OutTable, ExcelRenderer } from "react-excel-renderer";
+import {  ExcelRenderer } from "react-excel-renderer";
+import {QuizContext} from "../../../utils/contextStore/quizData";
 
 let fileData;
 let quizQuestion = [];
 
+
+
 const QuizQuestionsForm = () => {
+
+  const [Quiz ,setQuiz] = useContext(QuizContext);
+
+  console.log(Quiz);
   const loadDoc = (e) => {
     document
       .getElementById("file")
@@ -22,13 +30,13 @@ const QuizQuestionsForm = () => {
         fileData = resp.rows.slice(1);
         fileData.map((questions) => {
           let data = {
-            id: questions[0],
-            question: questions[1],
-            options: questions.slice(2, questions.length - 4),
-            correctAnswer: questions[questions.length - 4],
-            chapter: questions[questions.length - 3],
-            section: questions[questions.length - 2],
-            syllabus: questions[questions.length - 1],
+              id: questions[0],
+              question: questions[1],
+              options: questions.slice(2, questions.length - 4),
+              correctAnswer: questions[questions.length - 4],
+              chapter: questions[questions.length - 3],
+              section: questions[questions.length - 2],
+              syllabus: questions[questions.length - 1],
           };
           quizQuestion.push(data);
         });
@@ -37,26 +45,23 @@ const QuizQuestionsForm = () => {
   };
 
   const QuizDataFrom =  async(e) => {
-  let  quiz = {
-      title: "otha poi thola 1",
-      quizTag: "Fek Tag",
-      state: "active",
-      schedule: {
-        startTime: 1614419276373,
-        endTime: 1614419276373,
-      },
-      totalMarks: 15,
-      questions: quizQuestion,
-    };
+ 
+    e.preventDefault();
 
-    console.log(JSON.stringify(quiz));
+    let tempQuiz = Quiz;
+    tempQuiz.question = quizQuestion;
+    setQuiz(tempQuiz);
+    
+    console.log(JSON.stringify(tempQuiz));
+
+    //console.log(JSON.stringify(quiz));
 
     let res =  await fetch('/api/db/quiz/add',{
        method : 'PUT',
        headers: {
         'Content-Type': 'application/json'
       },
-      body : JSON.stringify(quiz)
+      body : JSON.stringify(Quiz)
        })
 
        console.log(res);
@@ -273,5 +278,7 @@ const QuizQuestionsForm = () => {
     </CenterLayout>
   );
 };
+
+
 
 export default QuizQuestionsForm;

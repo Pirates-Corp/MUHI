@@ -1,23 +1,31 @@
 import Link from "next/link";
+import { useState , useContext} from "react"
 import { useRouter } from "next/router";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizDataForm.module.scss";
+import {QuizContext} from "../../../utils/contextStore/quizData";
+
 
 const QuizDataForm = () => {
-  const router = useRouter();
-  const currentTime =
+
+    const router = useRouter();
+    const [Quiz , setQuiz] = useContext(QuizContext);
+   
+  
+    console.log('onStart : ',Quiz);
+
+  
+    const currentTime =
     new Date().toISOString().split(":")[0] +
     ":" +
     new Date().toISOString().split(":")[1];
     
-     let tagsArray = ["Basic","Advance","Intermediate","Advance2"];
+    let tagsArray = ["Basic","Advance","Intermediate","Advance2"];
 
-  
-
+     
     const showSuggestion = (e)=>
     {
-      
       const suggestionBox = document.querySelector('.suggestion');
       let input = e.target.value;
       suggestionBox.innerHTML = "";
@@ -40,17 +48,31 @@ const QuizDataForm = () => {
     }
 
 
-    let QuizData;
+
+
+
 
     const AddQuestions=(e)=>
-    {
+    {    
+      let QuizData;
+
       e.preventDefault();
         QuizData = {
-        title : e.currentTarget.quizName.value
-
+        title : e.currentTarget.quizName.value,
+        duration : e.currentTarget.duration.value,
+        quizTag : e.currentTarget.quizTag.value +" - "+ e.currentTarget.type.value,
+        schedule : 
+         {  startTime : e.currentTarget.startTime.value,
+            endTime : e.currentTarget.endTime.value
+         },
+        state : (document.getElementById('state').checked == true)? "true" : "false",
+        hideScore : (document.getElementById('hideScore').checked == true)? "true" : "false"
       }
+  
+    
+      setQuiz(QuizData);
       router.push("questions")
-      console.log(QuizData);
+      
     }
 
 
@@ -68,6 +90,7 @@ const QuizDataForm = () => {
                   id="quizName"
                   name="quizName"
                   placeholder="Quiz Name"
+                  value = {(Quiz.title==='') ? "" : Quiz.title}
                   required
                 />
               </div>
@@ -76,7 +99,8 @@ const QuizDataForm = () => {
                 <input
                   type="text"
                   id="quizTime"
-                  name="quizTime"
+                  name="duration"
+                  value = {(Quiz.duration==='') ? "" : Quiz.duration}
                   placeholder="Duration In mins"
                   required
                 />
@@ -101,12 +125,12 @@ const QuizDataForm = () => {
             
             
               <label id={style.radio} className="radio">
-                <input type="radio" name="type" checked />
+                <input type="radio" name="type" value="open" />
                 <span className="inputControl"></span>
                 Open
               </label>
               <label id={style.radio} className="radio">
-                <input type="radio" name="type" checked />
+                <input type="radio" name="type" value="close" defaultChecked />
                 <span className="inputControl"></span>
                 Close
               </label>
@@ -120,12 +144,12 @@ const QuizDataForm = () => {
                 <input
                   type="datetime-local"
                   min={currentTime}
-                  id="startDate"
-                  name="startDate"
+                  id="startTime"
+                  name="startTime"
                   onChange={(e) => {
-                    document.getElementById("endDate").min = e.target.value;
+                    document.getElementById("endTime").min = e.target.value;
                     document
-                      .getElementById("endDate")
+                      .getElementById("endTime")
                       .removeAttribute("disabled");
                   }}
                   placeholder="Start Date"
@@ -140,10 +164,10 @@ const QuizDataForm = () => {
                   type="datetime-local"
                   min={currentTime}
                   onChange={(e) => {
-                    document.getElementById("startDate").max = e.target.value;
+                    document.getElementById("startTime").max = e.target.value;
                   }}
-                  id="endDate"
-                  name="endDate"
+                  id="endTime"
+                  name="endTime"
                   placeholder="end Date"
                   required
                 />
@@ -154,21 +178,16 @@ const QuizDataForm = () => {
 
               <label className="container" id={style.checkbox}>
                  Hide score
-              <input type="checkbox" />
-              <span className="checkmark"></span>
+                <input type="checkbox" name="hideScore" id="hideScore" />
+                <span className="checkmark"></span>
              </label>
 
              
               <label className="container" id={style.checkbox}>
                  Active 
-              <input type="checkbox"/>
+              <input type="checkbox" name="active" id="state"/>
               <span className="checkmark"></span>
              </label>
-
-
-             
-              
-
             </div>
           </div>
 
@@ -181,7 +200,6 @@ const QuizDataForm = () => {
               className="blueBtn"
               name="Add Questions"
               value="Add Questions"
-             
             />
           </div>
         </form>
@@ -189,5 +207,9 @@ const QuizDataForm = () => {
     </CenterLayout>
   );
 };
+
+
+
+
 
 export default QuizDataForm;
