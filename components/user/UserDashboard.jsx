@@ -7,7 +7,7 @@ import Alert from '../common/Popups/Alert'
 const userDashboard = () => {
   return (
     <>
-    <Alert/>
+    {/* <Alert/> */}
     <BaseLayout>
       <PropPass type="user" />
       <GreetingHeader for="user" />
