@@ -1,20 +1,76 @@
 import Link from "next/link";
-import { useState , useContext} from "react"
+import { useState , useContext , useEffect} from "react"
 import { useRouter } from "next/router";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizDataForm.module.scss";
-import {QuizContext} from "../../../utils/contextStore/quizData";
+
 
 
 const QuizDataForm = () => {
 
     const router = useRouter();
-    const [Quiz , setQuiz] = useContext(QuizContext);
-   
+    const Quiz = { };
+
+    Quiz.data = null;
+
+    try {
+       Quiz.data = JSON.parse(sessionStorage.getItem('Quiz'));
+       console.log(Quiz);
+       Quiz.noData = false;
+    } catch (error) {
+       Quiz.noData = true;
+      }
+      
+      if(Quiz.data == null)
+      {
+        Quiz.noData = true;
+      }
+  
   
     console.log('onStart : ',Quiz);
 
+  
+    useEffect(()=>{
+
+      document.getElementById("endTime").disabled = true;
+        
+      if(!(Quiz.data===null))
+      {
+           const tag = Quiz.data.quizTag.split('-').splice(0,2);
+        
+          if(document.getElementById("endTime"))
+          {
+            document.getElementById('endTime').removeAttribute('disabled');
+          }
+
+          if(Quiz.data.state === 'Active'){
+            document.getElementById('state').checked = true;
+          }
+
+          if(tag[1] === 'false')
+          {
+            document.getElementById('hideScore').checked = false;
+          }
+          else
+          {
+            document.getElementById('hideScore').checked = true;
+          }
+
+          if(tag[0] === 'close')
+          {
+            document.getElementById('close').checked = true;
+          }
+          else
+          {
+            document.getElementById('open').checked = true;
+          }
+      }
+
+    });
+
+
+   
   
     const currentTime =
     new Date().toISOString().split(":")[0] +
@@ -56,21 +112,20 @@ const QuizDataForm = () => {
     {    
       let QuizData;
 
+
       e.preventDefault();
         QuizData = {
         title : e.currentTarget.quizName.value,
-        duration : e.currentTarget.duration.value,
-        quizTag : e.currentTarget.quizTag.value +" - "+ e.currentTarget.type.value,
+        duration : Number(e.currentTarget.duration.value),
+        quizTag : e.currentTarget.type.value +"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-"+ e.currentTarget.quizTag.value ,
         schedule : 
-         {  startTime : e.currentTarget.startTime.value,
-            endTime : e.currentTarget.endTime.value
+         {  startTime : new Date( e.currentTarget.startTime.value).getTime(),
+            endTime : new Date(e.currentTarget.endTime.value).getTime()
          },
-        state : (document.getElementById('state').checked == true)? "true" : "false",
-        hideScore : (document.getElementById('hideScore').checked == true)? "true" : "false"
+        state : (document.getElementById('state').checked == true)? "Active" : "Inactive",
+        
       }
-  
-    
-      setQuiz(QuizData);
+      sessionStorage.setItem('Quiz',JSON.stringify(QuizData))
       router.push("questions")
       
     }
@@ -87,10 +142,10 @@ const QuizDataForm = () => {
                 <img src="/imgs/svgs/QuizName.svg" alt="username" />
                 <input
                   type="text"
-                  id="quizName"
                   name="quizName"
+                  id="quizName"
                   placeholder="Quiz Name"
-                  value = {(Quiz.title==='') ? "" : Quiz.title}
+                  defaultValue = {(Quiz.noData) ? "" : Quiz.data.title}
                   required
                 />
               </div>
@@ -100,7 +155,7 @@ const QuizDataForm = () => {
                   type="text"
                   id="quizTime"
                   name="duration"
-                  value = {(Quiz.duration==='') ? "" : Quiz.duration}
+                  defaultValue = {(Quiz.noData)  ? "" : Quiz.data.duration}
                   placeholder="Duration In mins"
                   required
                 />
@@ -114,6 +169,7 @@ const QuizDataForm = () => {
                   id="quizTag"
                   name="quiztag"
                   placeholder="Quiz tag"
+                  defaultValue = {(Quiz.noData)? '' : new String(Quiz.data.quizTag).split('-').splice(2).join('-')}
                   required
                   onKeyUp={e=>showSuggestion(e)}
                 />
@@ -125,12 +181,12 @@ const QuizDataForm = () => {
             
             
               <label id={style.radio} className="radio">
-                <input type="radio" name="type" value="open" />
+                <input type="radio" name="type" value="open" id="open"/>
                 <span className="inputControl"></span>
                 Open
               </label>
               <label id={style.radio} className="radio">
-                <input type="radio" name="type" value="close" defaultChecked />
+                <input type="radio" name="type" value="close" id="close"  defaultChecked />
                 <span className="inputControl"></span>
                 Close
               </label>
@@ -152,6 +208,7 @@ const QuizDataForm = () => {
                       .getElementById("endTime")
                       .removeAttribute("disabled");
                   }}
+                  defaultValue = {(Quiz.noData)  ? '' : new Date(Quiz.data.schedule.startTime+19800000).toISOString().split(':',2).join(':')}
                   placeholder="Start Date"
                   required
                 />
@@ -168,6 +225,7 @@ const QuizDataForm = () => {
                   }}
                   id="endTime"
                   name="endTime"
+                  defaultValue = {(Quiz.noData)  ? '' : new Date(Quiz.data.schedule.endTime+19800000).toISOString().split(':',2).join(':')}
                   placeholder="end Date"
                   required
                 />
@@ -185,7 +243,7 @@ const QuizDataForm = () => {
              
               <label className="container" id={style.checkbox}>
                  Active 
-              <input type="checkbox" name="active" id="state"/>
+              <input type="checkbox" name="active" id="state" />
               <span className="checkmark"></span>
              </label>
             </div>

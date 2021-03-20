@@ -4,7 +4,7 @@ import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
 import {  ExcelRenderer } from "react-excel-renderer";
-import {QuizContext} from "../../../utils/contextStore/quizData";
+
 
 let fileData;
 let quizQuestion = [];
@@ -13,9 +13,19 @@ let quizQuestion = [];
 
 const QuizQuestionsForm = () => {
 
-  const [Quiz ,setQuiz] = useContext(QuizContext);
+  const Quiz = { }; 
+
+  try {
+    Quiz.data = JSON.parse(sessionStorage.getItem('Quiz'))
+  } catch (error) {
+
+  }
+
+
+
 
   console.log(Quiz);
+
   const loadDoc = (e) => {
     document
       .getElementById("file")
@@ -49,19 +59,20 @@ const QuizQuestionsForm = () => {
     e.preventDefault();
 
     let tempQuiz = Quiz;
-    tempQuiz.question = quizQuestion;
-    setQuiz(tempQuiz);
+    tempQuiz.data.questions = quizQuestion;
+    tempQuiz.data.totalMarks = quizQuestion.length;
+    sessionStorage.setItem('Quiz',JSON.stringify(tempQuiz.data))
     
-    console.log(JSON.stringify(tempQuiz));
+    console.log(tempQuiz);
 
-    //console.log(JSON.stringify(quiz));
+    
 
     let res =  await fetch('/api/db/quiz/add',{
        method : 'PUT',
        headers: {
         'Content-Type': 'application/json'
       },
-      body : JSON.stringify(Quiz)
+      body : JSON.stringify(Quiz.data)
        })
 
        console.log(res);
