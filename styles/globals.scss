@@ -470,10 +470,9 @@ radio buttons
   }
 
   input:checked ~ .inputControl {
-    background: var(--primary)
-   
+    background: var(--primary) !important;
   }
-  input:onfocus 
+  input:onfocus
   {
     visibility: hidden;
   }
