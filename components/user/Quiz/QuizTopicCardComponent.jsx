@@ -14,13 +14,12 @@ const QuizTopicCardComponent = ({ props }) => {
     // return isoString.substring(0,isoString.indexOf('.')-3).replace("T"," ");
     // return isoString.substring(0, isoString.indexOf("T"));
   };
-  
+
   return (
     <>
       <PrimaryHeader heading="MUHI Quiz" />
 
       <div id={style.quizCardsHolder}>
-        
         {quizArray.map((quiz, index) => (
           <div className={style.quizCard}>
             <h2>{quiz.title}</h2>
@@ -33,10 +32,10 @@ const QuizTopicCardComponent = ({ props }) => {
                 <img src="imgs/svgs/FileW.svg" alt="" />
                 <p>{`${quiz.questions.length} Questions`}</p>
               </li>
-              <li>
+              {/* <li>
                 <img src="imgs/svgs/EndDateW.svg" alt="" />
                 <p>Start Time : {getDateString(quiz.schedule.startTime)}</p>
-              </li>
+              </li> */}
               <li>
                 <img src="imgs/svgs/EndDateW.svg" alt="" />
                 <p>End Time : {getDateString(quiz.schedule.endTime)}</p>

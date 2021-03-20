@@ -104,6 +104,11 @@ export const handleDocumentReadAll = async (req, res) => {
                   ) {
                     delete doc.password;
                     delete doc.resetToken;
+                  } else if( collectionDetails.collectionName ===
+                    constants.collectionMap.quiz.collectionName && constants.roles.admin!==result[1].role){
+                      doc.questions.map((question)=>{
+                        delete question.correctAnswer
+                      });
                   }
                   collectionsArray.push(doc);
                 });

@@ -64,38 +64,42 @@ const QuizTaking = () => {
                 </div>
                 <div id={style.navOptions}>
                   {questionId > 0 ? (
-                    <button className="blueBtn" id={style.pre}>
-                      <Link
-                        href={{
-                          pathname: "/quiz/attend",
-                          query: {
-                            quizId,
-                            questionId: questionId - 1,
-                          },
-                        }}
-                      >
-                        <a className={style.quizBtn}>Previous</a>
-                      </Link>
-                    </button>
+                    // <button className="blueBtn" id={style.pre}>
+                    <Link
+                      className="blueBtn"
+                      id={style.pre}
+                      href={{
+                        pathname: "/quiz/attend",
+                        query: {
+                          quizId,
+                          questionId: questionId - 1,
+                        },
+                      }}
+                    >
+                      <a className="blueBtn" id={style.pre}>
+                        Previous
+                      </a>
+                    </Link>
                   ) : (
+                    // </button>
                     ""
                   )}
 
                   {questionId >= 0 &&
                   questionId < currentQuiz.questions.length - 1 ? (
-                    <button className="blueBtn" id={style.nxt}>
-                      <Link
-                        href={{
-                          pathname: "/quiz/attend",
-                          query: {
-                            quizId,
-                            questionId: questionId + 1,
-                          },
-                        }}
-                      >
-                        <a className={style.quizBtn}>Next</a>
-                      </Link>
-                    </button>
+                    <Link
+                      href={{
+                        pathname: "/quiz/attend",
+                        query: {
+                          quizId,
+                          questionId: questionId + 1,
+                        },
+                      }}
+                    >
+                      <a className="blueBtn" id={style.nxt}>
+                        Next
+                      </a>
+                    </Link>
                   ) : (
                     ""
                   )}
