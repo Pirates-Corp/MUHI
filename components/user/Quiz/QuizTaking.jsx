@@ -1,7 +1,13 @@
 import PrimaryHeading from "../../common/Header/PrimaryHeading";
 import Link from "next/link"
 import style from "../../user/Quiz/QuizTaking.module.scss";
+import { useRouter } from 'next/router'
+
 const QuizTaking = () => {
+
+  const router = useRouter()
+
+  console.log(router);
   return (
     <>
       <div id={style.takeQuizBox}>

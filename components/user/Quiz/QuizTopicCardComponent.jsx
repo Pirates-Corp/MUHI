@@ -32,13 +32,13 @@ const QuizTopicCardComponent = ({ props }) => {
                 <p>
                   End Date :{" "}
                   {trimISOString(
-                    new Date(quiz.schedule.endTime + 19800000).toISOString()
+                    new Date(quiz.schedule.endTime + (new Date().getTimezoneOffset() * 60000)).toISOString()
                   )}
                 </p>
               </li>
             </ul>
             <div id={style.quizBtnHolder}>
-              <Link href="quiz/takequiz">
+              <Link href={{pathname:"quiz/"+quiz.title,query: { data: JSON.stringify(quiz) }}} asPath='/take' >
                 <a className={style.quizBtn}>Take Quiz</a>
               </Link>
             </div>
