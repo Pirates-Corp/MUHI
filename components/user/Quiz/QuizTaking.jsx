@@ -1,106 +1,161 @@
 import PrimaryHeading from "../../common/Header/PrimaryHeading";
-import Link from "next/link"
+import Link from "next/link";
 import style from "../../user/Quiz/QuizTaking.module.scss";
-import { useRouter } from 'next/router'
-import {useEffect,useState} from 'react'
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const QuizTaking = () => {
+  let router = useRouter();
+  let quizId = router.query.quizId ? Number(router.query.quizId) : -1;
+  let questionId = router.query.questionId
+    ? Number(router.query.questionId)
+    : -1;
 
-  const [quizArray,setQuizArray] = useState([])
+  const [currentQuiz, setCurrentQuiz] = useState([]);
 
-  useEffect(()=>{
-    let data = sessionStorage.getItem('quizArray')
-    if(data && data !== 'undefined') {
-      data = JSON.parse(data)
-      setQuizArray(data)
+  useEffect(() => {
+    let quizArray = sessionStorage.getItem("quizArray");
+    if (quizArray && quizArray !== "undefined") {
+      quizArray = JSON.parse(quizArray);
+      if (
+        quizId >= 0 &&
+        quizArray[quizId] &&
+        JSON.stringify(quizArray[quizId]).toLocaleLowerCase() !==
+          JSON.stringify(currentQuiz).toLocaleLowerCase()
+      ) {
+        setCurrentQuiz(quizArray[quizId]);
+      }
     }
-  })
+  });
 
   return (
     <>
       <div id={style.takeQuizBox}>
-        <PrimaryHeading heading="Basic of Islam" />
-        <div id={style.timer}>
-          <img src="/imgs/svgs/TimeTaken.svg" alt="Time :" />
-          <p id={style.time}><span>01</span>: <span>30</span></p>
-        </div>
-        <div id={style.quiz}>
-          <div id={style.questionBox}>
-              <div id={style.questionHolder}>
-                  <p id={style.question}>
-                      11 . Which Sahabah was replaced with Bilal (r.a) as the caller of
-                      Prayer?
-                     
-                    </p>
-
-                    <div id={style.options}>
-                        <label className="radio" id={style.radio}>
-                        <input type="radio" name="option"  />
-                        <span className="inputControl"  id={style.inputControl} ></span>
-                        Sa'd ibn Malik
-                        </label>
-                        <label className="radio" id={style.radio}>
-                        <input type="radio" name="option"  />
-                        <span className="inputControl"  id={style.inputControl}></span>
-                        Sa'd ibn ar-Rabi
-                        </label>
-                        <label className="radio" id={style.radio}>
-                        <input type="radio" name="option"  />
-                        <span className="inputControl" id={style.inputControl}></span>
-                        Said ibn Jazied
-                        </label>
-                        <label className="radio" id={style.radio}>
-                        <input type="radio" name="option"  />
-                        <span className="inputControl" id={style.inputControl}></span>
-                        Sa'd Al-Quraz
-                        </label>
-                    </div>
-              </div>
-              <div id={style.navOptions}>
-                <button className="blueBtn" id={style.pre}>
-                previous
-                </button>
-                <button className="blueBtn" id={style.nxt}>
-                    Next
-                </button>
+        <PrimaryHeading heading={currentQuiz.title} />
+        {questionId >= 0 &&
+        currentQuiz &&
+        currentQuiz.hasOwnProperty("questions") &&
+        questionId < currentQuiz.questions.length ? (
+          <>
+            <div id={style.timer}>
+              <img src="/imgs/svgs/TimeTaken.svg" alt="Time :" />
+              <p id={style.time}>
+                <span>01</span>: <span>30</span>
+              </p>
             </div>
-          </div>
-         
-          <div id={style.questionSet}>
+            <div id={style.quiz}>
+              <div id={style.questionBox}>
+                <div id={style.questionHolder}>
+                  <p id={style.question}>
+                    {currentQuiz.questions[questionId].question}
+                  </p>
+                  <div id={style.options}>
+                    {currentQuiz.questions[questionId].options.map((option) => (
+                      <label className="radio" id={style.radio}>
+                        <input type="radio" name="option" />
+                        <span
+                          className="inputControl"
+                          id={style.inputControl}
+                        ></span>
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div id={style.navOptions}>
+                  {questionId > 0 ? (
+                    <button className="blueBtn" id={style.pre}>
+                      <Link
+                        href={{
+                          pathname: "/quiz/attend",
+                          query: {
+                            quizId,
+                            questionId: questionId - 1,
+                          },
+                        }}
+                      >
+                        <a className={style.quizBtn}>Previous</a>
+                      </Link>
+                    </button>
+                  ) : (
+                    ""
+                  )}
 
-            <div className={style.scrollView}>
-            <ul id={style.roundList}>
-                    <li><button className={`${style.qNav} ${style.active}`}>1</button></li>
-                    <li><button className={`${style.qNav} ${style.answered}`}>2</button></li>
-                    <li><button className={`${style.qNav} ${style.answered}`}>3</button></li>
-                    <li><button className={style.qNav}>4</button></li>
-                    <li><button className={style.qNav}>5</button></li>
-                    <li><button className={style.qNav}>6</button></li>
-                    <li><button className={style.qNav}>7</button></li>
-                    <li><button className={style.qNav}>8</button></li>
-                    <li><button className={style.qNav}>9</button></li>
-                    <li><button className={style.qNav}>10</button></li>
-                    <li><button className={style.qNav}>11</button></li>
-                    <li><button className={style.qNav}>12</button></li> 
-                    <li><button className={style.qNav}>13</button></li>
-                    <li><button className={style.qNav}>14</button></li>
-                    <li><button className={style.qNav}>15</button></li>
-                    
-                    
-                </ul>
-             </div>
+                  {questionId >= 0 &&
+                  questionId < currentQuiz.questions.length - 1 ? (
+                    <button className="blueBtn" id={style.nxt}>
+                      <Link
+                        href={{
+                          pathname: "/quiz/attend",
+                          query: {
+                            quizId,
+                            questionId: questionId + 1,
+                          },
+                        }}
+                      >
+                        <a className={style.quizBtn}>Next</a>
+                      </Link>
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
 
-            {/* <button id={style.exitBtn} className="redBtn">
-             End Quiz
-            </button> */}
+              <div id={style.questionSet}>
+                <div className={style.scrollView}>
+                  <ul id={style.roundList}>
+                    {currentQuiz.questions.map((question) => (
+                      <Link
+                        href={{
+                          pathname: "/quiz/attend",
+                          query: {
+                            quizId: quizId,
+                            questionId: question.id - 1,
+                          },
+                        }}
+                      >
+                        <a className={style.quizBtn}>
+                          <li>
+                            <button
+                              className={`${style.qNav} ${
+                                questionId + 1 === question.id
+                                  ? style.active
+                                  : ""
+                              }`}
+                            >
+                              {question.id}
+                            </button>
+                          </li>
+                        </a>
+                      </Link>
+                    ))}
 
-            <Link href="congratulations">
-                <a  id={style.exitBtn} className="redBtn">End Quiz</a>
-            </Link>
-            
-                
-          </div>
-        </div>
+                    <li>
+                      <button className={`${style.qNav} ${style.answered}`}>
+                        2
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* <button id={style.exitBtn} className="redBtn">
+               End Quiz
+              </button> */}
+
+                <Link href="congratulations">
+                  <a id={style.exitBtn} className="redBtn">
+                    {questionId === currentQuiz.questions.length - 1
+                      ? "Finish"
+                      : "End Quiz"}
+                  </a>
+                </Link>
+              </div>
+            </div>
+          </>
+        ) : (
+          "Invalid Question Id"
+        )}
       </div>
     </>
   );
