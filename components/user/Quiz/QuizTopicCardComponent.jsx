@@ -2,12 +2,15 @@ import Link from "next/link";
 import PrimaryHeader from "../../common/Header/PrimaryHeading";
 import style from "../../user/Quiz/QuizTopicCardComponent.module.scss";
 
-const QuizTopicCardComponent = ({ props }) => {
-  let data = props;
 
-  const trimISOString = (s) => {
+const QuizTopicCardComponent = ({props}) => {
+  const quizArray = props ?  props : []
+  const offsetInMillis = new Date().getTimezoneOffset() * 60000; 
+
+  const getISOString = (timeInMillis) => {
+    let isoString = new Date(timeInMillis + offsetInMillis).toISOString();
     // return s.substring(0,s.indexOf('.')-3).replace("T"," ");
-    return s.substring(0, s.indexOf("T"));
+    return isoString.substring(0, isoString.indexOf("T"));
   };
 
   return (
@@ -15,7 +18,7 @@ const QuizTopicCardComponent = ({ props }) => {
       <PrimaryHeader heading="MUHI Quiz" />
 
       <div id={style.quizCardsHolder}>
-        {data.map((quiz) => (
+        {quizArray.map((quiz) => (
           <div className={style.quizCard}>
             <h2>{quiz.title}</h2>
             <ul>
@@ -29,16 +32,16 @@ const QuizTopicCardComponent = ({ props }) => {
               </li>
               <li>
                 <img src="imgs/svgs/EndDateW.svg" alt="" />
-                <p>
-                  End Date :{" "}
-                  {trimISOString(
-                    new Date(quiz.schedule.endTime + (new Date().getTimezoneOffset() * 60000)).toISOString()
-                  )}
-                </p>
+                <p>End Date : {getISOString(quiz.schedule.endTime)}</p>
               </li>
             </ul>
             <div id={style.quizBtnHolder}>
-              <Link href={{pathname:"quiz/"+quiz.title,query: { data: JSON.stringify(quiz) }}} asPath='/take' >
+              <Link
+                href={{
+                  pathname: "quiz/" + quiz.title,
+                }}
+                asPath="/take"
+              >
                 <a className={style.quizBtn}>Take Quiz</a>
               </Link>
             </div>

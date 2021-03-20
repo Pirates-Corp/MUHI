@@ -1,8 +1,14 @@
 import QuizTopicCard from "../../components/user/Quiz/QuizTopicCardComponent";
 import BaseLayout from "../../components/Layouts/BaseLayout.jsx";
 import Propass from "../../components/Layouts/PropPass";
+import {useEffect,useState} from 'react'
 
 function quiztopic({ props }) {
+
+  useEffect(()=>{
+    sessionStorage.setItem('quizArray',JSON.stringify(props))
+  })
+  
   return (
     <BaseLayout>
       <Propass type="user" />

@@ -2,12 +2,20 @@ import PrimaryHeading from "../../common/Header/PrimaryHeading";
 import Link from "next/link"
 import style from "../../user/Quiz/QuizTaking.module.scss";
 import { useRouter } from 'next/router'
+import {useEffect,useState} from 'react'
 
 const QuizTaking = () => {
 
-  const router = useRouter()
+  const [quizArray,setQuizArray] = useState([])
 
-  console.log(router);
+  useEffect(()=>{
+    let data = sessionStorage.getItem('quizArray')
+    if(data && data !== 'undefined') {
+      data = JSON.parse(data)
+      setQuizArray(data)
+    }
+  })
+
   return (
     <>
       <div id={style.takeQuizBox}>
