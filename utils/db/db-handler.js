@@ -583,19 +583,26 @@ export const handleFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const newDoc = req.body;
-      newDoc.id = newDoc.id ? newDoc.id : parseInt(fieldId);
+      newDoc.id = newDoc.id ? newDoc.id : fieldId;
       const collectionDetails = constants.collectionMap[collection];
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
+        let modified = false
         const modifiedArray = document[fieldName].map((doc) => {
           if (doc.id == fieldId) {
+            console.log("found doc ");
             doc = newDoc;
+            modified = true
           }
           return doc;
         });
+        if(!modified){
+          modifiedArray.push(newDoc)
+        } 
         document[fieldName] = modifiedArray;
-        console.log(document);
+        console.log(modifiedArray);
+        console.log(modified);
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -604,7 +611,6 @@ export const handleFieldUpdate = async (req, res) => {
         console.log(document);
         resCode = updateResponse[0];
         resBody = updateResponse[1];
-        console.log(resBody);
       } else {
         resCode = result[0];
         resBody = result[1];
@@ -991,18 +997,18 @@ const validateDoc = (array) => {
         doc[key].length > 0 &&
         doc[key][0].hasOwnProperty("id")
       ) {
-        console.log("Has Id Property and is array");
+        // console.log("Has Id Property and is array");
         if (validateDoc(doc[key]) === false) {
           return false;
         }
       }
     }
     if (doc.hasOwnProperty("id")) {
-      console.log("Has Id Property and is object");
+      // console.log("Has Id Property and is object");
       const tempId = doc.id;
       if (!validator.includes(tempId)) {
         validator.push(tempId);
-        console.log(validator);
+        // console.log(validator);
       } else {
         console.log(
           "Duplicate id found in the doc. Document validation failed. Returning false."

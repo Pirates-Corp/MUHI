@@ -14,11 +14,6 @@ function QuizTaking() {
 
   const [currentQuiz, setCurrentQuiz] = useState({});
 
-  if(questionId === 0 ){
-    currentQuiz.startTime = Date.now()
-    console.log(currentQuiz.startTime);
-  }
-
   useEffect(() => {
     let quizInCache = localStorage.getItem("currentQuiz");
     // console.log(quizInCache);
