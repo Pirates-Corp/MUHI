@@ -44,9 +44,8 @@ const QuizTopicCardComponent = ({ props }) => {
             <div id={style.quizBtnHolder}>
               <Link
                 href={{
-                  pathname: "quiz/attend",
+                  pathname: "quiz/"+quiz.title,
                   query: {
-                    quizId: index,
                     questionId: 0,
                   },
                 }}

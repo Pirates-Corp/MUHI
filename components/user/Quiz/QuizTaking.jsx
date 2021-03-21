@@ -3,30 +3,72 @@ import Link from "next/link";
 import style from "../../user/Quiz/QuizTaking.module.scss";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Timer from './Timer'
 
-const QuizTaking = () => {
+function QuizTaking() {
   let router = useRouter();
-  let quizId = router.query.quizId ? Number(router.query.quizId) : -1;
+  let quizId = router.query.quiz;
   let questionId = router.query.questionId
     ? Number(router.query.questionId)
     : -1;
 
-  const [currentQuiz, setCurrentQuiz] = useState([]);
+  const [currentQuiz, setCurrentQuiz] = useState({});
+
+  if(questionId === 0 ){
+    currentQuiz.startTime = Date.now()
+    console.log(currentQuiz.startTime);
+  }
 
   useEffect(() => {
-    let quizArray = sessionStorage.getItem("quizArray");
-    if (quizArray && quizArray !== "undefined") {
-      quizArray = JSON.parse(quizArray);
-      if (
-        quizId >= 0 &&
-        quizArray[quizId] &&
-        JSON.stringify(quizArray[quizId]).toLocaleLowerCase() !==
-          JSON.stringify(currentQuiz).toLocaleLowerCase()
-      ) {
-        setCurrentQuiz(quizArray[quizId]);
+    let quizInCache = localStorage.getItem("currentQuiz");
+    // console.log(quizInCache);
+    if (quizInCache === null) {
+      // console.log('Cache is null');
+      if (quizId) {
+        // console.log('Quiz id is not null');
+        fetch("http://localhost/api/db/quiz/" + quizId, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => {
+            res.json().then((quizData) => {
+              if (
+                quizData &&
+                JSON.stringify(quizData) !== JSON.stringify(currentQuiz)
+              ) {
+                console.log("Quiz data and current state is not null");
+                setCurrentQuiz(quizData);
+                localStorage.setItem("currentQuiz", JSON.stringify(quizData));
+              }
+            });
+          })
+          .catch((err) => console.error(err));
+      } else console.log("failed loading quiz id in address bar");
+    } else {
+      // console.log('Not null==============');
+      if (!currentQuiz.hasOwnProperty("questions")) {
+        // console.log('does not has own poperty==============');
+        setCurrentQuiz(JSON.parse(quizInCache));
+      } else {
+        if (currentQuiz.title === quizId) {
+          // console.log('same title==============');
+          localStorage.setItem("currentQuiz", JSON.stringify(currentQuiz));
+        } else if (quizId) {
+          // console.log("title => "+currentQuiz.title+"  id=>"+quizId);
+          // console.log("id removed for some reason");
+          localStorage.removeItem("currentQuiz");
+          setCurrentQuiz({});
+        }
       }
     }
-  });
+  }, [currentQuiz, quizId]);
+  
+
+  const handleRadioSelect = (e, option) => {
+    currentQuiz.questions[questionId].answer = option;
+    setCurrentQuiz({ ...currentQuiz });
+    console.log(currentQuiz);
+  };
 
   return (
     <>
@@ -37,12 +79,7 @@ const QuizTaking = () => {
         currentQuiz.hasOwnProperty("questions") &&
         questionId < currentQuiz.questions.length ? (
           <>
-            <div id={style.timer}>
-              <img src="/imgs/svgs/TimeTaken.svg" alt="Time :" />
-              <p id={style.time}>
-                <span>01</span>: <span>30</span>
-              </p>
-            </div>
+            <Timer props={{duration:currentQuiz.duration ,currentQuiz,setCurrentQuiz}}/>
             <div id={style.quiz}>
               <div id={style.questionBox}>
                 <div id={style.questionHolder}>
@@ -50,28 +87,36 @@ const QuizTaking = () => {
                     {currentQuiz.questions[questionId].question}
                   </p>
                   <div id={style.options}>
-                    {currentQuiz.questions[questionId].options.map((option) => (
-                      <label className="radio" id={style.radio}>
-                        <input type="radio" name="option" />
-                        <span
-                          className="inputControl"
-                          id={style.inputControl}
-                        ></span>
-                        {option}
-                      </label>
-                    ))}
+                    {currentQuiz.questions[questionId].options.map(
+                      (option, index) => (
+                        <label className="radio" id={style.radio}>
+                          <input
+                            type="radio"
+                            name={"option"}
+                            onChange={(e) => handleRadioSelect(e, option)}
+                            checked={
+                              currentQuiz.questions[questionId].answer ===
+                              option
+                            }
+                          />
+                          <span
+                            className="inputControl"
+                            id={style.inputControl}
+                          ></span>
+                          {option}
+                        </label>
+                      )
+                    )}
                   </div>
                 </div>
                 <div id={style.navOptions}>
                   {questionId > 0 ? (
-                    // <button className="blueBtn" id={style.pre}>
                     <Link
                       className="blueBtn"
                       id={style.pre}
                       href={{
-                        pathname: "/quiz/attend",
+                        pathname: "/quiz/" + quizId,
                         query: {
-                          quizId,
                           questionId: questionId - 1,
                         },
                       }}
@@ -81,7 +126,6 @@ const QuizTaking = () => {
                       </a>
                     </Link>
                   ) : (
-                    // </button>
                     ""
                   )}
 
@@ -89,9 +133,8 @@ const QuizTaking = () => {
                   questionId < currentQuiz.questions.length - 1 ? (
                     <Link
                       href={{
-                        pathname: "/quiz/attend",
+                        pathname: "/quiz/" + quizId,
                         query: {
-                          quizId,
                           questionId: questionId + 1,
                         },
                       }}
@@ -112,9 +155,8 @@ const QuizTaking = () => {
                     {currentQuiz.questions.map((question) => (
                       <Link
                         href={{
-                          pathname: "/quiz/attend",
+                          pathname: "/quiz/" + quizId,
                           query: {
-                            quizId: quizId,
                             questionId: question.id - 1,
                           },
                         }}
@@ -125,6 +167,8 @@ const QuizTaking = () => {
                               className={`${style.qNav} ${
                                 questionId + 1 === question.id
                                   ? style.active
+                                  : question.hasOwnProperty("answer")
+                                  ? style.answered
                                   : ""
                               }`}
                             >
@@ -134,18 +178,8 @@ const QuizTaking = () => {
                         </a>
                       </Link>
                     ))}
-
-                    <li>
-                      <button className={`${style.qNav} ${style.answered}`}>
-                        2
-                      </button>
-                    </li>
                   </ul>
                 </div>
-
-                {/* <button id={style.exitBtn} className="redBtn">
-               End Quiz
-              </button> */}
 
                 <Link href="congratulations">
                   <a id={style.exitBtn} className="redBtn">
@@ -163,6 +197,6 @@ const QuizTaking = () => {
       </div>
     </>
   );
-};
+}
 
 export default QuizTaking;

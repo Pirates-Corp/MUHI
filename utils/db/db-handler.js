@@ -889,6 +889,11 @@ const getDoc = async (req) => {
             ) {
               delete document.password;
               delete document.resetToken;
+            } else if( collectionDetails.collectionName ===
+              constants.collectionMap.quiz.collectionName && constants.roles.admin!==authResult[1].role){
+                document.questions.map((question)=>{
+                  delete question.correctAnswer
+                });
             }
             resBody = document;
             resCode = 200;

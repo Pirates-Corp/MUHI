@@ -4,10 +4,6 @@ import Propass from "../../components/Layouts/PropPass";
 import { useEffect, useState } from "react";
 
 function quiztopic({ props }) {
-  useEffect(() => {
-    sessionStorage.setItem("quizArray", JSON.stringify(props));
-  });
-
   return (
     <BaseLayout>
       <Propass type="user" />
@@ -15,16 +11,6 @@ function quiztopic({ props }) {
     </BaseLayout>
   );
 }
-
-const removeCorrectAnswer = (quizData) => {
-  quizData.map((quiz) => {
-    if (quiz.hasOwnProperty("questions")) {
-      quiz.questions.map((question)=>{
-        delete question.correctAnswer
-      })
-    }
-  });
-};
 
 quiztopic.getInitialProps = async (ctx) => {
   const cookie = ctx.req ? ctx.req.headers.cookie : null;
@@ -38,11 +24,7 @@ quiztopic.getInitialProps = async (ctx) => {
 
   try {
     quizData = await res.json();
-    if(quizData) {
-      removeCorrectAnswer(quizData)
-    } else {
-      quizData = {}
-    }
+    quizData = quizData ? quizData : {}
   } catch (err) {
     console.error(err);
   }
