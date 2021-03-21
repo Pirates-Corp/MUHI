@@ -48,17 +48,50 @@ const QuizQuestionsForm = () => {
     });
   };
 
-  const modifyQuiz = (e, index) => {
-    let value = e.target.value;
-    let key = e.target.name;
-    console.log(quizQuestions);
+  const modifyQuiz = (e, obj) => {
+    
+    // console.log(up);
 
-    if (quizQuestions) {
-      quizQuestions[index][key] = value;
+
+    const {index , option ,optionIndex,addOption } = obj;
+    console.log(obj);
+   
+    let value = (e.target.type== 'radio')? option : e.target.value;
+    let key = (e.target.type== 'radio')? "correctAnswer" : e.target.name;
+    
+    if (loadedQuestions) {
+          
+        if(addOption === 'add')
+        {
+          loadedQuestions[index].options.push('');
+        }
+        if(addOption === 'remove')
+        {
+
+          console.log(optionIndex);
+          loadedQuestions[index].options =  loadedQuestions[index].options.filter((e,index)=>index!==optionIndex)
+          console.log(loadedQuestions[index].options);
+          
+        }
+        else if(optionIndex!==undefined)
+        {
+          if(loadedQuestions[index].correctAnswer === option)
+          {
+            loadedQuestions[index].correctAnswer = value;
+          }
+          loadedQuestions[index].options[optionIndex] = e.target.value;
+        }
+        else
+        {
+          loadedQuestions[index][key] = value;
+        }
     }
-
-    updateLoadedQuestion(quizQuestions);
+     
+   updateLoadedQuestion([...loadedQuestions]); 
+    
   };
+
+
 
   const QuizDataFrom = async (e) => {
     e.preventDefault();
@@ -78,6 +111,15 @@ const QuizQuestionsForm = () => {
     console.log(res);
   };
 
+
+
+  useEffect(()=>{
+    console.log('use effects call');
+    updateLoadedQuestion([...quizQuestions])
+  },[quizQuestions])
+
+  console.log(loadedQuestions);
+ 
   return (
     <CenterLayout>
       <PrimaryHeading heading="Add Questions" />
@@ -90,14 +132,6 @@ const QuizQuestionsForm = () => {
           </div>
         </div>
         
-                     <label className="radio">
-                        <input type="radio" name="type1" id="radioOption" defaultChecked/>
-                        <span className="inputControl"></span>
-                      </label>
-                      <label className="radio">
-                        <input type="radio" name="type1" id="radioOption"   />
-                        <span className="inputControl"></span>
-                      </label>
 
         <div className={style.reviewBox}>
           <h5>Review</h5>
@@ -106,30 +140,23 @@ const QuizQuestionsForm = () => {
               
               {loadedQuestions.length !== 0 ? (
                 <>
-                
-                  {loadedQuestions.map((question, index) => (
+             
+                  {loadedQuestions.map((question, QIndex) => (
                     <div id={style.questionBox}>
-                     <label className="radio">
-                        <input type="radio" name="type3" id="radioOption" defaultChecked/>
-                        <span className="inputControl"></span>
-                      </label>
-                      <label className="radio">
-                        <input type="radio" name="type3" id="radioOption"   />
-                        <span className="inputControl"></span>
-                      </label>
+                     
                       <button id={style.close} className="redRoundBtn">
                         <img src="/imgs/svgs/CloseMenu.svg" alt="X" />
                       </button>
 
                       <div className={style.metaData}>
-                        <h3>{"Q" + (index + 1)}</h3>
+                        <h3>{"Q" + (QIndex + 1)}</h3>
                         <input
                           type="text"
                           name="chapter"
                           placeholder="chapter"
                           className="textBox"
                           defaultValue={question.chapter}
-                          onBlur={(e) => modifyQuiz(e, index)}
+                          onBlur={(e) => modifyQuiz(e, {index : QIndex})}
                         />
                         <input
                           type="text"
@@ -137,7 +164,7 @@ const QuizQuestionsForm = () => {
                           placeholder="section"
                           className="textBox"
                           defaultValue={question.section}
-                          onBlur={(e) => modifyQuiz(e, index)}
+                          onBlur={(e) => modifyQuiz(e, {index : QIndex})}
                         />
                       </div>
                       
@@ -147,7 +174,7 @@ const QuizQuestionsForm = () => {
                         className="textBox"
                         id={style.question}
                         defaultValue={question.question}
-                        onBlur={(e) => modifyQuiz(e, index)}
+                        onBlur={(e) => modifyQuiz(e, {index : QIndex})}
                       ></textarea>
 
 
@@ -160,11 +187,10 @@ const QuizQuestionsForm = () => {
                           <p>Options</p>
                         </div>
                        
-                        {question.options.map((option,index) => (                            
-                           <div id={style.option}>
+                        {question.options.map((option,index) => (             
+                           <div id={style.option}>  
                               <label className="radio">
-                              {/* onLoad={e=>{(option === question.correctAnswer)? document.getElementById('radioOption').checked = true : " "}}  */}
-                                <input type="radio" name="type" id="radioOption" />
+                                <input type="radio" name={"Q"+QIndex} id="radioOption" onChange={e=> modifyQuiz(e, {index : QIndex,option})} defaultChecked={((option && option.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase())?true:false)} />
                                 <span className="inputControl"></span>
                               </label>
                               <input
@@ -172,16 +198,18 @@ const QuizQuestionsForm = () => {
                                 name="option"
                                 placeholder="option"
                                 className="textBox"
-                                defaultValue={option}
+                                value={option}
+                              
+                                onBlur={(e) => modifyQuiz(e, {index : QIndex, optionIndex : index,option})}
                               />
-                              <button className="redRoundBtn">
+                              <button className="redRoundBtn" onClick={e=>modifyQuiz(e,{index:QIndex,addOption : 'remove', optionIndex : index,option})}>
                                 {" "}
-                                <img src="/imgs/svgs/OptionMinus.svg" alt="-" />
+                                 <img src="/imgs/svgs/OptionMinus.svg" alt="-" />
                               </button>
                               {(index===question.options.length-1) ?
-                                (<button className="greenRoundBtn">
+                                (<button className="greenRoundBtn" onClick={e=>modifyQuiz(e,{index:QIndex,addOption : 'add'})}>
                                   {" "}
-                                  <img src="/imgs/svgs/OptionPlus.svg" alt="+" />
+                                  <img src="/imgs/svgs/OptionPlus.svg"  alt="+" />
                                 </button>)
                                 :" "
                               }
@@ -197,7 +225,7 @@ const QuizQuestionsForm = () => {
                         placeholder="Add syllabus"
                         className="textBox"
                         defaultValue={question.syllabus}
-                        onBlur={(e) => modifyQuiz(e, index)}
+                        onBlur={(e) => modifyQuiz(e, {index : QIndex})}
                       />
                     </div>
                   ))}
