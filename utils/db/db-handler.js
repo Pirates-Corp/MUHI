@@ -581,10 +581,10 @@ export const handleFieldUpdate = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = parseInt(decodeURIComponent(req.query?.fieldId))
       const newDoc = req.body;
-      newDoc.id = newDoc.id ? newDoc.id : fieldId;
       const collectionDetails = constants.collectionMap[collection];
+      newDoc.id = newDoc.id ? newDoc.id : fieldId;
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -788,8 +788,9 @@ export const handleSubFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = decodeURIComponent(req.query?.subFieldId);
+      const subFieldId = parseInt(decodeURIComponent(req.query?.subFieldId))
       const newDoc = req.body;
+      newDoc.id = newDoc.id ? newDoc.id : subFieldId;
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -797,12 +798,17 @@ export const handleSubFieldUpdate = async (req, res) => {
           return doc.id == fieldId;
         });
         if (matchedFields[0]) {
+          let modifiedSubField = false
           const matchedSubFields = matchedFields[0][subFieldName].map((doc) => {
             if (doc.id == subFieldId) {
+              modifiedSubField = true
               doc = newDoc;
             }
             return doc;
           });
+          if(!modifiedSubField) {
+            matchedSubFields.push(newDoc)
+          }
           console.log(matchedSubFields);
           if (matchedSubFields[0]) {
             matchedFields[0][subFieldName] = matchedSubFields;
