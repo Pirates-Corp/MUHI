@@ -8,9 +8,21 @@ import { ExcelRenderer } from "react-excel-renderer";
 let fileData;
 let quizQuestions = [];
 
+
 const QuizQuestionsForm = () => {
+  let flag = true;
   const Quiz = {};
-  const [loadedQuestions, updateLoadedQuestion] = useState([]);
+  const [loadedQuestions, updateLoadedQuestion] = useState([
+    {
+      id: 0,
+      chapter: "",
+      correctAnswer: '',
+      options: [null],
+      question: "",
+      section: "",
+      syllabus: "",
+    },
+  ]);
 
   try {
     Quiz.data = JSON.parse(sessionStorage.getItem("Quiz"));
@@ -58,8 +70,9 @@ const QuizQuestionsForm = () => {
           }
         })
 
-
+        sessionStorage.setItem("Questions",JSON.stringify(quizQuestions))
         updateLoadedQuestion([...quizQuestions]);
+        
         
       }
     });
@@ -124,14 +137,16 @@ const QuizQuestionsForm = () => {
       }
     }
   
+    sessionStorage.setItem("Questions",JSON.stringify(loadedQuestions))
     updateLoadedQuestion([...loadedQuestions]);
+   
   };
 
   const QuizDataFrom = async (e) => {
     e.preventDefault();
     let tempQuiz = Quiz;
-    tempQuiz.data.questions = loadedQuestions;
-    tempQuiz.data.totalMarks = loadedQuestions.length;
+    tempQuiz.data.questions = JSON.parse(sessionStorage.getItem('Questions'));
+    tempQuiz.data.totalMarks = JSON.parse(sessionStorage.getItem('Questions')).length;
     sessionStorage.setItem("Quiz", JSON.stringify(tempQuiz.data));
 
     console.log(tempQuiz);
@@ -147,20 +162,20 @@ const QuizQuestionsForm = () => {
 
   useEffect(() => {
     console.log("use effects call");
-    updateLoadedQuestion([
-      {
-        id: 0,
-        chapter: "",
-        correctAnswer: '',
-        options: [null],
-        question: "",
-        section: "",
-        syllabus: "",
-      },
-    ]);
-  }, [quizQuestions]);
+    let sessionData = JSON.parse(sessionStorage.getItem('Questions'))
+    if(sessionData !== null)
+    {
+      updateLoadedQuestion(sessionData);
+    }
+  },[flag]);
 
   console.log(loadedQuestions);
+
+    if(loadedQuestions.length==1 ){
+        flag = false;
+        console.log("condition");
+    } 
+  
 
   return (
     <CenterLayout>
@@ -329,7 +344,7 @@ const QuizQuestionsForm = () => {
                 className="blueBtn"
                 onClick={(e) =>
                   modifyQuiz(e, {
-                    index: loadedQuestions.length-1,
+                    index: loadedQuestions.length,
                     addQuestion: true,
                   })
                 }
