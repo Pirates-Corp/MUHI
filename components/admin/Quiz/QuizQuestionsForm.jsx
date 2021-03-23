@@ -44,7 +44,7 @@ const QuizQuestionsForm = () => {
         });
         console.log(quizQuestions);
 
-        loadedQuestions.map((obj,index)=>{
+        loadedQuestions.map((obj)=>{
 
          if(!(obj.chapter === "" &&
           obj.correctAnswer === "" &&
@@ -53,7 +53,7 @@ const QuizQuestionsForm = () => {
           obj.section === "" &&
           obj.syllabus === "" && obj.id === 0))
           {
-           obj.id = quizQuestions.length+(index+1);
+           obj.id = quizQuestions.length+1;
            quizQuestions.unshift(obj);
           }
         })
@@ -329,7 +329,7 @@ const QuizQuestionsForm = () => {
                 className="blueBtn"
                 onClick={(e) =>
                   modifyQuiz(e, {
-                    index: loadedQuestions.length,
+                    index: loadedQuestions.length-1,
                     addQuestion: true,
                   })
                 }
