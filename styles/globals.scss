@@ -269,7 +269,7 @@ Text Box
 //textBox without Image
 
 .textBox{
-    background: #ffffff;
+    background: var(--white);
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     border: none;
@@ -599,7 +599,7 @@ File Uploader
             display: inline-block;
             margin-right: 2rem;
             position: relative;
-            background: #ffffff;
+            background: var(--white);
             box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
             border-radius: 5px;
             border: none;
@@ -752,4 +752,75 @@ File Uploader
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+/* 
+ ==========
+ Drop down
+ ==========
+ */
+
+.dropDown
+{
+   display: inline-block;
+   margin:.5rem .8rem;
+  
+   box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+   border-radius: 20px;
+   border: none;
+   width: fit-content;
+   font-family: TextRegular;
+   color: var(--black);
+   position: relative;
+
+   img
+   {
+     width: .8rem;
+     height: .8rem;
+     display: block;
+     top: 35%;
+     left: .5rem;
+     position: absolute;
+     margin-left: .3rem;
+     margin-right: .3rem;
+   }
+   
+    
+    select
+    {
+      padding: 0.8rem 2.8rem 0.8rem 2rem;
+      border-radius: 20px;
+      border: none;
+      appearance: none;
+      outline: none;
+
+      option li
+      {
+        width: max-content;
+        background-color: var(--white);
+        border: none;
+        padding: 1rem !important;
+        border-radius: 30px;
+        
+      
+        
+      }
+    }
+
+    .dropDrownArrow
+    {
+      pointer-events: none;
+      position: absolute;
+      display: block;
+      top: 48%;
+      right: 1rem;
+      height: .5rem;
+      width: .5rem;
+      border-top: .3rem solid ;
+      border-left: .3rem solid transparent;
+      border-right: .3rem solid transparent;
+    }
+
+    
+    
 }
