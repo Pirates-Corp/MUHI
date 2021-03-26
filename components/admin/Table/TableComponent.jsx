@@ -45,11 +45,47 @@ const TableComponent = (props) => {
         e.preventDefault();
 
         const searchString = document.getElementById("searchText").value.toString().toLowerCase();
-        let resultData = viewData.filter(el=>el.join('').toLowerCase().includes(searchString.trim(' ')));
+        let resultData = rawTableData.filter(el=>el.join('').toLowerCase().includes(searchString.trim(' ')));
         console.log(resultData);
-        setViewData((searchString.length==0)?rawTableData:resultData);
+        //setViewData((searchString.length==0)?rawTableData:resultData);
+        setViewData(resultData);
 
       }
+
+  //sort option
+  const sortFunction  = (event)=>{
+       let   sortBy   = event.target.value;
+       let   sortView = [];
+       let   sortArr  = [];
+       const index = viewColNames.indexOf(sortBy);
+
+       if(sortBy=='Sort By')
+       {
+         setViewData(rawTableData)
+       }
+       else{
+         viewData.map(arr=>{
+            sortArr.push(arr[index]);
+         })
+        
+         sortArr.sort();
+       
+         sortArr.map((key)=>{
+            viewData.map((arr)=>{
+              if(key==arr[index])
+              {
+                sortView.push(arr);
+              }
+            })
+         })
+
+         setViewData(sortView);
+        
+       }
+
+
+
+  }
 
 
 
@@ -70,16 +106,14 @@ const TableComponent = (props) => {
           let row = [];
           apiData.allReports.map((user)=>{
               user.reports.map(quiz=>{
-                console.log(quiz.id);
-                console.log(currentQuiz);
-                console.log(quiz.id.toLowerCase(),currentQuiz.toLowerCase());
+              
                 if(quiz.id.toLowerCase()==currentQuiz.toLowerCase())
                 {
-                row = Object.values(user).slice(0,3);
-                row.push(quiz.score.taken+'/'+quiz.score.total);
-                row.push(quiz.time.taken+'/'+quiz.time.total)
-                row.push("www.google.com");
-                studentData.push(row);
+                  row = Object.values(user).slice(0,3);
+                  row.push(quiz.score.taken+'/'+quiz.score.total);
+                  row.push(quiz.time.taken+'/'+quiz.time.total)
+                  row.push("www.google.com");
+                  studentData.push(row);
                 }
               })
             console.log(studentData);   
@@ -96,45 +130,92 @@ const TableComponent = (props) => {
       setViewData(studentData);
     
 
-      console.log("studentData",studentData);
+      console.log("rawData",rawTableData);
 
   }
 
   //Export option
   const exportFile = ()=>{
-     let ExportAllStudents = []
-     if(exportHeader=="All students")
+     let ExportData = []
+     if(exportHeader)
      {
-      apiData.allReports.map((user)=>{
-        let row = Object.values(user).slice(0,3);
-        row.push(user.reports.length);
+       if(exportHeader=="All students")
+       {
+        const exportStudentCol = ['Student Name','Overall Rank','Average Score','Quizzes Taken']
+        apiData.allReports.map((user)=>{
+          let row = Object.values(user).slice(0,3);
+          row.push(user.reports.length);
+          ExportData.push(row)
+        })
+        ExportData.unshift(exportStudentCol);
+       }
+       else
+       {
+        let row = [];
+        const exportQuizCol = ['Student Name','Rank','Average Score','score','Time Taken','Status','Questions Left']
+        let tagMap = {};
+        let runOnce = true;
+        apiData.allReports.map((user)=>{
+            user.reports.map((quiz)=>{
+              console.log(quiz.id);
+              console.log(quiz.id.toLowerCase(),exportHeader.toLowerCase());
+              if(quiz.id.toLowerCase()==exportHeader.toLowerCase())
+              {
+                row = Object.values(user).slice(0,3);
+                row.push(quiz.score.taken+'/'+quiz.score.total);
+                row.push(quiz.time.taken+'/'+quiz.time.total+"Mins");
+                row.push(quiz.status);
+                row.push(quiz.questionsLeft.length);
+                quiz.report.map((tag)=>{
+                  if(tag.chapter+'_'+tag.section in tagMap)
+                   tagMap[tag.chapter+'_'+tag.section] =  tagMap[tag.chapter+'_'+tag.section] + Number(tag.result);
+                  else
+                   tagMap[tag.chapter+'_'+tag.section] = Number(tag.result);
+                })
+                row.push(...Object.keys(tagMap).map(key=>tagMap[key]));
+
+                if(runOnce){
+                  exportQuizCol.push(...Object.keys(tagMap).map(key=>key));
+                  runOnce=false
+                }
         
-        ExportAllStudents.push(row)
-      })
-      ExportAllStudents.unshift(studentCol);
-    }
+                tagMap = {};
+                ExportData.push(row);
+              }
+            })
+        })
+        
+        ExportData.unshift(exportQuizCol);
+       }
 
+     }
+     else
+     {
+      ExportData.push(viewData);
+      ExportData.unshift(viewColNames);
+     }
 
-    //console.log(JSON.stringify(ExportAllStudents));
-    var wb = XLSX.utils.book_new();
+     console.log(ExportData);
+ 
+    let wb = XLSX.utils.book_new();
 
     wb.Props = {
       Title: exportHeader+"- Reports",
-      Subject: "exportHeader",
+      Subject: exportHeader,
       Author: "MUHI",
       CreatedDate: new Date()
      };
    
      wb.SheetNames.push("Sheet 1");
-     var ws_data =  ExportAllStudents;  
-     var ws = XLSX.utils.aoa_to_sheet(ws_data);
+     let ws_data =  ExportData;  
+     let ws = XLSX.utils.aoa_to_sheet(ws_data);
      wb.Sheets["Sheet 1"] = ws;
 
-     var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+     let wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
       
      function s2ab(s) { 
-      var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-      var view = new Uint8Array(buf);  //create uint8array as viewer
+      let buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+      let view = new Uint8Array(buf);  //create uint8array as viewer
       for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
       return buf;    
      }
@@ -171,12 +252,17 @@ const TableComponent = (props) => {
 
         <div className="dropDown" style={(feature.sort)?({"display" : "inline-block"}) : {"display" : "none"}}>
           <img src="/imgs/svgs/Sort.svg" alt=""/>
-          <select >
-             <option  disabled  defaultValue="Sort By" hidden selected  >Sort By</option>
-             {
+          <select onChange={sortFunction}>
+          <option  disabled  defaultValue="Sort By" hidden selected  >Sort By</option>
+          <optgroup label="Default View">
+             <option value="Sort By" >Sort By</option>
+          </optgroup>
+          <optgroup label="Sort Options">
+              {
                viewColNames.map((option)=>
-                <option value={option}>{option}</option>)
-             }
+               <option value={option}>{option}</option>)
+              }
+          </optgroup>
           </select>
           <span className="dropDrownArrow"></span>
         </div>
@@ -247,3 +333,42 @@ const TableComponent = (props) => {
 };
 
 export default TableComponent;
+
+
+
+// [{
+//   "id": 1,
+//   "chapter": "test chapter",
+//   "section": "test section",
+//   "result": "1"
+// },
+// {
+//   "id": 2,
+//   "chapter": "test chapter - change",
+//   "section": "test section",
+//   "result": "1"
+// },
+// {
+//   "id": 1,
+//   "chapter": "test chapter",
+//   "section": "test section",
+//   "result": "1"
+// },
+// {
+//   "id": 2,
+//   "chapter": "test chapter - change",
+//   "section": "test section",
+//   "result": "1"
+// }]
+
+// const chapterWithSection = tag.chapter +"_"+tag.section;
+
+//                      if(chapterWithSection in tagMap)
+//                      {
+//                        tagMap[chapterWithSection] = tag[chapterWithSection] +  tag.result ;
+//                      }
+//                     else
+//                     {
+                      
+//                       tagMap[chapterWithSection] = tag.result;
+//                     }
