@@ -32,6 +32,7 @@ function QuizTaking() {
                 JSON.stringify(quizData) !== JSON.stringify(currentQuiz)
               ) {
                 console.log("Quiz data and current state is not null");
+                quizData.duration = quizData.duration * 60
                 setCurrentQuiz(quizData);
                 localStorage.setItem("currentQuiz", JSON.stringify(quizData));
               }
@@ -74,7 +75,7 @@ function QuizTaking() {
         currentQuiz.hasOwnProperty("questions") &&
         questionId < currentQuiz.questions.length ? (
           <>
-            <Timer props={{duration:currentQuiz.duration ,currentQuiz,setCurrentQuiz}}/>
+            <Timer props={{duration:currentQuiz.duration,currentQuiz,setCurrentQuiz}}/>
             <div id={style.quiz}>
               <div id={style.questionBox}>
                 <div id={style.questionHolder}>

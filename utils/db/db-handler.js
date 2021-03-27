@@ -104,11 +104,14 @@ export const handleDocumentReadAll = async (req, res) => {
                   ) {
                     delete doc.password;
                     delete doc.resetToken;
-                  } else if( collectionDetails.collectionName ===
-                    constants.collectionMap.quiz.collectionName && constants.roles.admin!==result[1].role){
-                      doc.questions.map((question)=>{
-                        delete question.correctAnswer
-                      });
+                  } else if (
+                    collectionDetails.collectionName ===
+                      constants.collectionMap.quiz.collectionName &&
+                    constants.roles.admin !== result[1].role
+                  ) {
+                    doc.questions.map((question) => {
+                      delete question.correctAnswer;
+                    });
                   }
                   collectionsArray.push(doc);
                 });
@@ -168,10 +171,10 @@ export const handleDocumentInsert = async (req, res) => {
             "Unauthorized action. Need admin handle to execute this operation";
           console.log(resBody);
         } else {
-          const result = await insertDoc(collectionDetails,documentReceived)
-          if(result) {
-            resCode = result[0]
-            resBody = result[1]
+          const result = await insertDoc(collectionDetails, documentReceived);
+          if (result) {
+            resCode = result[0];
+            resBody = result[1];
           }
         }
       } else if (authResult) {
@@ -470,9 +473,7 @@ export const handleFieldInsert = async (req, res) => {
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
-        console.log(document);
         document[fieldName].push(doc);
-        console.log(document);
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -507,7 +508,6 @@ export const handleFieldDelete = async (req, res) => {
       if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
-          console.log(doc);
           return doc.id != fieldId;
         });
         document[fieldName] = matchedFields;
@@ -516,7 +516,6 @@ export const handleFieldDelete = async (req, res) => {
           documentId,
           document
         );
-        console.log(document);
         resCode = updateResponse[0];
         resBody = updateResponse[1];
         console.log(resBody);
@@ -541,25 +540,25 @@ export const handleFieldUpdate = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = parseInt(decodeURIComponent(req.query?.fieldId))
+      const fieldId = parseInt(decodeURIComponent(req.query?.fieldId));
       const newDoc = req.body;
       const collectionDetails = constants.collectionMap[collection];
       newDoc.id = newDoc.id ? newDoc.id : fieldId;
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
-        let modified = false
+        let modified = false;
         const modifiedArray = document[fieldName].map((doc) => {
           if (doc.id == fieldId) {
             console.log("found doc ");
             doc = newDoc;
-            modified = true
+            modified = true;
           }
           return doc;
         });
-        if(!modified){
-          modifiedArray.push(newDoc)
-        } 
+        if (!modified) {
+          modifiedArray.push(newDoc);
+        }
         document[fieldName] = modifiedArray;
         console.log(modifiedArray);
         console.log(modified);
@@ -568,7 +567,6 @@ export const handleFieldUpdate = async (req, res) => {
           documentId,
           document
         );
-        console.log(document);
         resCode = updateResponse[0];
         resBody = updateResponse[1];
       } else {
@@ -703,15 +701,15 @@ export const handleSubFieldDelete = async (req, res) => {
         if (matchedFields[0]) {
           const matchedSubFields = matchedFields[0][subFieldName].filter(
             (doc) => {
-              console.log(doc);
               return doc.id != subFieldId;
             }
           );
           matchedFields[0][subFieldName] = matchedSubFields;
+          console.log("==================================>"+JSON.stringify(document))
           const updateResponse = await updateDoc(
             collectionDetails,
             documentId,
-            document
+            {...document}
           );
           resCode = updateResponse[0];
           resBody = updateResponse[1];
@@ -748,7 +746,7 @@ export const handleSubFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = parseInt(decodeURIComponent(req.query?.subFieldId))
+      const subFieldId = parseInt(decodeURIComponent(req.query?.subFieldId));
       const newDoc = req.body;
       newDoc.id = newDoc.id ? newDoc.id : subFieldId;
       const result = await getDoc(req);
@@ -758,16 +756,16 @@ export const handleSubFieldUpdate = async (req, res) => {
           return doc.id == fieldId;
         });
         if (matchedFields[0]) {
-          let modifiedSubField = false
+          let modifiedSubField = false;
           const matchedSubFields = matchedFields[0][subFieldName].map((doc) => {
             if (doc.id == subFieldId) {
-              modifiedSubField = true
+              modifiedSubField = true;
               doc = newDoc;
             }
             return doc;
           });
-          if(!modifiedSubField) {
-            matchedSubFields.push(newDoc)
+          if (!modifiedSubField) {
+            matchedSubFields.push(newDoc);
           }
           if (matchedSubFields[0]) {
             matchedFields[0][subFieldName] = matchedSubFields;
@@ -860,11 +858,24 @@ const getDoc = async (req) => {
             ) {
               delete document.password;
               delete document.resetToken;
-            } else if( collectionDetails.collectionName ===
-              constants.collectionMap.quiz.collectionName && constants.roles.admin!==authResult[1].role){
-                document.questions.map((question)=>{
-                  delete question.correctAnswer
+            } else if (
+              collectionDetails.collectionName ===
+                constants.collectionMap.quiz.collectionName &&
+              constants.roles.user === authResult[1].role
+            ) {
+              document.questions.map((question) => {
+                delete question.correctAnswer;
+              });
+            } else if (
+              collectionDetails.collectionName ===
+                constants.collectionMap.report.collectionName &&
+              constants.roles.user === authResult[1].role
+            ) {
+              document.reports.map((report) => {
+                report.report.map((questionReport) => {
+                  delete questionReport.result;
                 });
+              });
             }
             resBody = document;
             resCode = 200;
@@ -986,9 +997,10 @@ const validateDoc = (array) => {
   return true;
 };
 
-const insertDoc = async (collectionDetails,doc) => {
-  let resCode = 400,resBody =""
-  try{
+const insertDoc = async (collectionDetails, doc) => {
+  let resCode = 400,
+    resBody = "";
+  try {
     if (collectionDetails && doc) {
       let mongoDocument = {};
       if (
@@ -1000,9 +1012,7 @@ const insertDoc = async (collectionDetails,doc) => {
         mongoDocument._id = new String(doc.id).toLowerCase();
         delete doc.id;
       } else {
-        mongoDocument._id = new String(
-          doc.title
-        ).toLowerCase();
+        mongoDocument._id = new String(doc.title).toLowerCase();
       }
       mongoDocument = { ...mongoDocument, ...doc };
       const internalValidationResp = validateDoc([mongoDocument]);
@@ -1034,18 +1044,19 @@ const insertDoc = async (collectionDetails,doc) => {
       resBody = "Invalid Collection";
       console.log(resBody);
     }
-  
-  }catch(err) {console.error("Error while inserting document => ",err)}
-  return [resCode,resBody]
-}
+  } catch (err) {
+    console.error("Error while inserting document => ", err);
+  }
+  return [resCode, resBody];
+};
 
 export const addUserReport = async (id) => {
   const newReport = {
     id,
-    rank:"NIL",
-    avgScore:0,
-    reports:[]
-  }
-  const result = await insertDoc(constants.collectionMap.report,newReport)
-  return result
-}
+    rank: "NIL",
+    avgScore: 0,
+    reports: [],
+  };
+  const result = await insertDoc(constants.collectionMap.report, newReport);
+  return result;
+};

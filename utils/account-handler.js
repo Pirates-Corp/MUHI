@@ -118,11 +118,15 @@ export const login = async (httpReq, httpRes) => {
             return;
           }
         } else {
-          console.log("User Not found => " + userDetails.id);
-          httpRes.redirect(
-            httpReq.headers.referer.split("?")[0] + process.env.routes.invalidUser
-          );
-          return;
+          resText = "User Not found => " + userDetails.id
+          resCode = 400;
+          console.log(resText)
+          if(httpReq.headers.referer) {
+            httpRes.redirect(
+              httpReq.headers.referer.split("?")[0] + process.env.routes.invalidUser
+            );
+            return;
+          } 
         }
       } else {
         resText = "Required fields missing";

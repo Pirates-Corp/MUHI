@@ -72,7 +72,7 @@ export const reportSchema = {
               additionalItems: false,
               items: {
                 bsonType: "object",
-                required: ["id", "chapter", "section", "result"],
+                required: ["id", "chapter", "section", "result","answer"],
                 additionalProperties: false,
                 properties: {
                   id: {
@@ -85,8 +85,11 @@ export const reportSchema = {
                     bsonType: "string",
                   },
                   result: {
-                    bsonType: "string",
+                    bsonType: "number",
                   },
+                  answer : {
+                    bsonType: "string",
+                  }
                 },
               },
             },

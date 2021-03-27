@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import style from "../../user/Quiz/QuizTaking.module.scss";
 
 const Timer = ({ props }) => {
-  const [currentCount, setCount] = useState(parseInt(props.duration * 60));
+  const [currentCount, setCount] = useState(parseInt(props.duration));
 
   const [minute, setMinute] = useState(parseInt(Math.floor(currentCount / 60)));
 
@@ -18,12 +18,12 @@ const Timer = ({ props }) => {
     const id = setInterval(() => {
       setCount(currentCount - 1);
     }, 1000);
-    if (props.currentQuiz && minute > parseInt(Math.floor(currentCount / 60))) {
+    // if (props.currentQuiz && minute > parseInt(Math.ceil(currentCount / 60))) {
       props.currentQuiz.started = true;
-      props.currentQuiz.duration = parseInt(currentCount / 60);
-      console.log(props.currentQuiz.duration);
+      props.currentQuiz.duration = currentCount
+      // console.log(props.currentQuiz.duration);
       props.setCurrentQuiz({ ...props.currentQuiz });
-    }
+    // }
     setMinute(parseInt(Math.floor(currentCount / 60)));
     setSecond(parseInt(Math.floor(currentCount % 60)));
     return () => clearInterval(id);
