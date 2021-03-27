@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  
 }
 html,
 body {
@@ -8,6 +9,10 @@ body {
 }
 a {
   text-decoration: none;
+}
+p
+{
+  font-family: TextRegular;
 }
 ul {
   list-style: none;
@@ -27,7 +32,33 @@ ul {
   --dark-light: #7a7979;
   --black: #000;
   --white: #fff;
+  --adminColor : linear-gradient(92.56deg, rgba(0, 104, 194, 0.1) 5.51%, rgba(163, 120, 255, 0.1) 76.93%);
+  --userColor : linear-gradient(92.56deg, rgba(0, 104, 194, 0.1) 5.51%, rgba(163, 120, 255, 0.1) 76.93%);
 }
+
+
+//bg
+
+.blueBg
+{
+      background-color: var(--primary);
+}
+
+.greenBg
+{
+      background-color: var(--secondary);
+}
+
+.redBg
+{
+      background-color: var(--red);
+}
+
+.blackBg
+{
+      background-color: var(--dark-light);
+}
+
 
 /* fonts  */
 
@@ -127,20 +158,14 @@ Text Box
     caret-color: var(--primary);
     font-family: TextRegular;
     color: var(--black);
-
-
-  
-
   }
+
   input[type="text"]::-webkit-input-placeholder {
     color: var(--black);
     text-transform: capitalize;
     opacity: 1 !important;
   }
  
-  
-
-
   input[type="password"] {
     background: #ffffff;
     box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
@@ -211,6 +236,34 @@ Text Box
       opacity: 0;
     }
   }
+
+
+  .suggestion
+  {
+    background: #ffffff;
+    box-shadow: 0px 1px 7px -1px rgba(0, 0, 0, 0.25);
+    border-radius: 0 0 5px 5px;
+    border: none;
+    width: 95%;
+    font-family: TextRegular;
+    color: var(--black);
+    overflow: hidden;
+    margin: 0;
+    position: absolute;
+    z-index: 50;
+    li
+    {
+      
+      padding: .5rem;
+    }
+    li:hover
+    {
+     background-color: var(--primary-light);
+     cursor: pointer;
+     
+    }
+  }
+
 }
 
 //textBox without Image
@@ -276,7 +329,6 @@ color buttons
 .blueBtn {
 
   text-transform: capitalize;
-  box-sizing: content-box;
   margin: 0rem 1rem 2rem 0;
   background: var(--primary-light);
   color: var(--primary);
@@ -289,7 +341,9 @@ color buttons
 
   img {
     filter: invert(32%) sepia(75%) saturate(939%) hue-rotate(177deg) brightness(92%) contrast(81%);
+    margin-top: 6px !important;
     margin-right: 8px !important;
+    margin-left: 8px !important;
     width: 1rem;
     height: 1rem;
     transition: 0.5s;
@@ -313,7 +367,6 @@ color buttons
 //green
 
 .greenBtn {
-  box-sizing: content-box;
   margin: 0rem 1rem 2rem 0;
   background: var(--secondary-light);
   color: var(--secondary);
@@ -351,7 +404,6 @@ color buttons
 //Red
 
 .redBtn {
-  box-sizing: content-box;
   margin: 0rem 1rem 2rem 0;
   background: var(--red-light);
   color: var(--red);
@@ -390,8 +442,6 @@ radio buttons
 ===========*/
 
 .radio {
-  
-  display: block;
   width: min-content;
   position: relative;
   margin-bottom: 20px;
@@ -440,11 +490,12 @@ Round buttons
   display: block;
   border-radius: 50% !important;
   height: 1.5rem;
-  padding-top: 5;
+  padding: 0;
   width: 1.5rem;
   background: var(--primary-light);
   color: var(--primary);
-
+  cursor: pointer;
+ 
    img
    {
     display: block;
@@ -453,11 +504,17 @@ Round buttons
     margin: 0 auto;
    }
 
+   svg
+   {
+    height: .8rem;
+    width: .8rem;
+    fill: aquamarine;
+   }
+
    &:hover
    {
     background: var(--primary);
     color: var(--white);
-
       img
       {
         filter: invert(0%) sepia(0%) saturate(7481%) hue-rotate(145deg) brightness(105%) contrast(97%);
@@ -474,7 +531,7 @@ Round buttons
   display: block;
   border-radius: 50% !important;
   height: 1.5rem;
-  padding-top: 5;
+  padding: 0;
   width: 1.5rem;
   background: var(--red-light);
   color: var(--red);
@@ -485,7 +542,6 @@ Round buttons
     height: .8rem;
     width: .8rem;
     margin: 0 auto;
-    filter: invert(52%) sepia(7%) saturate(7438%) hue-rotate(321deg) brightness(86%) contrast(118%);
    }
 
    &:hover
@@ -501,16 +557,14 @@ Round buttons
 }
 
 
-
-
 .greenRoundBtn
 {
   border: none;
   display: block;
   border-radius: 50% !important;
   height: 1.5rem;
-  padding-top: 5;
   width: 1.5rem;
+  padding: 0;
   background: var(--secondary-light);
   color: var(--secondary);
 
@@ -606,4 +660,97 @@ File Uploader
 }
 .mb-1 {
   margin-bottom: 1rem !important;
+}
+
+//animations
+
+@keyframes fadeInDown {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 200%, 0);
+  }
+}
+
+
+
+//==============
+//check box
+//==============
+
+/* The container */
+.container {
+  display: block;
+  width: fit-content !important;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-family: TextRegular;
+  margin: 2rem auto;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border : 3px solid var(--primary);
+  border-radius: 8px;
+  background-color: var(--white)
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: var(--primary);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--white);
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

@@ -22,8 +22,8 @@ export default function studentReport() {
         <TableComponent
           col="6"
           colNames={["Student Name", "overall Rank","High score",' active ago',"test taken"]}
-          buttonColor="red"
-          buttonText="terminate"
+          buttonColor="blue"
+          buttonText="View"
           data={data}
         />
       </BaseLayout>

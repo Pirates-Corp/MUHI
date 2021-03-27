@@ -1,0 +1,330 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin desktop {
+      .newsletterForm
+      {
+           width: 100%;
+           padding: .8rem;
+           display: grid;
+           grid-template-columns: 65% 30%;
+           grid-column-gap: 2rem ;
+           
+           #fromBox
+           {
+             width: 100%;
+             min-height: 60vh;
+            
+             
+             #newsletterName
+             {
+                   width: 100%;
+                   margin-bottom: .5rem;
+                   font-size: 1rem;
+             }
+     
+             textarea
+             {
+                 font-size: 1rem;
+                 resize: none;
+                 height: 50vh;
+                 width: 100%;
+             }
+           } 
+           #options
+           {
+             padding: 1.5rem; 
+             background: rgba(205, 222, 236, 0.24);
+             border-radius: 20px;  
+     
+             #checkbox
+             {
+                 margin-top: 1rem;
+             }
+             #radio
+             {
+                   display: Inline-block;
+                   width: fit-content;
+                   margin: 1rem 0 1rem .5rem;              
+             }
+             #schedule
+             {
+                 display: block;
+                 width: fit-content;
+                 margin: 1.2rem 0 1rem .5rem;   
+             }
+             #Textbox
+             {
+                 margin-top: .1rem;
+             }
+             #pubBtn
+             {
+                   margin-left: .5rem;
+                   margin-top: 2rem;
+             }
+           }
+      }
+}
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+ 
+ .newsletterForm
+ {
+      padding: .8rem;
+      
+      #fromBox
+      {
+        width: 100%;
+        min-height: 40vh;
+        margin-bottom: 1rem;
+        
+        #newsletterName
+        {
+              width: 100%;
+        }
+
+        textarea
+        {
+            resize: none;
+            height: 13rem;
+            width: 100%;
+        }
+      } 
+      #options
+      {
+        padding: 1.2rem; 
+        background: rgba(205, 222, 236, 0.24);
+        border-radius: 20px;  
+
+        #checkbox
+        {
+            margin-top: 1rem;
+        }
+        #radio
+        {
+              display: Inline-block;
+              width: 90%;
+              margin: 1rem 0 1rem .4rem;              
+        }
+        #schedule
+        {
+            display: Inline-block;
+            width: 90%;
+            margin: 1.2rem 0 1rem .4rem;   
+        }
+        #Textbox
+        {
+            margin-top: .1rem;
+        }
+        #pubBtn
+        {
+              margin-left: .5rem;
+        }
+      }
+ }
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+ 
+      .newsletterForm
+ {
+      padding: .8rem;
+      
+      #fromBox
+      {
+        width: 100%;
+        min-height: 40vh;
+        margin-bottom: 1rem;
+        
+        #newsletterName
+        {
+              width: 100%;
+        }
+
+        textarea
+        {
+            resize: none;
+            height: 13rem;
+            width: 100%;
+        }
+      } 
+      #options
+      {
+        padding: 1.5rem; 
+        background: rgba(205, 222, 236, 0.24);
+        border-radius: 20px;  
+
+        #checkbox
+        {
+            margin-top: 1rem;
+        }
+        #radio
+        {
+              display: Inline-block;
+              width: 90%;
+              margin: 1rem 0 1rem .5rem;              
+        }
+        #schedule
+        {
+            display: Inline-block;
+            width: 90%;
+            margin: 1.2rem 0 1rem .5rem;   
+        }
+        #Textbox
+        {
+            margin-top: .1rem;
+        }
+        #pubBtn
+        {
+              margin-left: .5rem;
+        }
+      }
+ }
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+      .newsletterForm
+      {
+           padding: .8rem;
+           
+           #fromBox
+           {
+             width: 100%;
+             min-height: 40vh;
+             margin-bottom: 1rem;
+             
+             #newsletterName
+             {
+                   width: 100%;
+             }
+     
+             textarea
+             {
+                 resize: none;
+                 height: 13rem;
+                 width: 100%;
+             }
+           } 
+           #options
+           {
+             padding: 1.5rem; 
+             background: rgba(205, 222, 236, 0.24);
+             border-radius: 20px;  
+     
+             #checkbox
+             {
+                 margin-top: 1rem;
+             }
+             #radio
+             {
+                   display: Inline-block;
+                   width: fit-content;
+                   margin: 1rem 0 1rem 1rem;              
+             }
+             #schedule
+             {
+                 display: block;
+                 width: fit-content;
+                 margin: 1.2rem 0 1rem 1rem;   
+             }
+             #Textbox
+             {
+                 margin-top: .1rem;
+             }
+             #pubBtn
+             {
+                   margin-left: 1rem;
+             }
+           }
+      }
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+      .newsletterForm
+      {
+           padding: .8rem;
+           
+           #fromBox
+           {
+             width: 100%;
+             min-height: 40vh;
+             margin-bottom: 1rem;
+             
+             #newsletterName
+             {
+                   width: 100%;
+             }
+     
+             textarea
+             {
+                 resize: none;
+                 height: 13rem;
+                 width: 100%;
+             }
+           } 
+           #options
+           {
+             padding: 1.5rem; 
+             background: rgba(205, 222, 236, 0.24);
+             border-radius: 20px;  
+     
+             #checkbox
+             {
+                 margin-top: 1rem;
+             }
+             #radio
+             {
+                   display: Inline-block;
+                   width: fit-content;
+                   margin: 1rem 0 1rem 1.3rem;              
+             }
+             #schedule
+             {
+                 display: block;
+                 width: fit-content;
+                 margin: 1.2rem 0 1rem 1.3rem;   
+             }
+             #Textbox
+             {
+                 margin-top: .1rem;
+             }
+             #pubBtn
+             {
+                   margin-left: 1.3rem;
+             }
+           }
+      }
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+     @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+      @include desktop();  
+}

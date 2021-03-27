@@ -1,0 +1,362 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+#skip:hover
+{
+     cursor: pointer;
+}
+#skip:focus
+{
+      outline: none;
+      color: var(--primary-light);
+}
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin phone {
+      #window
+      {
+        background-color: rgba(3, 3, 3, 0.171);
+        height: 100vh;
+        width: 100vw;
+        display: grid;
+        place-content: center;
+        place-items: center;
+        
+
+        #box
+        {
+            position: relative;
+            background-color: var(--white);
+            border-radius: 20px;
+            min-height: 50vh;
+            width: 90vw;
+            padding: 1rem;
+
+
+            #closeBtn
+            {
+              background-color: var(--red);
+              position: absolute;
+              top: .8rem;
+              right: .8rem;
+            }
+
+           #header
+           {
+               display: grid;
+               grid-template-columns: 30% 70%;
+               place-content: center;
+               align-items: center;
+                  img
+                  {
+                  
+                  margin: 0rem auto;
+                  height:4rem; 
+                  width: 4rem;  
+                  }
+                  h4
+                  {
+                        display: inline-block;
+                        margin: 0;
+                        font-size: 1.5rem;
+                        font-family: HeadingHeavy;
+                        background: -webkit-linear-gradient(-50deg, #75bc43, #0759a0);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                  }
+           }
+           #main
+           {
+               #TextBox
+               {
+                     width: 100%;
+               }
+               #radio
+               {
+                     margin-right: 1rem;
+               } 
+               #btnHolder
+               {
+                     display: block;
+                     height: 3rem;
+                     margin-top: 1.5rem;
+                     #startBtn
+                     {
+                        float: left;
+                     }
+                     #skip
+                     {
+                       font-size: .8rem;
+                       float: right;
+                       background-color: transparent;
+                       padding: 0;
+                       margin: .5rem 1rem;
+                       border: none;
+                       font-size: 1rem;
+                       font-family: TextRegular;
+                       color : var(--primary)
+                     }
+               } 
+
+           }
+           #footer
+           {
+                 p
+                 {
+                       a {
+                             color: var(--primary);
+                       }
+                 }
+           }
+
+        }
+      }
+}
+
+@mixin tablet {
+      #window
+      {
+        background-color: rgba(3, 3, 3, 0.171);
+        height: 100vh;
+        width: 100vw;
+        display: grid;
+        place-content: center;
+        place-items: center;
+        
+
+        #box
+        {
+            position: relative;
+            background-color: var(--white);
+            border-radius: 20px;
+            min-height: 50vh;
+            width: 50vw;
+            padding: 1rem;
+
+
+            #closeBtn
+            {
+              background-color: var(--red);
+              position: absolute;
+              top: .8rem;
+              right: .8rem;
+            }
+
+           #header
+           {
+               display: grid;
+               grid-template-columns: 30% 70%;
+               place-content: center;
+               align-items: center;
+                  img
+                  {
+                  
+                  margin: 0rem auto;
+                  height:4rem; 
+                  width: 4rem;  
+                  }
+                  h4
+                  {
+                        display: inline-block;
+                        margin: 0;
+                        font-size: 1.5rem;
+                        font-family: HeadingHeavy;
+                        background: -webkit-linear-gradient(-50deg, #75bc43, #0759a0);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                  }
+           }
+           #main
+           {
+               #TextBox
+               {
+                     width: 100%;
+               }
+               #radio
+               {
+                     margin-right: 1rem;
+               } 
+               #btnHolder
+               {
+                     display: block;
+                     height: 3rem;
+                     margin-top: 1.5rem;
+                     #startBtn
+                     {
+                        float: left;
+                     }
+                     #skip
+                     {
+                       font-size: .8rem;
+                       float: right;
+                       background-color: transparent;
+                       padding: 0;
+                       margin: .5rem 1rem;
+                       border: none;
+                       font-size: 1rem;
+                       font-family: TextRegular;
+                       color : var(--primary)
+                     }
+               } 
+
+           }
+           #footer
+           {
+                 p
+                 {
+                       a {
+                             color: var(--primary);
+                       }
+                 }
+           }
+
+        }
+      }
+}
+
+@mixin desktop {
+      #window
+      {
+        background-color: rgba(3, 3, 3, 0.171);
+        height: 100vh;
+        width: 100vw;
+        display: grid;
+        place-content: center;
+        place-items: center;
+        
+
+        #box
+        {
+            position: relative;
+            background-color: var(--white);
+            border-radius: 20px;
+           
+            width: 30vw;
+            padding: 1rem;
+
+
+            #closeBtn
+            {
+              background-color: var(--red);
+              position: absolute;
+              top: .8rem;
+              right: .8rem;
+            }
+
+           #header
+           {
+               display: grid;
+               grid-template-columns: 30% 70%;
+               place-content: center;
+               align-items: center;
+                  img
+                  {
+                  
+                  margin: 0rem auto;
+                  height:4rem; 
+                  width: 4rem;  
+                  }
+                  h4
+                  {
+                        display: inline-block;
+                        margin: 0;
+                        font-size: 1.5rem;
+                        font-family: HeadingHeavy;
+                        background: -webkit-linear-gradient(-50deg, #75bc43, #0759a0);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                  }
+           }
+           #main
+           {
+               #TextBox
+               {
+                     width: 100%;
+               }
+               #radio
+               {
+                     margin-right: 1rem;
+               } 
+               #btnHolder
+               {
+                     display: block;
+                     height: 3rem;
+                     margin-top: 1.5rem;
+                     #startBtn
+                     {
+                        float: left;
+                     }
+                     #skip
+                     {
+                       font-size: .8rem;
+                       float: right;
+                       background-color: transparent;
+                       padding: 0;
+                       margin: .5rem 1rem;
+                       border: none;
+                       font-size: 1rem;
+                       font-family: TextRegular;
+                       color : var(--primary)
+                     }
+               } 
+
+           }
+           #footer
+           {
+                 p
+                 {
+                       a {
+                             color: var(--primary);
+                       }
+                 }
+           }
+
+        }
+      }
+}
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+  @include phone();
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+  @include phone();   
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+   @include tablet();  
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+   @include tablet(); 
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+      @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+      @include desktop();   
+}

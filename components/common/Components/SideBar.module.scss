@@ -3,11 +3,11 @@
 -------------------------*/
 
 #holder {
-  background-color: var(--dark);
+      background-color: var(--background);
 }
 
 .active {
-  background-color: var(--dark-light);
+  background-color: var(--activeBackground);
 }
 .checkBox {
   display: none;
@@ -84,21 +84,22 @@
     padding: 1rem .79rem;
     transition: 0.5s;
 
-    li:nth-child(1)
+    li:first-child
     {
       position: absolute;
       top: 1rem;
     }
-
-    li:nth-child(n+2):nth-child(-n+6)
+    
+    li:not(:first-child):not(:last-of-type)
     {
       position: relative;
-      top : 25%;
-      transform: translateY(50%);
+      display: block;
+      top: var(--height);
+      transform: translateY(-30v);
       margin-bottom: 1rem;
     }
 
-    li:nth-child(7)
+    li:last-of-type
     {
       position: absolute;
       bottom: 1rem;
@@ -213,7 +214,7 @@
     top: 5vh;
     left: 10vw;
     right: 10vw;
-    height: 460px;
+    height: var(--holder-height);
     width: 80vw;
     border-radius: 30px;
     padding: 1rem;
@@ -253,15 +254,14 @@
     }
 
     #closeMenu {
-      margin: 0 auto;
+      margin-top: 1.5rem;
       width: 3.5rem;
       height: 3.5rem;
       border-radius: 50%;
-      background-color: var(--dark);
+      background-color: var(--background);
       display: grid;
       place-items: center;
       
-
       img {
         height: 2rem;
         height: 2rem;
@@ -320,7 +320,7 @@
     top: 15vh;
     left: 5vw;
     right: 5vw;
-    height: 460px;
+    height: var(--holder-height);
     width: 90vw;
     border-radius: 30px;
     padding: 1.2rem 2rem;
@@ -365,11 +365,11 @@
     }
 
     #closeMenu {
-      margin: 0 auto;
+      margin-top: 1.5rem;
       width: 3.5rem;
       height: 3.5rem;
       border-radius: 50%;
-      background-color: var(--dark);
+      background-color: var(--background);
       display: grid;
       place-items: center;
 
@@ -417,21 +417,22 @@
     padding: 1rem .8rem;
     transition: 0.5s;
 
-    li:nth-child(1)
+    li:first-child
     {
       position: absolute;
       top: 1rem;
     }
-
-    li:nth-child(n+2):nth-child(-n+6)
+    
+    li:not(:first-child):not(:last-of-type)
     {
       position: relative;
-      top : 25%;
-      transform: translateY(50%);
+      display: block;
+      top: var(--height);
+      transform: translateY(-30v);
       margin-bottom: 1rem;
     }
 
-    li:nth-child(7)
+    li:last-of-type
     {
       position: absolute;
       bottom: 1rem;
@@ -519,21 +520,22 @@
     padding: 2rem 1rem;
     transition: 0.5s;
 
-    li:nth-child(1)
+    li:first-child
     {
       position: absolute;
       top: 1rem;
     }
-
-    li:nth-child(n+2):nth-child(-n+6)
+    
+    li:not(:first-child):not(:last-of-type)
     {
       position: relative;
-      top : 25%;
-      transform: translateY(50%);
+      display: block;
+      top: var(--height);
+      transform: translateY(-30v);
       margin-bottom: 1rem;
     }
 
-    li:nth-child(7)
+    li:last-of-type
     {
       position: absolute;
       bottom: 1rem;

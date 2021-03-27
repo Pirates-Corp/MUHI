@@ -18,6 +18,10 @@ export const quizSchema = {
       title: {
         bsonType: "string",
       },
+      duration :{
+        bsonType : "number",
+
+      },
       quizTag: {
         bsonType: "string",
       },
@@ -27,6 +31,7 @@ export const quizSchema = {
         bsonType: "string",
         description: " 1.Active 2.Inactive",
       },
+      
       schedule: {
         bsonType: "object",
         required: ["startTime", "endTime"],

@@ -1,38 +1,94 @@
 import Link from "next/link";
+import { useState , useContext} from "react"
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
+import {  ExcelRenderer } from "react-excel-renderer";
+
+
+let fileData;
+let quizQuestion = [];
+
+
 
 const QuizQuestionsForm = () => {
+
+  const Quiz = { }; 
+
+  try {
+    Quiz.data = JSON.parse(sessionStorage.getItem('Quiz'))
+  } catch (error) {
+
+  }
+
+
+
+
+  console.log(Quiz);
+
+  const loadDoc = (e) => {
+    document
+      .getElementById("file")
+      .setAttribute("data", e.target.value.replace(/.*(\/|\\)/, ""));
+
+    let fileObj = e.target.files[0];
+
+    ExcelRenderer(fileObj, (err, resp) => {
+      if (err) {
+        console.log(err);
+      } else {
+        fileData = resp.rows.slice(1);
+        fileData.map((questions) => {
+          let data = {
+              id: questions[0],
+              question: questions[1],
+              options: questions.slice(2, questions.length - 4),
+              correctAnswer: questions[questions.length - 4],
+              chapter: questions[questions.length - 3],
+              section: questions[questions.length - 2],
+              syllabus: questions[questions.length - 1],
+          };
+          quizQuestion.push(data);
+        });
+      }
+    });
+  };
+
+  const QuizDataFrom =  async(e) => {
+ 
+    e.preventDefault();
+
+    let tempQuiz = Quiz;
+    tempQuiz.data.questions = quizQuestion;
+    tempQuiz.data.totalMarks = quizQuestion.length;
+    sessionStorage.setItem('Quiz',JSON.stringify(tempQuiz.data))
+    
+    console.log(tempQuiz);
+
+    
+
+    let res =  await fetch('/api/db/quiz/add',{
+       method : 'PUT',
+       headers: {
+        'Content-Type': 'application/json'
+      },
+      body : JSON.stringify(Quiz.data)
+       })
+
+       console.log(res);
+
+  };
+
   return (
     <CenterLayout>
       <PrimaryHeading heading="Add Questions" />
+
       <div id={style.formBox}>
         <div id={style.fileForm}>
-          <form>
-            <div
-              className="fileUploader"
-              id="file"
-              data="Upload Questions"
-            >
-              <img src="/imgs/svgs/File.svg" alt="" />
-              <input
-                type="file"
-                onChange={(e) => {
-                  document
-                    .getElementById("file")
-                    .setAttribute(
-                      "data",
-                      e.target.value.replace(/.*(\/|\\)/, "")
-                    );
-                }}
-              />
-            </div>
-            <button className="blueBtn" type="submit">
-              
-              Submit
-            </button>
-          </form>
+          <div className="fileUploader" id="file" data="Upload Questions">
+            <img src="/imgs/svgs/File.svg" alt="" />
+            <input type="file" onChange={(e) => loadDoc(e)} />
+          </div>
         </div>
 
         <div className={style.reviewBox}>
@@ -73,10 +129,6 @@ const QuizQuestionsForm = () => {
                     <p>Options</p>
                   </div>
 
-
-
-                  
-                  
                   <div id={style.option}>
                     <label className="radio">
                       <input type="radio" name="type" />
@@ -92,11 +144,7 @@ const QuizQuestionsForm = () => {
                       {" "}
                       <img src="/imgs/svgs/OptionMinus.svg" alt="-" />
                     </button>
-                  
                   </div>
-
-
-
 
                   <div id={style.option}>
                     <label className="radio">
@@ -118,9 +166,6 @@ const QuizQuestionsForm = () => {
                       <img src="/imgs/svgs/OptionPlus.svg" alt="+" />
                     </button>
                   </div>
-
-
-
                 </div>
 
                 <input
@@ -226,7 +271,14 @@ const QuizQuestionsForm = () => {
                 Add Question
               </button>
 
-              <button className="greenBtn" id={style.save} type="submit">
+              <button
+                className="greenBtn"
+                id={style.save}
+                onClick={(e) => {
+                  QuizDataFrom(e);
+                }}
+                type="submit"
+              >
                 <img src="/imgs/svgs/tick.svg"></img>
                 Save & Finish
               </button>
@@ -237,5 +289,7 @@ const QuizQuestionsForm = () => {
     </CenterLayout>
   );
 };
+
+
 
 export default QuizQuestionsForm;

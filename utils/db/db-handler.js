@@ -104,6 +104,11 @@ export const handleDocumentReadAll = async (req, res) => {
                   ) {
                     delete doc.password;
                     delete doc.resetToken;
+                  } else if( collectionDetails.collectionName ===
+                    constants.collectionMap.quiz.collectionName && constants.roles.admin!==result[1].role){
+                      doc.questions.map((question)=>{
+                        delete question.correctAnswer
+                      });
                   }
                   collectionsArray.push(doc);
                 });
@@ -536,21 +541,28 @@ export const handleFieldUpdate = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = parseInt(decodeURIComponent(req.query?.fieldId))
       const newDoc = req.body;
-      newDoc.id = newDoc.id ? newDoc.id : parseInt(fieldId);
       const collectionDetails = constants.collectionMap[collection];
+      newDoc.id = newDoc.id ? newDoc.id : fieldId;
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
+        let modified = false
         const modifiedArray = document[fieldName].map((doc) => {
           if (doc.id == fieldId) {
+            console.log("found doc ");
             doc = newDoc;
+            modified = true
           }
           return doc;
         });
+        if(!modified){
+          modifiedArray.push(newDoc)
+        } 
         document[fieldName] = modifiedArray;
-        console.log(document);
+        console.log(modifiedArray);
+        console.log(modified);
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -559,7 +571,6 @@ export const handleFieldUpdate = async (req, res) => {
         console.log(document);
         resCode = updateResponse[0];
         resBody = updateResponse[1];
-        console.log(resBody);
       } else {
         resCode = result[0];
         resBody = result[1];
@@ -737,8 +748,9 @@ export const handleSubFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = decodeURIComponent(req.query?.subFieldId);
+      const subFieldId = parseInt(decodeURIComponent(req.query?.subFieldId))
       const newDoc = req.body;
+      newDoc.id = newDoc.id ? newDoc.id : subFieldId;
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -746,12 +758,17 @@ export const handleSubFieldUpdate = async (req, res) => {
           return doc.id == fieldId;
         });
         if (matchedFields[0]) {
+          let modifiedSubField = false
           const matchedSubFields = matchedFields[0][subFieldName].map((doc) => {
             if (doc.id == subFieldId) {
+              modifiedSubField = true
               doc = newDoc;
             }
             return doc;
           });
+          if(!modifiedSubField) {
+            matchedSubFields.push(newDoc)
+          }
           if (matchedSubFields[0]) {
             matchedFields[0][subFieldName] = matchedSubFields;
             const updateResponse = await updateDoc(
@@ -843,6 +860,11 @@ const getDoc = async (req) => {
             ) {
               delete document.password;
               delete document.resetToken;
+            } else if( collectionDetails.collectionName ===
+              constants.collectionMap.quiz.collectionName && constants.roles.admin!==authResult[1].role){
+                document.questions.map((question)=>{
+                  delete question.correctAnswer
+                });
             }
             resBody = document;
             resCode = 200;
@@ -940,18 +962,18 @@ const validateDoc = (array) => {
         doc[key].length > 0 &&
         doc[key][0].hasOwnProperty("id")
       ) {
-        console.log("Has Id Property and is array");
+        // console.log("Has Id Property and is array");
         if (validateDoc(doc[key]) === false) {
           return false;
         }
       }
     }
     if (doc.hasOwnProperty("id")) {
-      console.log("Has Id Property and is object");
+      // console.log("Has Id Property and is object");
       const tempId = doc.id;
       if (!validator.includes(tempId)) {
         validator.push(tempId);
-        console.log(validator);
+        // console.log(validator);
       } else {
         console.log(
           "Duplicate id found in the doc. Document validation failed. Returning false."

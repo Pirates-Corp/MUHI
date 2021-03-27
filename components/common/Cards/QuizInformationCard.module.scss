@@ -1,0 +1,865 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+#InfoCard {
+      width: 100%;
+}
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+      #cardHolder
+      {
+            #InfoCard {
+                  background-color: var(--white);
+                  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+                  border-radius: 17px;
+                  padding: 1.5rem;
+                  margin-bottom: 1.8rem;
+                  #header {
+                    height: fit-content;
+                    img{
+                        display: inline-block;
+                        height: 1.3rem;
+                        width: 1.3rem;     
+                      }
+                      h3
+                      {
+                          font-size: 1.5rem;
+                          display: inline-block;
+                          font-family: TextBold;
+                          margin: 0 0 0 .3rem;
+                          line-height: .2rem;
+                      }
+                  }
+              
+                  #body
+                    {
+              
+                       #quizInfo
+                       {
+                          margin-top: .5rem;
+                          display: grid;
+                          grid-template-columns: repeat(2,1fr);
+              
+                           .quizInfoItem
+                           {
+                                .infoHeading
+                                {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin-bottom: .3rem;
+                                      font-size: .8rem;
+                                }
+                                .infoDataBox
+                                {
+                                      img
+                                      {
+                                            height: .8rem;
+                                            width: .8rem;   
+                                      }
+                                      h5
+                                      {
+                                            display: inline-block;
+                                            font-size: 1rem;
+                                            margin: 0;
+                                            margin-left: .3rem;
+                                            font-family: TextBold;
+                                      }
+                                }
+                            }
+                      
+                          }
+              
+                          #tagReport
+                          {
+                                #tagReportHeader
+                                {
+                                    h6
+                                    {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin: 2rem 0 0 0 ; 
+                                      font-size: 1rem;
+                                    }  
+                                }
+              
+                                #tagReports
+                                {
+                                   display: grid;
+                                   grid-template-columns: repeat(2,1fr);
+                                   #report 
+                                   {
+                                      p
+                                      {
+                                        margin: .5rem 0 0 0 ; 
+                                        font-size: 1rem;   
+                                        display: block;
+                                        
+                                      }
+                                      h4
+                                      {
+                                        font-family: TextBold;
+                                        font-size: 1rem;
+                                        margin-top: .3rem;
+                                      }
+                                   }  
+              
+                                }
+                          }
+              
+                      }
+                     #footer
+                     {
+                       
+                          display: flex;
+                          justify-content: flex-end;
+                       #editBtn
+                       { 
+                         display: inline-block;
+                         margin-right: 1rem;
+                         height: 2rem;
+                         width: 2rem;
+                         
+                         
+                       }
+                       #deleteBtn
+                       {
+                          
+                          display: inline-block;
+                          height: 2rem;
+                           width: 2rem;
+                       }
+                       
+                     }
+              
+              
+              
+                }
+      }
+    
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+
+      #cardHolder
+      {
+            #InfoCard {
+                  background-color: var(--white);
+                  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+                  border-radius: 17px;
+                  padding: 1.5rem;
+                  margin-bottom: 1.8rem;
+                  #header {
+                    height: fit-content;
+                    img{
+                        display: inline-block;
+                        height: 1.3rem;
+                        width: 1.3rem;     
+                      }
+                      h3
+                      {
+                          font-size: 1.5rem;
+                          display: inline-block;
+                          font-family: TextBold;
+                          margin: 0 0 0 .3rem;
+                          line-height: .2rem;
+                      }
+                  }
+              
+                  #body
+                    {
+              
+                       #quizInfo
+                       {
+                          margin-top: .5rem;
+                          display: grid;
+                          grid-template-columns: repeat(2,1fr);
+                          grid-column-gap: 1rem ;
+              
+                           .quizInfoItem
+                           {
+                                .infoHeading
+                                {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin-bottom: .3rem;
+                                      font-size: .8rem;
+                                }
+                                .infoDataBox
+                                {
+                                      img
+                                      {
+                                            height: .8rem;
+                                            width: .8rem;   
+                                      }
+                                      h5
+                                      {
+                                            display: inline-block;
+                                            font-size: 1rem;
+                                            margin: 0;
+                                            margin-left: .3rem;
+                                            font-family: TextBold;
+                                      }
+                                }
+                            }
+                      
+                          }
+              
+                          #tagReport
+                          {
+                                #tagReportHeader
+                                {
+                                    h6
+                                    {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin: 2rem 0 0 0 ; 
+                                      font-size: 1rem;
+                                    }  
+                                }
+              
+                                #tagReports
+                                {
+                                   display: grid;
+                                   grid-template-columns: repeat(2,30%);
+                                   grid-column-gap : 2rem;
+                                   #report 
+                                   {
+                                      p
+                                      {
+                                        margin: .5rem 0 0 0 ; 
+                                        font-size: 1rem;   
+                                        display: block;
+                                        
+                                      }
+                                      h4
+                                      {
+                                        font-family: TextBold;
+                                        font-size: 1rem;
+                                        margin-top: .3rem;
+                                      }
+                                   }  
+              
+                                }
+                          }
+              
+                      }
+                     #footer
+                     {
+                       
+                          display: flex;
+                          justify-content: flex-end;
+                       #editBtn
+                       { 
+                         display: inline-block;
+                         margin-right: 1rem;
+                         height: 2rem;
+                         width: 2rem;
+                         
+                         
+                       }
+                       #deleteBtn
+                       {
+                          
+                          display: inline-block;
+                          height: 2rem;
+                         width: 2rem;
+                       }
+                       
+                     }
+            
+                }
+      }
+
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+
+      #cardHolder
+      {
+            #InfoCard {
+                  background-color: var(--white);
+                  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+                  border-radius: 17px;
+                  padding: 1.5rem;
+                  margin-bottom: 1.8rem;
+                  #header {
+                    height: fit-content;
+                    img{
+                        display: inline-block;
+                        height: 1.3rem;
+                        width: 1.3rem;     
+                      }
+                      h3
+                      {
+                          font-size: 1.5rem;
+                          display: inline-block;
+                          font-family: TextBold;
+                          margin: 0 0 0 .3rem;
+                          line-height: .2rem;
+                      }
+                  }
+              
+                  #body
+                    {
+              
+                       #quizInfo
+                       {
+                          margin-top: .5rem;
+                          display: grid;
+                          grid-template-columns: repeat(3,1fr);
+                          grid-column-gap: 1rem ;
+              
+                           .quizInfoItem
+                           {
+                                .infoHeading
+                                {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin-bottom: .3rem;
+                                      font-size: .8rem;
+                                }
+                                .infoDataBox
+                                {
+                                      img
+                                      {
+                                            height: .8rem;
+                                            width: .8rem;   
+                                      }
+                                      h5
+                                      {
+                                            display: inline-block;
+                                            font-size: 1rem;
+                                            margin: 0;
+                                            margin-left: .3rem;
+                                            font-family: TextBold;
+                                      }
+                                }
+                            }
+                      
+                          }
+              
+                          #tagReport
+                          {
+                                #tagReportHeader
+                                {
+                                    h6
+                                    {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin: 2rem 0 0 0 ; 
+                                      font-size: 1rem;
+                                    }  
+                                }
+              
+                                #tagReports
+                                {
+                                   display: grid;
+                                   grid-template-columns: repeat(3,30%);
+                                   #report 
+                                   {
+                                      p
+                                      {
+                                        margin: .5rem 0 0 0 ; 
+                                        font-size: 1rem;   
+                                        display: block;
+                                        
+                                      }
+                                      h4
+                                      {
+                                        font-family: TextBold;
+                                        font-size: 1rem;
+                                        margin-top: .3rem;
+                                      }
+                                   }  
+              
+                                }
+                          }
+              
+                      }
+                     #footer
+                     {
+                       
+                          display: flex;
+                          justify-content: flex-end;
+                       #editBtn
+                       { 
+                         display: inline-block;
+                         margin-right: 1rem;
+                         height: 3rem;
+                         width: 3rem;
+                         img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                         
+                       }
+                       #deleteBtn
+                       {
+                          
+                          display: inline-block;
+                          height: 3rem;
+                          width: 3rem;
+                          img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                       }
+                       
+                     }
+            
+                }
+      }
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+      #cardHolder
+      {
+            #InfoCard {
+                  background-color: var(--white);
+                  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+                  border-radius: 17px;
+                  padding: 2rem;
+                  margin-bottom: 1.8rem;
+                  #header {
+                    height: fit-content;
+                    img{
+                        display: inline-block;
+                        height: 1.5rem;
+                        width: 1.5rem;     
+                      }
+                      h3
+                      {
+                          font-size: 1.8rem;
+                          display: inline-block;
+                          font-family: TextBold;
+                          margin: 0 0 0 .5rem;
+                          line-height: .2rem;
+                      }
+                  }
+              
+                  #body
+                    {
+              
+                       #quizInfo
+                       {
+                          margin-top: .5rem;
+                          display: grid;
+                          grid-template-columns: repeat(5,1fr);
+                          grid-column-gap: 1rem ;
+              
+                           .quizInfoItem
+                           {
+                                .infoHeading
+                                {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin-bottom: .3rem;
+                                      font-size: .8rem;
+                                }
+                                .infoDataBox
+                                {
+                                      img
+                                      {
+                                            height: .8rem;
+                                            width: .8rem;   
+                                      }
+                                      h5
+                                      {
+                                            display: inline-block;
+                                            font-size: 1rem;
+                                            margin: 0;
+                                            margin-left: .3rem;
+                                            font-family: TextBold;
+                                      }
+                                }
+                            }
+                      
+                          }
+              
+                          #tagReport
+                          {
+                                #tagReportHeader
+                                {
+                                    h6
+                                    {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin: 2rem 0 0 0 ; 
+                                      font-size: 1rem;
+                                    }  
+                                }
+              
+                                #tagReports
+                                {
+                                   display: grid;
+                                   grid-template-columns: repeat(4,1fr);
+                                   #report 
+                                   {
+                                      p
+                                      {
+                                        margin: .5rem 0 0 0 ; 
+                                        font-size: 1rem;   
+                                        display: block;
+                                        
+                                      }
+                                      h4
+                                      {
+                                        font-family: TextBold;
+                                        font-size: 1rem;
+                                        margin-top: .3rem;
+                                      }
+                                   }  
+              
+                                }
+                          }
+              
+                      }
+                     #footer
+                     {
+                       
+                          display: flex;
+                          justify-content: flex-end;
+                       #editBtn
+                       { 
+                         display: inline-block;
+                         margin-right: 1rem;
+                         height: 3rem;
+                         width: 3rem;
+                         img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                         
+                       }
+                       #deleteBtn
+                       {
+                          
+                          display: inline-block;
+                          height: 3rem;
+                          width: 3rem;
+                          img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                       }
+                       
+                     }
+            
+                }
+      }
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+      #cardHolder
+      {
+            #InfoCard {
+                  
+                  background-color: var(--white);
+                  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+                  border-radius: 17px;
+                  padding: 2rem;
+                  margin-bottom: 1.8rem;
+                  #header {
+                    height: fit-content;
+                    img{
+                        display: inline-block;
+                        height: 1.3rem;
+                        width: 1.3rem;     
+                      }
+                      h3
+                      {
+                          font-size: 1.5rem;
+                          display: inline-block;
+                          font-family: TextBold;
+                          margin: 0 0 0 .3rem;
+                          line-height: .2rem;
+                      }
+                  }
+              
+                  #body
+                    {
+                        
+                       #quizInfo
+                       {
+                          margin-top: .5rem;
+                          display: grid;
+                          grid-template-columns: repeat(4,1fr);
+                          grid-column-gap: 2rem ;
+                          
+              
+                           .quizInfoItem
+                           {
+                                .infoHeading
+                                {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin-bottom: .3rem;
+                                      font-size: 1rem;
+                                }
+                                .infoDataBox
+                                {
+                                      img
+                                      {
+                                            height: 1.2rem;
+                                            width: 1.2rem;   
+                                      }
+                                      h5
+                                      {
+                                            display: inline-block;
+                                            font-size: 1.5rem;
+                                            margin: 0;
+                                            margin-left: .3rem;
+                                            font-family: TextBold;
+                                      }
+                                }
+                            }
+                      
+                          }
+              
+                          #tagReport
+                          {
+                                #tagReportHeader
+                                {
+                                    h6
+                                    {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin: 2rem 0 0 0 ; 
+                                      font-size: 1rem;
+                                    }  
+                                }
+              
+                                #tagReports
+                                {
+                                   display: grid;
+                                   grid-template-columns: repeat(6,1fr);
+                                   grid-column-gap : 4rem;
+                                   #report 
+                                   {
+                                      p
+                                      {
+                                        margin: .5rem 0 0 0 ; 
+                                        font-size: 1.2rem;   
+                                        display: block;
+                                        
+                                      }
+                                      h4
+                                      {
+                                        font-family: TextBold;
+                                        font-size: 1.2rem;
+                                        margin-top: .3rem;
+                                      }
+                                   }  
+              
+                                }
+                          }
+              
+                      }
+                     #footer
+                     {
+                       
+                          display: flex;
+                          justify-content: flex-end;
+                       #editBtn
+                       { 
+                         display: inline-block;
+                         margin-right: 1rem;
+                         height: 3rem;
+                         width: 3rem;
+                         img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                         
+                       }
+                       #deleteBtn
+                       {
+                          
+                          display: inline-block;
+                          height: 3rem;
+                          width: 3rem;
+                          img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                       }
+                       
+                     }
+            
+                }
+      }
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+      #cardHolder
+      {
+            #InfoCard {
+                  
+                  background-color: var(--white);
+                  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+                  border-radius: 17px;
+                  padding: 2rem;
+                  margin-bottom: 1.8rem;
+                  #header {
+                    height: fit-content;
+                    img{
+                        display: inline-block;
+                        height: 1.3rem;
+                        width: 1.3rem;     
+                      }
+                      h3
+                      {
+                          font-size: 1.5rem;
+                          display: inline-block;
+                          font-family: TextBold;
+                          margin: 0 0 0 .3rem;
+                          line-height: .2rem;
+                      }
+                  }
+              
+                  #body
+                    {
+                        
+                       #quizInfo
+                       {
+                          margin-top: .5rem;
+                          display: grid;
+                          grid-template-columns: repeat(3,1fr);
+                          grid-column-gap: 2rem ;
+                          
+              
+                           .quizInfoItem
+                           {
+                                .infoHeading
+                                {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin-bottom: .3rem;
+                                      font-size: 1rem;
+                                }
+                                .infoDataBox
+                                {
+                                      img
+                                      {
+                                            height: 1.2rem;
+                                            width: 1.2rem;   
+                                      }
+                                      h5
+                                      {
+                                            display: inline-block;
+                                            font-size: 1.5rem;
+                                            margin: 0;
+                                            margin-left: .3rem;
+                                            font-family: TextBold;
+                                      }
+                                }
+                            }
+                      
+                          }
+              
+                          #tagReport
+                          {
+                                #tagReportHeader
+                                {
+                                    h6
+                                    {
+                                      font-family: TextRegular;
+                                      text-transform: uppercase;
+                                      margin: 2rem 0 0 0 ; 
+                                      font-size: 1rem;
+                                    }  
+                                }
+              
+                                #tagReports
+                                {
+                                   display: grid;
+                                   grid-template-columns: repeat(6,1fr);
+                                   grid-column-gap : 4rem;
+                                   #report 
+                                   {
+                                      p
+                                      {
+                                        margin: .5rem 0 0 0 ; 
+                                        font-size: 1.2rem;   
+                                        display: block;
+                                        
+                                      }
+                                      h4
+                                      {
+                                        font-family: TextBold;
+                                        font-size: 1.2rem;
+                                        margin-top: .3rem;
+                                      }
+                                   }  
+              
+                                }
+                          }
+              
+                      }
+                     #footer
+                     {
+                       
+                          display: flex;
+                          justify-content: flex-end;
+                       #editBtn
+                       { 
+                         display: inline-block;
+                         margin-right: 1rem;
+                         height: 3rem;
+                         width: 3rem;
+                         img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                         
+                       }
+                       #deleteBtn
+                       {
+                          
+                          display: inline-block;
+                          height: 3rem;
+                          width: 3rem;
+                          img
+                         {
+                           height: 1.5rem;
+                           width:  1.5rem;
+                         }
+                       }
+                       
+                     }
+            
+                }
+      }
+}

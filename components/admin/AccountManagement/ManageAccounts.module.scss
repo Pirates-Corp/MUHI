@@ -1,0 +1,181 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+#CreateModerator,#Manage
+{
+    margin-bottom: 2rem;
+    padding: 1.5rem .5rem;
+    background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+    border-radius: 20px;
+}
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin  tablet {
+    #ManagementBox
+    {
+
+        #CreateModerator
+        {
+         padding: 1.8rem 1rem;
+         #createForm
+          {
+            #btnHolder{
+                margin-left: 1.2rem;
+              }
+          }
+        }
+        #Manage
+        {
+            padding: 1.8rem 1rem;
+            #ManageBtnHolder
+            {
+                margin-top: 2rem;
+               
+                a
+                { 
+                    text-align: center;
+                    display: block;
+                    margin-bottom: 1rem;
+                    padding: 1.5rem 1.5rem !important;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+@mixin desktop {
+    #ManagementBox
+    {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        grid-column-gap : 4rem;
+        #CreateModerator
+        {
+         padding: 1.8rem 4rem;
+         #createForm
+          {
+            #btnHolder{
+                margin-left: .8rem;
+              }
+          }
+        }
+        #Manage
+        {
+            padding: 1.8rem 4rem;
+            #ManageBtnHolder
+            {
+                margin-top: 2rem;
+               
+                a
+                {
+                    text-align: center;
+                    display: block;
+                    margin-bottom: 2rem;
+                    padding: 1.5rem 1.5rem !important;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+    #ManagementBox
+    {
+        #CreateModerator
+        {
+         #createForm
+          {
+            #btnHolder{
+                margin-left: .5rem;
+              }
+          }
+        }
+        #Manage
+        {
+            #ManageBtnHolder
+            {
+                margin-top: 2rem;
+               
+                a
+                { 
+                    text-align: center;
+                    display: block;
+                    margin-bottom: 1rem;
+                    
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+    #ManagementBox
+    {
+        #CreateModerator
+        {
+         #createForm
+          {
+            #btnHolder{
+                margin-left: .5rem;
+              }
+          }
+        }
+        #Manage
+        {
+            #ManageBtnHolder
+            {
+                margin-top: 2rem;
+               
+                a
+                { 
+                    text-align: center;
+                    display: block;
+                    margin-bottom: 1rem;
+                    padding: 1.5rem 1.5rem !important;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+   @include tablet();
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+    @include tablet();  
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+   @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+    @include desktop();
+}

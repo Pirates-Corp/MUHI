@@ -31,9 +31,9 @@ module.exports = {
       "You have created an account in Muhi Quiz. Please use the following link <link> to take quizzes.",
     routes: {
       loginRedirectAdmin: "/admin/dashboard",
-      loginRedirectUser: "/admin/dashboard",
-      invalidPassword: "?password:invalid",
-      invalidUser: "?user:invalid",
+      loginRedirectUser: "/dashboard",
+      invalidPassword: "?incorrect",
+      invalidUser: "?incorrect",
       passwordResetPath: "/admin/reset_password/",
     },
   },

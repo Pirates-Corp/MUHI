@@ -1,0 +1,647 @@
+/*-----------------------
+        GLOBAL Module css
+-------------------------*/
+.answered
+{
+  background-color: var(--primary) !important;
+  color: var(--white) ;
+}
+
+.active
+{
+  border: 4px solid var(--dark-light) !important;
+}
+
+
+#takeQuizBox
+{
+    background: linear-gradient(180deg, #EEF7FF 0%, rgba(246, 247, 249, 0) 100%);
+    border-radius: 20px;
+}
+
+#question,#radio
+{
+  word-wrap: break-word;
+  user-select: none;		
+}
+
+.qNav
+{
+  cursor: pointer;
+}
+.qNav:focus {outline:0;}
+/*-----------------------
+        Animations
+-------------------------*/
+
+/*-----------------------
+         Mixin
+-------------------------*/
+@mixin  tablet {
+  #takeQuizBox
+  {
+      padding: .8rem;
+
+      #timer
+      {
+          margin-left: 1rem;
+          display: block;
+          height: min-content;
+          width: max-content;
+          border-radius: 20px;
+          padding: .4rem;
+          background-color: transparent;
+          border: 5px solid var(--primary-light);
+
+          img
+          {
+              margin-top: .2rem;
+              display: inline-block;
+              height: 1.5rem;
+              width: 1.5rem;
+              margin-right: .3rem;
+          }
+
+          #time{
+            margin: 0;
+            font-size: 1.8rem;
+            display: inline-block; 
+          }
+      }
+      #quiz
+      {  
+          #questionBox
+          {
+            #questionHolder
+            {
+              margin-top: 1rem;
+              margin-bottom: .5rem;
+              width: 100%;
+              height: 65vh;
+              padding: 1rem;
+              border-radius: 20px;
+              border: 2px solid var(--primary-light);
+              overflow: hidden;
+              overflow-y: scroll;
+                #question
+                {
+                  font-size: 1.3rem; 
+                }
+                #options
+                {
+                  #radio
+                  {
+                    display: block;
+                    width: max-content;
+                    font-size: 1.3rem;
+                    padding-left: 2rem;
+                     
+                      #inputControl
+                      {
+                        height: 1.5rem;
+                        width: 1.5rem;
+                        
+                      }
+                  }
+                }
+            }
+            #navOptions
+            {
+              margin-top: 1rem;
+              button
+              {
+                #pre
+                {
+                  font-size: 1rem;
+                  float: left;
+                }
+                #nxt
+                {
+                  font-size: 1rem;
+                  float: right; 
+                }
+              }
+              #pre
+              {
+                float: left;
+              }
+              #nxt
+              {
+                float: right;
+              }
+            }
+          } 
+
+
+          #questionSet
+          {
+
+            .scrollView
+            {
+              width: 100%;
+              overflow: hidden;
+              overflow-x: scroll;
+              height: 6rem;
+              #roundList
+              {
+                width: max-content;
+                padding: 0;
+                margin: 0;
+                height: 4rem;
+                li
+                {
+                  display: Inline-block;
+                  transform: translateY(25%);
+                  .qNav
+                  {
+                   font-family: TextRegular;
+                   font-size: 1.5rem;
+                   display: Inline-block;
+                   height: 3rem;
+                   width: 3rem; 
+                   background-color: var(--primary-light);
+                   border: none;
+                   border-radius: 50%;
+                   text-align: center;
+                   padding: 0;
+                   margin-left:6px;
+                   
+                  }
+                }
+              }
+
+              
+            }
+            #exitBtn
+              {
+              
+                display: block;
+                margin: 0 auto;
+                margin-top: 2rem;
+                margin-bottom: .5rem;
+                
+              }
+             
+          }
+
+
+
+      }
+
+  }
+}
+
+
+@mixin desktop {
+  #takeQuizBox
+  {
+      padding: 1rem 2rem  0 2rem;
+      display: block;
+      width: 100%;
+      #timer
+      {
+          display: block;
+          height: min-content;
+          width: max-content;
+          border-radius: 20px;
+          padding: .4rem;
+          background-color: transparent;
+          border: 5px solid var(--primary-light);
+          margin-bottom: 1rem;
+
+          img
+          {
+              margin-top: .2rem;
+              display: inline-block;
+              height: 1.2rem;
+              width: 1.2rem;
+              margin-right: .3rem;
+
+          }
+
+          #time{
+            margin: 0;
+            font-size: 1.5rem;
+            display: inline-block; 
+          }
+      }
+      #quiz
+      {  
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: 70% auto;
+        grid-column-gap: 2rem;
+        min-height: 70vh;
+       
+          #questionBox
+          {
+            #questionHolder
+            {
+              margin-bottom: .5rem;
+              width: 100%;
+              height: 60vh;
+              padding: 1rem;
+              border-radius: 20px;
+              border: 2px solid var(--primary-light);
+              overflow: hidden;
+              overflow-y: scroll;
+                #question
+                {
+                  font-size: 1.5rem; 
+                }
+                #options
+                {
+                  #radio
+                  {
+                    display: block;
+                    width: max-content;
+                    font-size: 1.5rem;
+                    padding-left: 2rem;
+                     
+                      #inputControl
+                      {
+                        height: 1.5rem;
+                        width: 1.5rem;
+                      }
+                  }
+                }
+            }
+            #navOptions
+            {
+              margin-top: 1.5rem;
+              
+              #pre
+              {
+                font-size: 1rem;
+                float: left;
+              }
+              #nxt
+              {
+                font-size: 1rem;
+                float: right;
+              }
+            }
+          } 
+
+
+          #questionSet
+          {
+            .scrollView
+            {
+              height: 60vh;
+              padding: 1rem;
+              border-radius: 20px;
+              border: 2px solid var(--primary-light);
+              overflow: hidden;
+              overflow-y: scroll;
+              #roundList
+              {
+                width: fit-content;
+                height: max-content;
+                padding: 0;
+                margin: 0;
+                li
+                {
+                  display: Inline-block;
+                  margin: .5rem;
+                  .qNav
+                  {
+                   font-family: TextRegular;
+                   font-size: 1rem;
+                   display: Inline-block;
+                   height: 2.5rem;
+                   width: 2.5rem; 
+                   background-color: var(--primary-light);
+                   border: none;
+                   border-radius: 50%;
+                   text-align: center;
+                   padding: 0;
+                   margin-left:6px;
+                   
+                  }
+                }
+              }
+
+              
+            }
+            #exitBtn
+              {
+                display: block;
+                margin-top: 1.5rem;
+                font-size: 1rem;
+                float: right;
+              
+                
+              }
+             
+          }
+
+
+
+      }
+
+  }
+}
+
+/*-----------------------
+        Mobile - small
+-------------------------*/
+@media all and (max-width: 350px) {
+  #takeQuizBox
+  {
+      padding: .2rem;
+
+      #timer
+      {
+          margin-left: 1rem;
+          display: block;
+          height: min-content;
+          width: max-content;
+          border-radius: 20px;
+          padding: .4rem;
+          background-color: transparent;
+          border: 5px solid var(--primary-light);
+
+          img
+          {
+              margin-top: .2rem;
+              display: inline-block;
+              height: 1rem;
+              width: 1rem;
+              margin-right: .3rem;
+          }
+
+          #time{
+            margin: 0;
+            font-size: 1.3rem;
+            display: inline-block; 
+          }
+      }
+      #quiz
+      {  
+          #questionBox
+          {
+            #questionHolder
+            {
+              margin-top: 1rem;
+              margin-bottom: .5rem;
+              width: 100%;
+              height: 60vh;
+              padding: 1rem;
+              border-radius: 20px;
+              overflow: hidden;
+              overflow-y: scroll;
+              border: 2px solid var(--primary-light);
+                #question
+                {
+                  font-size: 1.3rem; 
+                }
+                #options
+                {
+                  #radio
+                  {
+                  display: block;
+                  width: max-content;
+                  }
+                }
+            }
+            #navOptions
+            {
+              #pre
+              {
+                float: left;
+                margin-top: 1rem;
+                font-size: .9rem;
+              }
+              #nxt
+              {
+                float: right;
+                margin-top: 1rem;
+                font-size: .9rem;
+              }
+            }
+          } 
+
+
+          #questionSet
+          {
+
+            .scrollView
+            {
+              width: 100%;
+              overflow: hidden;
+              overflow-x: scroll;
+              height: 4rem;
+              #roundList
+              {
+                width: max-content;
+                padding: 0;
+                margin: 0;
+                height: 4rem;
+                li
+                {
+                  display: Inline-block;
+                  transform: translateY(25%);
+                  .qNav
+                  {
+                   font-family: TextRegular;
+                   font-size: 1.5rem;
+                   display: Inline-block;
+                   height: 3rem;
+                   width: 3rem; 
+                   background-color: var(--primary-light);
+                   border: none;
+                   border-radius: 50%;
+                   text-align: center;
+                   padding: 0;
+                   margin-left:6px;
+                   
+                  }
+                }
+              }
+
+              
+            }
+            #exitBtn
+              {
+              
+                display: block;
+                margin: 0 auto;
+                margin-top: 1rem;
+                margin-bottom: .5rem;
+                
+              }
+             
+          }
+
+
+
+      }
+
+  }
+
+}
+
+/*-----------------------
+        Mobile - Large
+-------------------------*/
+@media all and (min-width: 350px) and (max-width: 600px) {
+  #takeQuizBox
+  {
+      padding: .8rem;
+
+      #timer
+      {
+          margin-left: 1rem;
+          display: block;
+          height: min-content;
+          width: max-content;
+          border-radius: 20px;
+          padding: .4rem;
+          background-color: transparent;
+          border: 5px solid var(--primary-light);
+
+          img
+          {
+              margin-top: .2rem;
+              display: inline-block;
+              height: 1rem;
+              width: 1rem;
+              margin-right: .3rem;
+          }
+
+          #time{
+            margin: 0;
+            font-size: 1.3rem;
+            display: inline-block; 
+          }
+      }
+      #quiz
+      {  
+          #questionBox
+          {
+            #questionHolder
+            {
+              margin-top: .8rem;
+              width: 100%;
+              height: 65vh;
+              padding: 1rem;
+              border-radius: 20px;
+              border: 2px solid var(--primary-light);
+              overflow: hidden;
+              overflow-y: scroll;
+                #question
+                {
+                  font-size: 1.3rem; 
+                }
+                #options
+                {
+                  #radio
+                  {
+                  display: block;
+                  width: max-content;
+                  }
+                }
+            }
+            #navOptions
+            {
+              #pre
+              {
+                margin-top: 1rem;
+                float: left;
+               
+              }
+              #nxt
+              {
+                margin-top: 1rem;
+                float: right;
+              }
+            }
+          } 
+
+
+          #questionSet
+          {
+
+            .scrollView
+            {
+              width: 100%;
+              overflow: hidden;
+              overflow-x: scroll;
+              height: 6rem;
+              #roundList
+              {
+                width: max-content;
+                padding: 0;
+                margin: 0;
+                height: 4rem;
+                li
+                {
+                  display: Inline-block;
+                  transform: translateY(25%);
+                  .qNav
+                  {
+                   font-family: TextRegular;
+                   font-size: 1.5rem;
+                   display: Inline-block;
+                   height: 3rem;
+                   width: 3rem; 
+                   background-color: var(--primary-light);
+                   border: none;
+                   border-radius: 50%;
+                   text-align: center;
+                   padding: 0;
+                   margin-left:6px;
+                   
+                  }
+                }
+              }
+
+              
+            }
+            #exitBtn
+              {
+              
+                display: block;
+                margin: 0 auto;
+                margin-top: 1rem;
+                margin-bottom: .5rem;
+                
+              }
+             
+          }
+
+
+
+      }
+
+  }
+}
+
+/*-----------------------
+      Tablet - small
+-------------------------*/
+@media all and (min-width: 600px) and (max-width: 900px) {
+ @include tablet();
+}
+
+/*-----------------------
+      Tablet - Large
+-------------------------*/
+@media all and (min-width: 900px) and (max-width: 1200px) {
+  @include tablet();
+}
+
+/*-----------------------
+      Desktop - small
+-------------------------*/
+@media all and (min-width: 1200px) and (max-width: 1800px) {
+  @include desktop();
+}
+
+/*-----------------------
+      Desktop - large
+-------------------------*/
+@media all and (min-width: 1800px) {
+  @include desktop();   
+}
