@@ -470,10 +470,12 @@ export const handleFieldInsert = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const collectionDetails = constants.collectionMap[collection];
       const doc = req.body;
+      doc.id = doc.id.trim()
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
         document[fieldName].push(doc);
+        console.log(document);
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -705,7 +707,6 @@ export const handleSubFieldDelete = async (req, res) => {
             }
           );
           matchedFields[0][subFieldName] = matchedSubFields;
-          console.log("==================================>"+JSON.stringify(document))
           const updateResponse = await updateDoc(
             collectionDetails,
             documentId,
@@ -755,6 +756,19 @@ export const handleSubFieldUpdate = async (req, res) => {
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
         });
+        const quizResult = await getDocument(constants.collectionMap.quiz.collectionName,constants.collectionMap.quiz.schema,{_id:new String(fieldId).toLowerCase()})
+        if(quizResult && quizResult[0]) {
+          quizResult[1].questions.map((question)=>{
+            if(question.id === newDoc.id ) {
+              if(question.correctAnswer === newDoc.answer ) {
+                newDoc.result = 1
+              } else {
+                newDoc.result = 0
+              }
+            } 
+          })
+        }
+        console.log(newDoc);
         if (matchedFields[0]) {
           let modifiedSubField = false;
           const matchedSubFields = matchedFields[0][subFieldName].map((doc) => {
@@ -769,6 +783,7 @@ export const handleSubFieldUpdate = async (req, res) => {
           }
           if (matchedSubFields[0]) {
             matchedFields[0][subFieldName] = matchedSubFields;
+            console.log(JSON.stringify(document));
             const updateResponse = await updateDoc(
               collectionDetails,
               documentId,
