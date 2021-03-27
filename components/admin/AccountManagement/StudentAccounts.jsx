@@ -14,13 +14,13 @@ export default function Students() {
   return(
     <>
       <PrimaryHeading heading="student"/>
-      <TableComponent
+      {/* <TableComponent
           col="4"
           colNames={["Name", "Email","Phone"]}
           buttonColor="red"
           buttonText="Terminate"
           data={data}
-        />
+        /> */}
     </>
   )
 }

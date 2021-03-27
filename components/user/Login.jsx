@@ -1,19 +1,17 @@
 import React from "react"
 import Link from "next/link";
 import style from "../user/Login.module.scss";
-import { useRouter } from 'next/router'
-import Snackbar from '../../components/common/Popups/Snackbar'
+import { useRouter ,useState} from 'next/router'
+// import Snackbar from '../../components/common/Popups/Snackbar'
 export default function Login() {
+
 
   const router = useRouter();
 
-  // const [err,errShow] = React.useState(1);
-   
-
-  //   if(router.asPath === "/?incorrect") {
-  //     errShow(0);  
-  //   }  
-   
+  if(router.asPath === "/?incorrect")
+  {
+    alert("Incorrect Email / Password");
+  }
 
   return (
     <>
@@ -42,18 +40,18 @@ export default function Login() {
             </div>
             <div id={style.btnHolder}>
               <input className="prBtn" type="submit" value="Login" />
-              <Link href="/forgetpassword">
+              {/* <Link href="/forgetpassword">
                 <a className={style.forgetPassword}>Forgot Password</a>
-              </Link>
+              </Link> */}
             </div>
           </form>
 
           <div id={style.otherOptions}>
 
-            <button className="blueBtn" id={style.gBtn}>
+            {/* <button className="blueBtn" id={style.gBtn}>
               <img src="imgs/svgs/Google.svg" />
               Continue with Google
-            </button>
+            </button> */}
 
             <p>Don't have an account ? </p>
             <Link href="/signup">
@@ -62,23 +60,17 @@ export default function Login() {
               </a>
             </Link>
 
-            <div id={style.line}></div>
+            {/* <div id={style.line}></div>
             <Link href="/openquiz">
               <a id={style.opBtn} className="prBtn">
                 Take Quizz without Login
               </a>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
-      {(router.asPath === "/?incorrect") ?
-
-         (
-           <Snackbar message="Invalid Email or Password" color="red" time="4000" />
-          //  (errShow(1))
-         )
-        
-         : ("")}
+     
+         
     </>
   );
 }

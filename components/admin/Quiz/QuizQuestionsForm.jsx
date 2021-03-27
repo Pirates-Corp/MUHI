@@ -4,13 +4,15 @@ import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
 import { ExcelRenderer } from "react-excel-renderer";
-import { session } from "next-session";
+import { useRouter } from "next/router"
+;
 
 let fileData;
 let quizQuestions = [];
 
 
 const QuizQuestionsForm = () => {
+  const router = useRouter()
   let flag = true;
   let Quiz = {};
   const [loadedQuestions, updateLoadedQuestion] = useState([
@@ -151,22 +153,32 @@ const QuizQuestionsForm = () => {
     e.preventDefault();
     let tempQuiz = Quiz;
     tempQuiz.totalMarks = tempQuiz.questions.length;
-    tempQuiz._id = tempQuiz.title;
-    
-    
-    sessionStorage.setItem("Quiz", JSON.stringify(tempQuiz));
-
-    console.log(tempQuiz);
-
-    console.log(tempQuiz);
+    tempQuiz.duration = tempQuiz.duration * 60;
+    // console.log(JSON.stringify(tempQuiz));
     let res = await fetch("/api/db/quiz/add", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(Quiz.data),
+      body: JSON.stringify(tempQuiz),
     });
     console.log(res);
+
+    if(201===res.status)
+    {
+      sessionStorage.removeItem("Quiz");
+      router.push('/admin/quiz');
+    }
+    else if(409===res.status)
+    {
+      alert("Duplicate Quiz Found")
+      sessionStorage.setItem("Quiz", JSON.stringify(tempQuiz));
+    }
+    else
+    {
+      alert("Something went Wrong")
+      sessionStorage.setItem("Quiz", JSON.stringify(tempQuiz));
+    }
 
     
 

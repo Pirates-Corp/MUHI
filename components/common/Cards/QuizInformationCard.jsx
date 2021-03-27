@@ -46,8 +46,8 @@ const quizInformationCard = ( ) => {
 
 
                 </div>
-
-                <div id={style.tagReport} style={{"display" : "none"}}>
+                {/* style={{"display" : "none"}} */}
+                <div id={style.tagReport}>
 
                     <div id={style.tagReportHeader}>
                         <h6>Tag Report</h6>
@@ -77,7 +77,8 @@ const quizInformationCard = ( ) => {
                 </div>
 
             </div>
-            <div id={style.footer} style={{"display" : "none"}}>
+            {/* style={{"display" : "none"}} */}
+            <div id={style.footer} >
                <button id={style.editBtn} className="greenRoundBtn">
                    <img src="/imgs/svgs/Edit.svg"/>
                </button>

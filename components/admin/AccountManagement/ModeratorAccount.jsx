@@ -16,13 +16,13 @@ export default function ModeratorAccount() {
   return (
     <>
       <PrimaryHeading heading="Moderators"/>
-      <TableComponent
+      {/* <TableComponent
           col="4"
           colNames={["Name", "Email","Phone"]}
           buttonColor="red"
           buttonText="Terminate"
           data={data}
-        />
+        /> */}
     </>
   )
 }
