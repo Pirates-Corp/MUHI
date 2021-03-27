@@ -4,6 +4,7 @@ import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizQuestionsForm.module.scss";
 import { ExcelRenderer } from "react-excel-renderer";
+import { session } from "next-session";
 
 let fileData;
 let quizQuestions = [];
@@ -11,7 +12,7 @@ let quizQuestions = [];
 
 const QuizQuestionsForm = () => {
   let flag = true;
-  const Quiz = {};
+  let Quiz = {};
   const [loadedQuestions, updateLoadedQuestion] = useState([
     {
       id: 0,
@@ -25,7 +26,7 @@ const QuizQuestionsForm = () => {
   ]);
 
   try {
-    Quiz.data = JSON.parse(sessionStorage.getItem("Quiz"));
+    Quiz = JSON.parse(sessionStorage.getItem("Quiz"));
   } catch (error) {}
 
   console.log("onStart", Quiz);
@@ -70,7 +71,9 @@ const QuizQuestionsForm = () => {
           }
         })
 
-        sessionStorage.setItem("Questions",JSON.stringify(quizQuestions))
+        Quiz = JSON.parse(sessionStorage.getItem("Quiz"));
+        Quiz.questions = quizQuestions;
+        sessionStorage.setItem("Quiz",JSON.stringify(Quiz))
         updateLoadedQuestion([...quizQuestions]);
         
         
@@ -137,7 +140,9 @@ const QuizQuestionsForm = () => {
       }
     }
   
-    sessionStorage.setItem("Questions",JSON.stringify(loadedQuestions))
+    Quiz = JSON.parse(sessionStorage.getItem("Quiz"));
+    Quiz.questions = loadedQuestions;
+    sessionStorage.setItem("Quiz",JSON.stringify(Quiz))
     updateLoadedQuestion([...loadedQuestions]);
    
   };
@@ -145,9 +150,13 @@ const QuizQuestionsForm = () => {
   const QuizDataFrom = async (e) => {
     e.preventDefault();
     let tempQuiz = Quiz;
-    tempQuiz.data.questions = JSON.parse(sessionStorage.getItem('Questions'));
-    tempQuiz.data.totalMarks = JSON.parse(sessionStorage.getItem('Questions')).length;
-    sessionStorage.setItem("Quiz", JSON.stringify(tempQuiz.data));
+    tempQuiz.totalMarks = tempQuiz.questions.length;
+    tempQuiz._id = tempQuiz.title;
+    
+    
+    sessionStorage.setItem("Quiz", JSON.stringify(tempQuiz));
+
+    console.log(tempQuiz);
 
     console.log(tempQuiz);
     let res = await fetch("/api/db/quiz/add", {
@@ -158,22 +167,30 @@ const QuizQuestionsForm = () => {
       body: JSON.stringify(Quiz.data),
     });
     console.log(res);
+
+    
+
+
   };
 
   useEffect(() => {
     console.log("use effects call");
-    let sessionData = JSON.parse(sessionStorage.getItem('Questions'))
-    if(sessionData !== null)
+    
+    Quiz = JSON.parse(sessionStorage.getItem("Quiz"));
+
+    
+    const sessionData = (Quiz)? Quiz.questions : undefined;
+    if(sessionData !== undefined )
     {
       updateLoadedQuestion(sessionData);
+      console.log(sessionData);
     }
   },[flag]);
 
   console.log(loadedQuestions);
 
-    if(loadedQuestions.length==1 ){
+    if(loadedQuestions.length==1 || loadedQuestions==null ){
         flag = false;
-        console.log("condition");
     } 
   
 

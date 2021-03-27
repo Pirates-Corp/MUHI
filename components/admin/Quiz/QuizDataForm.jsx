@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizDataForm.module.scss";
+import { session } from "next-session";
 
 
 
@@ -125,7 +126,10 @@ const QuizDataForm = () => {
         state : (document.getElementById('state').checked == true)? "Active" : "Inactive",
         
       }
-      sessionStorage.setItem('Quiz',JSON.stringify(QuizData))
+      let currentStorage =  JSON.parse(sessionStorage.getItem('Quiz'));
+      currentStorage = {...currentStorage,...QuizData};
+      console.log("Current",currentStorage);
+      sessionStorage.setItem('Quiz',JSON.stringify(currentStorage))
       router.push("questions")
       
     }
