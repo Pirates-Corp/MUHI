@@ -163,50 +163,10 @@ export const handleDocumentInsert = async (req, res) => {
             "Unauthorized action. Need admin handle to execute this operation";
           console.log(resBody);
         } else {
-          if (collectionDetails && documentReceived) {
-            let mongoDocument = {};
-            if (
-              collectionDetails.collectionName ===
-                constants.collectionMap.user.collectionName ||
-              collectionDetails.collectionName ===
-                constants.collectionMap.report.collectionName
-            ) {
-              mongoDocument._id = new String(documentReceived.id).toLowerCase();
-              delete documentReceived.id;
-            } else {
-              mongoDocument._id = new String(
-                documentReceived.title
-              ).toLowerCase();
-            }
-            mongoDocument = { ...mongoDocument, ...documentReceived };
-            const internalValidationResp = validateDoc([mongoDocument]);
-            if (internalValidationResp) {
-              const queryResponse = await insertDocument(
-                collectionDetails.collectionName,
-                collectionDetails.schema,
-                mongoDocument
-              );
-              if (queryResponse[0]) {
-                resCode = 201;
-                resBody = { ...mongoDocument };
-              } else {
-                if (queryResponse[1].code == 11000) {
-                  resCode = 409;
-                }
-                resBody =
-                  "Insertion completed with the response => " +
-                  queryResponse +
-                  " | " +
-                  JSON.stringify(mongoDocument);
-              }
-            } else {
-              resCode = 409;
-              resBody = "Duplicate id found in the doc";
-              console.log(resBody);
-            }
-          } else {
-            resBody = "Invalid Collection";
-            console.log(resBody);
+          const result = await insertDoc(collectionDetails,documentReceived)
+          if(result) {
+            resCode = result[0]
+            resBody = result[1]
           }
         }
       } else if (authResult) {
@@ -792,7 +752,6 @@ export const handleSubFieldUpdate = async (req, res) => {
             }
             return doc;
           });
-          console.log(matchedSubFields);
           if (matchedSubFields[0]) {
             matchedFields[0][subFieldName] = matchedSubFields;
             const updateResponse = await updateDoc(
@@ -1004,3 +963,67 @@ const validateDoc = (array) => {
   console.log("Internal Document validation succeeded. Returning true.");
   return true;
 };
+
+const insertDoc = async (collectionDetails,doc) => {
+  let resCode = 400,resBody =""
+  try{
+    if (collectionDetails && doc) {
+      let mongoDocument = {};
+      if (
+        collectionDetails.collectionName ===
+          constants.collectionMap.user.collectionName ||
+        collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName
+      ) {
+        mongoDocument._id = new String(doc.id).toLowerCase();
+        delete doc.id;
+      } else {
+        mongoDocument._id = new String(
+          doc.title
+        ).toLowerCase();
+      }
+      mongoDocument = { ...mongoDocument, ...doc };
+      const internalValidationResp = validateDoc([mongoDocument]);
+      if (internalValidationResp) {
+        const queryResponse = await insertDocument(
+          collectionDetails.collectionName,
+          collectionDetails.schema,
+          mongoDocument
+        );
+        if (queryResponse[0]) {
+          resCode = 201;
+          resBody = { ...mongoDocument };
+        } else {
+          if (queryResponse[1].code == 11000) {
+            resCode = 409;
+          }
+          resBody =
+            "Insertion completed with the response => " +
+            queryResponse +
+            " | " +
+            JSON.stringify(mongoDocument);
+        }
+      } else {
+        resCode = 409;
+        resBody = "Duplicate id found in the doc";
+        console.log(resBody);
+      }
+    } else {
+      resBody = "Invalid Collection";
+      console.log(resBody);
+    }
+  
+  }catch(err) {console.error("Error while inserting document => ",err)}
+  return [resCode,resBody]
+}
+
+export const addUserReport = async (id) => {
+  const newReport = {
+    id,
+    rank:"NIL",
+    avgScore:0,
+    reports:[]
+  }
+  const result = await insertDoc(constants.collectionMap.report,newReport)
+  return result
+}

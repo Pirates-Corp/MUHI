@@ -14,6 +14,7 @@ import {
 } from "./db/helpers/db-util";
 import nodemailer from "nodemailer";
 import { constants } from "./constants";
+import {addUserReport} from './db/db-handler'
 
 const emailRegex = new RegExp(/\S+@\S+\.\S+/);
 
@@ -219,6 +220,13 @@ export const signup = async (httpReq, httpRes) => {
             } else {
               httpRes.redirect(process.env.routes.loginRedirectUser);
             }
+            const reportCreationResult = await addUserReport(userDetails._id)
+            if(reportCreationResult && reportCreationResult[0] === 201) {
+              resText = resText+"and Report is created for user"
+            } else {
+              resText = resText+"and Report creation is failed for user =>"+reportCreationResult[1]
+            }
+            console.log("Singup result => "+resText);
             return;
           } else if (result.length >= 1 && result[0] === false) {
             if (result[1].code == 11000) {

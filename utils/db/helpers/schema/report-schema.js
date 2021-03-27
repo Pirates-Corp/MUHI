@@ -11,7 +11,7 @@ export const reportSchema = {
         bsonType: "string",
       },
       avgScore: {
-        bsonType: "double",
+        bsonType: "number",
       },
       reports: {
         bsonType: "array",
@@ -32,19 +32,12 @@ export const reportSchema = {
               bsonType: "string",
               description: " completed or ongoing",
             },
-            questionsLeft: {
+            questionsAttended: {
               bsonType: "array",
               uniqueItems: true,
               additionalItems: false,
               items: {
-                bsonType: "object",
-                required: ["qNo"],
-                additionalProperties: false,
-                properties: {
-                  qNo: {
-                    bsonType: "number",
-                  },
-                },
+                bsonType: "number"
               },
             },
             time: {
