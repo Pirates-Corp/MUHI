@@ -16,7 +16,8 @@ const TableComponent = (props) => {
     buttonText,
     feature,
   } = props;
-
+ 
+ 
     //Quiz List
     apiData.allQuiz.map((quiz) => {
       QuizList.push(quiz.title);
@@ -34,9 +35,15 @@ const TableComponent = (props) => {
    const initialStudentsData = () => {
     let allStudents = [];
     apiData.allReports.map((user) => {
-      let row = Object.values(user).slice(0, 3);
+      let row = Object.values(user).slice(1, 3);
       row.push(user.reports.length);
       row.push("www.google.com");
+      apiData.allUsers.map((student)=>{
+        if(user._id===student._id)
+        {
+          row.unshift(student.name);
+        }
+     })
       allStudents.push(row);
     });
     return allStudents;
@@ -90,14 +97,21 @@ const TableComponent = (props) => {
              
                if(quiz.id.toLowerCase()==currentQuiz.toLowerCase())
                {
-                 row = Object.values(user).slice(0,3);
+                 row = Object.values(user).slice(1,3);
                  row.push(quiz.score.taken+'/'+quiz.score.total);
                  row.push(quiz.time.taken+'/'+quiz.time.total)
                  row.push("www.google.com");
+                 apiData.allUsers.map((student)=>{
+                    if(user._id===student._id)
+                    {
+                      row.unshift(student.name);
+                    }
+                 })
                  studentData.push(row);
                }
              })
          })
+         
          setRawTableData(studentData)
          cols = ['Student Name','Rank','Average Score','score','Time Taken']
          tableColLen = cols.length+1;
@@ -148,6 +162,7 @@ const TableComponent = (props) => {
       if (exportHeader == "All students") {
         const exportStudentCol = [
           "Student Name",
+          "Email",
           "Overall Rank",
           "Average Score",
           "Quizzes Taken",
@@ -155,6 +170,12 @@ const TableComponent = (props) => {
         apiData.allReports.map((user) => {
           let row = Object.values(user).slice(0, 3);
           row.push(user.reports.length);
+          apiData.allUsers.map((student)=>{
+            if(user._id===student._id)
+            {
+              row.unshift(student.name);
+            }
+         })
           ExportData.push(row);
         });
         ExportData.unshift(exportStudentCol);
@@ -162,6 +183,7 @@ const TableComponent = (props) => {
         let row = [];
         const exportQuizCol = [
           "Student Name",
+          "Email",
           "Rank",
           "Average Score",
           "score",
@@ -179,8 +201,14 @@ const TableComponent = (props) => {
               row = Object.values(user).slice(0, 3);
               row.push(quiz.score.taken + "/" + quiz.score.total);
               row.push(quiz.time.taken + "/" + quiz.time.total + "Mins");
-              row.push(quiz.status);
-              row.push(quiz.questionsLeft.length);
+              row.push((quiz.status)?"Completed" : "InComplete");
+              row.push(quiz.questionsAttended.length);
+              apiData.allUsers.map((student)=>{
+                if(user._id===student._id)
+                {
+                  row.unshift(student.name);
+                }
+             })
               quiz.report.map((tag) => {
                 if (tag.chapter + "_" + tag.section in tagMap)
                   tagMap[tag.chapter + "_" + tag.section] =

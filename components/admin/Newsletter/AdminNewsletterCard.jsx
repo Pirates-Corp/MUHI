@@ -69,7 +69,7 @@ const AdminNewsLetterCard = () => {
                   {newsletter.state === "active" ? "Active": "Not active"}
                 </p>
               <div id={style.contentBox}>
-                <h3 id={style.newsLetterHeading}>{newsletter.title} | { new Date(newsletter.schedule.startTime).toDateString()}</h3>
+                <h3 id={style.newsLetterHeading}>{newsletter.title}   {(newsletter.schedule.startTime) ? "| " + new Date(newsletter.schedule.startTime).toDateString() : " "}</h3>
                 <p id={style.newsLetterContent}>
                     {newsletter.content}
                 </p>

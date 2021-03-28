@@ -7,10 +7,9 @@ import QuizInformationCard from '../common/Cards/QuizInformationCard'
 const userDashboard = () => {
 
   const [overallRowCardData ,setOverallRowCardData] = useState([]);
-
-  console.log(overallRowCardData);
+;
  
- 
+  
   
 
   
@@ -19,21 +18,119 @@ const userDashboard = () => {
         color : "secondary",
         imgScr : "/imgs/svgs/Report.svg",
         dataHeading : `Number of tests taken `,
-        data : "10"
+        data : (overallRowCardData.hasOwnProperty("reports"))? overallRowCardData.reports.length : 0
     },
     {
         color : "red",
         imgScr : "/imgs/svgs/OverallRanking.svg",
         dataHeading : "Overall Ranking",
-        data : overallRowCardData.rank
+        data : (overallRowCardData.hasOwnProperty("rank")) ? overallRowCardData.rank : 0
     },
     {
         color : "primary",
         imgScr : "/imgs/svgs/AverageScore.svg",
         dataHeading : "Average Score",
-        data : overallRowCardData.avgScore 
+        data :(overallRowCardData.hasOwnProperty("avgScore")) ? overallRowCardData.avgScore : 0  
     }
-]
+    ]
+
+
+
+      let QuizInformationCardData = 
+      
+       [ {
+          quizName : "Basic of Islam",
+          quizData : [
+            {
+              heading : "Total Score",
+              icon : "/imgs/svgs/TotalScore.svg",
+              data: "20/40"
+            },
+            {
+              heading : "Time Taken",
+              icon : "/imgs/svgs/TimeTaken.svg",
+              data: "25 Min"
+            },
+            {
+              heading : "Rank",
+              icon : "/imgs/svgs/Rank.svg",
+              data: "3"
+            }
+          ]
+        ,
+          tagData: [
+
+            {
+              tagname : "Abu - personal",
+              data: "2"
+            },
+            {
+              tagname : "Abu - private",
+              data: "5"
+            },
+            {
+              tagname : "Abu - personal",
+              data: "3"
+            }
+
+          ]
+          ,
+          buttonData:{
+            apiUrl: "google.com",
+            reqType:"POST"
+          }
+          
+        },
+        {
+          quizName : "Holy Quran",
+          quizData : [
+            {
+              heading : "Total Score",
+              icon : "/imgs/svgs/TotalScore.svg",
+              data: "20/40"
+            },
+            {
+              heading : "Time Taken",
+              icon : "/imgs/svgs/TimeTaken.svg",
+              data: "25 Min"
+            },
+            {
+              heading : "Rank",
+              icon : "/imgs/svgs/Rank.svg",
+              data: "3"
+            }
+          ]
+        ,
+          tagData: [
+
+            {
+              tagname : "Abu - personal",
+              data: "2"
+            },
+            {
+              tagname : "Abu - private",
+              data: "5"
+            },
+            {
+              tagname : "Abu - personal",
+              data: "3"
+            }
+
+          ]
+          ,
+          buttonData:{
+            apiUrl: "google.com",
+            reqType:"POST",
+            bodyData : {test : "hello"}
+          }
+          
+        }
+      ]
+      
+
+
+
+
 
 
  useEffect(async ()=>{
@@ -45,15 +142,36 @@ const userDashboard = () => {
 
    const user = await userRes.json();
 
-   const userReportRes = await fetch(`http://localhost/api/db/report/${user.email}`, {
+   const userReportsRes = await fetch(`http://localhost/api/db/report/${user.email}`, {
     method: "GET",
     headers: { "Content-Type": "application/json"},
     });
+    
+    const userReports = await userReportsRes.json();
 
-   const userReport = await userReportRes.json();
- 
-   setOverallRowCardData(userReport);
+    const allQuizRes = await fetch(`http://localhost/api/db/quiz/all`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json"},
+      });
 
+      const allQuiz = await allQuizRes.json();
+      const reports = [];
+
+      userReports.reports.map(takenQuiz=>{
+        allQuiz.map(quiz=>{
+          if(takenQuiz.id === quiz._id)
+          {
+            if((Boolean(quiz.quizTag.split('-')[1])))
+            {
+                reports.push(takenQuiz);
+            }
+          }
+        })
+      })
+
+   console.log("currentUserReports",reports);
+
+   setOverallRowCardData(userReports);
 
  },[])
 
@@ -65,36 +183,17 @@ const userDashboard = () => {
       <PropPass type="user" />
       <GreetingHeader for="user" />
       <OverallRowCard data={OverallData}/>
-      <QuizInformationCard />
+      <QuizInformationCard 
+      view={{
+         quizData : true,
+         tagData :  false,
+         showButtons : false
+      }}
+      apiData={QuizInformationCardData}
+       />
     </BaseLayout>
     </>
   );
 };
 
 export default userDashboard;
-
-// userDashboard.getInitialProps = async (ctx) => {
-//   const cookie = ctx.req ? ctx.req.headers.cookie : null;
-
-
-//   let allQuiz = "hello"
-//   const reportRes  = await fetch('http://localhost/api/db/report/all', {
-//     method: "GET",
-//     headers: { "Content-Type": "application/json", cookie },
-//   });
-
-//   let allReports;
-//   let allQuiz;
-
-//   try {
-//     allReports = await reportRes.json();
-//     allReports = allReports ? allReports : {}
-
-//     allQuiz    = await quizRes.json();
-//     allQuiz    = allQuiz ? allQuiz:{};
-  
-//   } catch (err) {
-//     console.error(err);
-//   }
-//   return { props: {userRes , allQuiz } };
-// };

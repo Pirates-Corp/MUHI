@@ -54,15 +54,29 @@ const NewsLetterForm = () => {
     
     const onSubmit = async (e) => {
       e.preventDefault();
+      
+      let schedule;
 
+       if(selectedOption==="scheduleLater")
+       {
+        schedule =  {
+          startTime: Date.parse(startDate),
+          endTime: Date.parse(endingDate)
+        }
+       }
+       else{
+        schedule =  {
+          startTime: 0,
+          endTime: 0
+        }
+       }
+
+      console.log(schedule);
       const body = {
           title: e.currentTarget.title.value,
           content: e.currentTarget.content.value,
           state: isActive ? "active": "inActive",
-          schedule: {
-            startTime: Date.parse(startDate),
-            endTime: Date.parse(endingDate)
-          }
+          schedule: schedule
       };
       let res;
 
@@ -135,6 +149,7 @@ const NewsLetterForm = () => {
               <input 
                 type="radio" 
                 name="postNow" 
+                disabled={(isActive)?false : true}
                 checked={selectedOption === "postNow" } 
                 onChange={(e) => setSelectedOption("postNow")}   
               />
@@ -146,6 +161,7 @@ const NewsLetterForm = () => {
               <input 
                 type="radio" 
                 name="scheduleLater" 
+                disabled={(isActive)?false : true}
                 checked={selectedOption==="scheduleLater"}  
                 onChange={(e) => setSelectedOption("scheduleLater")} 
               />
@@ -174,6 +190,7 @@ const NewsLetterForm = () => {
             <div className="TextBox" id={style.Textbox}>
               <img src="/imgs/svgs/EndDate.svg" alt="date" />
               <input
+               disabled={selectedOption === "postNow"}
                 type="datetime-local"
                 min={getTime()}
                 onChange={(e) => {

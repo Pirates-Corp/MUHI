@@ -53,7 +53,7 @@ const apiData = [
           apiData={props}
           feature={{
             search : true,
-            sort : true,
+            sort : false,
             filter : true,
             export : true
           }}
@@ -71,6 +71,11 @@ studentReport.getInitialProps = async (ctx) => {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
+
+  const userRes = await fetch('http://localhost/api/db/user/all', {
+    method: "GET",
+    headers: { "Content-Type": "application/json", cookie },
+  });
   
   const reportRes  = await fetch('http://localhost/api/db/report/all', {
     method: "GET",
@@ -79,6 +84,7 @@ studentReport.getInitialProps = async (ctx) => {
 
   let allReports;
   let allQuiz;
+  let allUsers;
 
   try {
     allReports = await reportRes.json();
@@ -86,9 +92,12 @@ studentReport.getInitialProps = async (ctx) => {
 
     allQuiz    = await quizRes.json();
     allQuiz    = allQuiz ? allQuiz:{};
+
+    allUsers    = await userRes.json();
+    allUsers    = allUsers ? allUsers:{};
   
   } catch (err) {
     console.error(err);
   }
-  return { props: {allReports , allQuiz } };
+  return { props: {allReports , allQuiz , allUsers } };
 };

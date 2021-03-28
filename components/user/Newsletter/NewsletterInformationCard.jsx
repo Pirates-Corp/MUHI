@@ -1,39 +1,63 @@
+import { useEffect, useState } from "react";
 import PrimaryHeader from "../../common/Header/PrimaryHeading";
-import style from "../../user/Newsletter/NewsletterInformationCard.module.scss"
-const Newsletter = ()=>{
-    return(
-        <>
-          <PrimaryHeader heading="Newsletters"/>
-           <div id={style.newsletterBox}>
-            
-            <div id={style.newsletter}>
+import style from "../../user/Newsletter/NewsletterInformationCard.module.scss";
+
+const Newsletter = () => {
+  const [NewsLetters, setNewsLetters] = useState([]);
+
+  useEffect(async () => {
+    const res = await fetch("http://localhost/api/db/newsletter/all", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    let allNewsletters = await res.json();
+
+    const ActiveNewsLetter = [];
+
+    allNewsletters.map((newsletter) => {
+      if (String(newsletter.state).toLowerCase() === "active") {
+        if (
+          (newsletter.schedule.startTime == 0 &&
+            newsletter.schedule.endTime == 0) ||
+          (new Date().getTime() < 1617215400000 &&
+            new Date().getTime() > 1617301800000)
+        ) {
+          ActiveNewsLetter.push(newsletter);
+        }
+      }
+    });
+
+    setNewsLetters(ActiveNewsLetter);
+  });
+
+  return (
+    <>
+      <PrimaryHeader heading="Newsletters" />
+      <div id={style.newsletterBox}>
+        {NewsLetters.length !== 0 ? (
+          <>
+            {NewsLetters.map((newsletter) => (
+              <>
+                <div id={style.newsletter}>
                   <div id={style.headingHolder}>
-                      <h1>Life  Of  Muhammad - quiz  | Feb 27 2020</h1>
+                    <h1>{newsletter.title}</h1>
                   </div>
                   <div id={style.msg}>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam maecenas sed enim ut. Bibendum neque egestas congue  quisque egestas diam in. </p>
+                    <p>
+                     {newsletter.content}
+                    </p>
                   </div>
-            </div>
-           
-            <div id={style.newsletter}>
-                  <div id={style.headingHolder}>
-                      <h1>Life  Of  Muhammad - quiz  | Feb 27 2020</h1>
-                  </div>
-                  <div id={style.msg}>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam maecenas sed enim ut. Bibendum neque egestas congue  quisque egestas diam in. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam maecenas sed enim ut. Bibendum neque egestas congue  quisque egestas diam in. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam maecenas sed enim ut. Bibendum neque egestas congue  quisque egestas diam in. </p>
-                  </div>
-            </div>
-
-
-            
-
-           
-
-
-           </div>
-        </>
-      
-    )
-}
+                </div>
+              </>
+            ))}
+          </>
+        ) : (
+          <><p>No NewLetters Updated</p></>
+        )}
+      </div>
+    </>
+  );
+};
 
 export default Newsletter;
