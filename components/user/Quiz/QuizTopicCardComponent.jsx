@@ -3,7 +3,8 @@ import PrimaryHeader from "../../common/Header/PrimaryHeading";
 import style from "../../user/Quiz/QuizTopicCardComponent.module.scss";
 
 const QuizTopicCardComponent = ({ props }) => {
-  const quizArray = props ? props : [];
+  const quizArray = props.quizData ? props.quizData : [];
+  const currentUser = props.currentUser ? props.currentUser : {}
   const offsetInMillis = new Date().getTimezoneOffset() * 60000;
 
   const getDateString = (timeInMillis) => {
@@ -26,7 +27,7 @@ const QuizTopicCardComponent = ({ props }) => {
             <ul>
               <li>
                 <img src="imgs/svgs/TimeW.svg" alt="" />
-                <p>{`${quiz.duration} Mins`}</p>
+                <p>{`${quiz.duration/60} Mins`}</p>
               </li>
               <li>
                 <img src="imgs/svgs/FileW.svg" alt="" />

@@ -427,7 +427,9 @@ export const handleFieldRead = async (req, res) => {
   try {
     if (req.method === "GET") {
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -470,11 +472,11 @@ export const handleFieldInsert = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const collectionDetails = constants.collectionMap[collection];
       const doc = req.body;
+      doc.id = doc.id.trim().toLowerCase();
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
         document[fieldName].push(doc);
-        console.log(document);
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -503,7 +505,9 @@ export const handleFieldDelete = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const collectionDetails = constants.collectionMap[collection];
       const result = await getDoc(req);
       if (result && result[0] === 200) {
@@ -541,7 +545,9 @@ export const handleFieldUpdate = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId).trim();
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const newDoc = req.body;
       const collectionDetails = constants.collectionMap[collection];
       newDoc.id =
@@ -554,19 +560,17 @@ export const handleFieldUpdate = async (req, res) => {
         const document = result[1];
         let modified = false;
         const modifiedArray = document[fieldName].map((doc) => {
-          if (doc.id == fieldId) {
-            console.log("found doc ");
+          if (doc.id.toLowerCase().trim() == fieldId) {
+            console.log("found doc");
             doc = newDoc;
             modified = true;
           }
           return doc;
         });
-        if (!modified) {
+        if (modified === false) {
           modifiedArray.push(newDoc);
         }
         document[fieldName] = modifiedArray;
-        console.log(modifiedArray);
-        console.log(modified);
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -592,9 +596,13 @@ export const handleSubFieldRead = async (req, res) => {
   try {
     if (req.method === "GET") {
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = decodeURIComponent(req.query?.subFieldId);
+      const subFieldId = decodeURIComponent(req.query?.subFieldId)
+        .trim()
+        .toLowerCase();
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -645,7 +653,9 @@ export const handleSubFieldInsert = async (req, res) => {
       const documentId = decodeURIComponent(req.query?.document);
       const collectionDetails = constants.collectionMap[collection];
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
       const newDoc = req.body;
       const result = await getDoc(req);
@@ -681,7 +691,6 @@ export const handleSubFieldInsert = async (req, res) => {
 
         if (matchedFields[0]) {
           matchedFields[0][subFieldName].push(newDoc);
-          console.log("newDoc =================> " + JSON.stringify(newDoc));
 
           const updateResponse = await updateDoc(
             collectionDetails,
@@ -721,9 +730,13 @@ export const handleSubFieldDelete = async (req, res) => {
       const documentId = decodeURIComponent(req.query?.document);
       const collectionDetails = constants.collectionMap[collection];
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = decodeURIComponent(req.query?.subFieldId);
+      const subFieldId = decodeURIComponent(req.query?.subFieldId)
+        .trim()
+        .toLowerCase();
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -775,58 +788,47 @@ export const handleSubFieldUpdate = async (req, res) => {
       const documentId = decodeURIComponent(req.query?.document);
       const collectionDetails = constants.collectionMap[collection];
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = decodeURIComponent(req.query?.fieldId);
+      const fieldId = decodeURIComponent(req.query?.fieldId)
+        .trim()
+        .toLowerCase();
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = decodeURIComponent(req.query?.subFieldId).trim();
+      const subFieldId = decodeURIComponent(req.query?.subFieldId)
+        .trim()
+        .toLowerCase();
       const newDoc = req.body;
       newDoc.id = parseInt(subFieldId);
       const result = await getDoc(req);
       if (result && result[0] === 200) {
+        let duration = newDoc.duration ? newDoc.duration : -1;
+        delete newDoc.duration;
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
         });
-        if (
-          collectionDetails.collectionName ===
-            constants.collectionMap.report.collectionName &&
-          !newDoc.hasOwnProperty("result")
-        ) {
-          const quizResult = await getDocument(
-            constants.collectionMap.quiz.collectionName,
-            constants.collectionMap.quiz.schema,
-            { _id: new String(fieldId).toLowerCase() }
-          );
-          if (quizResult && quizResult[0] && quizResult[1] !== null) {
-            console.log(quizResult);
-            quizResult[1].questions.map((question) => {
-              if (question.id === newDoc.id) {
-                if (question.correctAnswer === newDoc.answer) {
-                  newDoc.result = 1;
-                } else {
-                  newDoc.result = 0;
-                }
-              }
-            });
-          } else {
-            console.log(collection + " document is null for id " + documentId);
-          }
-        }
-
         if (matchedFields[0]) {
           let modifiedSubField = false;
-          const matchedSubFields = matchedFields[0][subFieldName].map((doc) => {
-            if (doc.id == subFieldId) {
-              modifiedSubField = true;
-              doc = newDoc;
+          const modifiedSubFields = matchedFields[0][subFieldName].map(
+            (doc) => {
+              if (doc.id == newDoc.id) {
+                modifiedSubField = true;
+                doc = newDoc;
+              }
+              return doc;
             }
-            return doc;
-          });
+          );
           if (!modifiedSubField) {
-            matchedSubFields.push(newDoc);
+            modifiedSubFields.push(newDoc);
           }
-          if (matchedSubFields[0]) {
-            matchedFields[0][subFieldName] = matchedSubFields;
-            console.log(JSON.stringify(document));
+          matchedFields[0][subFieldName] = modifiedSubFields;
+          if (
+            collectionDetails.collectionName ===
+            constants.collectionMap.report.collectionName
+          ) {
+            await updateResultsInQuizReports(matchedFields[0], duration);
+            console.log("Result updated doc =>", matchedFields[0]);
+          }
+
+          if (modifiedSubFields[0]) {
             const updateResponse = await updateDoc(
               collectionDetails,
               documentId,
@@ -1040,6 +1042,7 @@ const validateDoc = (array) => {
     if (doc.hasOwnProperty("id")) {
       // console.log("Has Id Property and is object");
       const tempId = doc.id;
+      doc.id = isNaN(doc.id) ? doc.id.trim().toLowerCase() : doc.id;
       if (!validator.includes(tempId)) {
         validator.push(tempId);
         // console.log(validator);
@@ -1051,7 +1054,7 @@ const validateDoc = (array) => {
       }
     }
   }
-  console.log("Internal Document validation succeeded. Returning true.");
+  // console.log("Internal Document validation succeeded. Returning true.");
   return true;
 };
 
@@ -1117,4 +1120,38 @@ export const addUserReport = async (id) => {
   };
   const result = await insertDoc(constants.collectionMap.report, newReport);
   return result;
+};
+
+const updateResultsInQuizReports = async (doc, duration = -1) => {
+  const quizResult = await getDocument(
+    constants.collectionMap.quiz.collectionName,
+    constants.collectionMap.quiz.schema,
+    { _id: new String(doc.id).toLowerCase().trim() }
+  );
+  // console.log("quizResult for corresponding report is => ",quizResult);
+  if (quizResult && quizResult[0] == true && quizResult[1] !== null) {
+    console.log("doc   ===>   ", doc);
+    quizResult[1].questions.map((question) => {
+      doc.report.map((report) => {
+        if (question.id === report.id) {
+          if (
+            question.correctAnswer.trim().toLowerCase() ===
+            report.answer.trim().toLowerCase()
+          ) {
+            report.result = 1;
+            doc.score.taken = doc.score.taken + 1;
+          } else {
+            report.result = 0;
+          }
+          if (!doc.questionsAttended.includes(question.id))
+            doc.questionsAttended.push(question.id);
+          if (duration >= 0) {
+            doc.time.taken = duration;
+          }
+        }
+      });
+    });
+  } else {
+    console.log("Report document is null for id " + doc.id);
+  }
 };

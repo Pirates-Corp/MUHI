@@ -26,11 +26,11 @@ export const reportSchema = {
               bsonType: "string",
             },
             rank: {
-              bsonType: "string",
+              bsonType: "number",
             },
             status: {
-              bsonType: "string",
-              description: " completed or ongoing",
+              bsonType: "number",
+              description: "1 - completed , 0 - ongoing",
             },
             questionsAttended: {
               bsonType: "array",

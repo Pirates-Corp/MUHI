@@ -3,9 +3,10 @@ import Link from "next/link";
 import style from "../../user/Quiz/QuizTaking.module.scss";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Timer from './Timer'
+import Timer from "./Timer";
 
-function QuizTaking() {
+function QuizTaking({ props }) {
+  const currentUser = props.currentUser;
   let router = useRouter();
   let quizId = router.query.quiz;
   let questionId = router.query.questionId
@@ -21,7 +22,7 @@ function QuizTaking() {
       // console.log('Cache is null');
       if (quizId) {
         // console.log('Quiz id is not null');
-        fetch("http://localhost/api/db/quiz/" + quizId, {
+        fetch("/api/db/quiz/" + quizId, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         })
@@ -32,13 +33,62 @@ function QuizTaking() {
                 JSON.stringify(quizData) !== JSON.stringify(currentQuiz)
               ) {
                 console.log("Quiz data and current state is not null");
-                quizData.duration = quizData.duration * 60
+                fetch(
+                  "/api/db/report/" +
+                    currentUser._id +
+                    "/reports/" +
+                    quizData._id
+                ).then((report) => {
+                  let userReport;
+                  if (report.status === 404) {
+                    userReport = {
+                      id: quizData._id,
+                      rank: 1,
+                      status: 0,
+                      questionsAttended: [],
+                      time: {
+                        taken: 0,
+                        total: quizData.duration,
+                      },
+                      score: {
+                        taken: 0,
+                        total: quizData.questions.length,
+                      },
+                      report: []
+                    };
+                    console.log("new report => ", userReport);
+                    fetch(
+                      "/api/db/report/" + currentUser._id + "/reports/add",
+                      {
+                        method: "PUT",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(userReport),
+                      }
+                    ).then((report) => {
+                      if(report.status === 200){
+                        console.log(report);
+                        /**
+                         *  to do Need to set d reports in local storage and need to handle push
+                         */
+                      }
+                    });
+                  } else if (report.status === 200) {
+                    report.json().then((currentReport) => {
+                      userReport = currentReport
+                      console.log("userReport => " + userReport);
+                    });
+                  }
+                });
                 setCurrentQuiz(quizData);
                 localStorage.setItem("currentQuiz", JSON.stringify(quizData));
               }
             });
           })
-          .catch((err) => console.error(err));
+          .catch((err) =>
+            console.error("error in quiz taking useeffect" + err)
+          );
       } else console.log("failed loading quiz id in address bar");
     } else {
       // console.log('Not null==============');
@@ -58,7 +108,6 @@ function QuizTaking() {
       }
     }
   }, [currentQuiz, quizId]);
-  
 
   const handleRadioSelect = (e, option) => {
     currentQuiz.questions[questionId].answer = option;
@@ -75,7 +124,12 @@ function QuizTaking() {
         currentQuiz.hasOwnProperty("questions") &&
         questionId < currentQuiz.questions.length ? (
           <>
-            <Timer props={{duration:currentQuiz.duration,currentQuiz,setCurrentQuiz}}/>
+            <Timer
+              props={{
+                currentQuiz,
+                setCurrentQuiz,
+              }}
+            />
             <div id={style.quiz}>
               <div id={style.questionBox}>
                 <div id={style.questionHolder}>
@@ -188,7 +242,7 @@ function QuizTaking() {
             </div>
           </>
         ) : (
-          "Invalid Question Id"
+          "Loading quiz..."
         )}
       </div>
     </>
