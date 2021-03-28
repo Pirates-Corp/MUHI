@@ -470,7 +470,6 @@ export const handleFieldInsert = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const collectionDetails = constants.collectionMap[collection];
       const doc = req.body;
-      doc.id = doc.id.trim()
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -542,10 +541,14 @@ export const handleFieldUpdate = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
-      const fieldId = parseInt(decodeURIComponent(req.query?.fieldId));
+      const fieldId = decodeURIComponent(req.query?.fieldId).trim();
       const newDoc = req.body;
       const collectionDetails = constants.collectionMap[collection];
-      newDoc.id = newDoc.id ? newDoc.id : fieldId;
+      newDoc.id =
+        collectionDetails.collectionName ===
+        constants.collectionMap.quiz.collectionName
+          ? parseInt(fieldId)
+          : fieldId;
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
@@ -651,8 +654,35 @@ export const handleSubFieldInsert = async (req, res) => {
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
         });
+        if (
+          collectionDetails.collectionName ===
+            constants.collectionMap.report.collectionName &&
+          !newDoc.hasOwnProperty("result")
+        ) {
+          const quizResult = await getDocument(
+            constants.collectionMap.quiz.collectionName,
+            constants.collectionMap.quiz.schema,
+            { _id: new String(fieldId).toLowerCase() }
+          );
+          if (quizResult && quizResult[0] && quizResult[1] !== null) {
+            quizResult[1].questions.map((question) => {
+              if (question.id === newDoc.id) {
+                if (question.correctAnswer === newDoc.answer) {
+                  newDoc.result = 1;
+                } else {
+                  newDoc.result = 0;
+                }
+              }
+            });
+          } else {
+            console.log(collection + " document is null for id " + fieldId);
+          }
+        }
+
         if (matchedFields[0]) {
           matchedFields[0][subFieldName].push(newDoc);
+          console.log("newDoc =================> " + JSON.stringify(newDoc));
+
           const updateResponse = await updateDoc(
             collectionDetails,
             documentId,
@@ -710,7 +740,7 @@ export const handleSubFieldDelete = async (req, res) => {
           const updateResponse = await updateDoc(
             collectionDetails,
             documentId,
-            {...document}
+            { ...document }
           );
           resCode = updateResponse[0];
           resBody = updateResponse[1];
@@ -747,28 +777,41 @@ export const handleSubFieldUpdate = async (req, res) => {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId);
       const subFieldName = decodeURIComponent(req.query?.subFieldName);
-      const subFieldId = parseInt(decodeURIComponent(req.query?.subFieldId));
+      const subFieldId = decodeURIComponent(req.query?.subFieldId).trim();
       const newDoc = req.body;
-      newDoc.id = newDoc.id ? newDoc.id : subFieldId;
+      newDoc.id = parseInt(subFieldId);
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
         });
-        const quizResult = await getDocument(constants.collectionMap.quiz.collectionName,constants.collectionMap.quiz.schema,{_id:new String(fieldId).toLowerCase()})
-        if(quizResult && quizResult[0]) {
-          quizResult[1].questions.map((question)=>{
-            if(question.id === newDoc.id ) {
-              if(question.correctAnswer === newDoc.answer ) {
-                newDoc.result = 1
-              } else {
-                newDoc.result = 0
+        if (
+          collectionDetails.collectionName ===
+            constants.collectionMap.report.collectionName &&
+          !newDoc.hasOwnProperty("result")
+        ) {
+          const quizResult = await getDocument(
+            constants.collectionMap.quiz.collectionName,
+            constants.collectionMap.quiz.schema,
+            { _id: new String(fieldId).toLowerCase() }
+          );
+          if (quizResult && quizResult[0] && quizResult[1] !== null) {
+            console.log(quizResult);
+            quizResult[1].questions.map((question) => {
+              if (question.id === newDoc.id) {
+                if (question.correctAnswer === newDoc.answer) {
+                  newDoc.result = 1;
+                } else {
+                  newDoc.result = 0;
+                }
               }
-            } 
-          })
+            });
+          } else {
+            console.log(collection + " document is null for id " + documentId);
+          }
         }
-        console.log(newDoc);
+
         if (matchedFields[0]) {
           let modifiedSubField = false;
           const matchedSubFields = matchedFields[0][subFieldName].map((doc) => {
