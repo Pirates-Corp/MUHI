@@ -9,6 +9,8 @@ const Timer = ({ props }) => {
     parseInt(props.currentQuiz.duration)
   );
 
+  console.log("time in seconds =>",currentCount);
+
   const [minute, setMinute] = useState(parseInt(Math.ceil(currentCount / 60)));
 
   const [second, setSecond] = useState(parseInt(Math.ceil(currentCount % 60)));
@@ -21,7 +23,7 @@ const Timer = ({ props }) => {
       "Quiz is about to start. Kindly click ok to start"
     );
     if (isStarted) {
-      setStarted('0');
+      setStarted("0");
     } else {
       router.push("/quiz");
     }
@@ -30,7 +32,7 @@ const Timer = ({ props }) => {
   useEffect(() => {
     if (started === "0") {
       if (currentCount <= 0) {
-        props.currentQuiz.status = "1";
+        props.currentQuiz.status = 1;
         props.currentQuiz.duration = 0;
         props.setCurrentQuiz({ ...props.currentQuiz });
         return;
@@ -39,7 +41,7 @@ const Timer = ({ props }) => {
         setCount(currentCount - 1);
       }, 1000);
       // if (props.currentQuiz && minute > parseInt(Math.ceil(currentCount / 60))) {
-      props.currentQuiz.status = "0";
+      props.currentQuiz.status = 0;
       props.currentQuiz.duration = currentCount;
       // console.log(props.currentQuiz.duration);
       props.setCurrentQuiz({ ...props.currentQuiz });

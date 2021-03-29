@@ -16,97 +16,106 @@ function QuizTaking({ props }) {
   const [currentQuiz, setCurrentQuiz] = useState({});
 
   useEffect(() => {
-    let quizInCache = localStorage.getItem("currentQuiz");
-    // console.log(quizInCache);
-    if (quizInCache === null) {
-      // console.log('Cache is null');
-      if (quizId) {
-        // console.log('Quiz id is not null');
-        fetch("/api/db/quiz/" + quizId, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        })
-          .then((res) => {
-            res.json().then((quizData) => {
-              if (
-                quizData &&
-                JSON.stringify(quizData) !== JSON.stringify(currentQuiz)
-              ) {
-                console.log("Quiz data and current state is not null");
-                fetch(
-                  "/api/db/report/" +
-                    currentUser._id +
-                    "/reports/" +
-                    quizData._id
-                ).then((report) => {
-                  let userReport;
-                  if (report.status === 404) {
-                    userReport = {
-                      id: quizData._id,
-                      rank: 1,
-                      status: 0,
-                      questionsAttended: [],
-                      time: {
-                        taken: 0,
-                        total: quizData.duration,
-                      },
-                      score: {
-                        taken: 0,
-                        total: quizData.questions.length,
-                      },
-                      report: []
-                    };
-                    console.log("new report => ", userReport);
-                    fetch(
-                      "/api/db/report/" + currentUser._id + "/reports/add",
-                      {
-                        method: "PUT",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(userReport),
-                      }
-                    ).then((report) => {
-                      if(report.status === 200){
-                        console.log(report);
-                        /**
-                         *  to do Need to set d reports in local storage and need to handle push
-                         */
-                      }
-                    });
-                  } else if (report.status === 200) {
-                    report.json().then((currentReport) => {
-                      userReport = currentReport
-                      console.log("userReport => " + userReport);
-                    });
-                  }
-                });
-                setCurrentQuiz(quizData);
-                localStorage.setItem("currentQuiz", JSON.stringify(quizData));
+    const triggerUseEffect = async () => {
+      let quizInCache = localStorage.getItem("currentQuiz");
+      // console.log(quizInCache);
+      if (quizInCache === null) {
+        // console.log('Cache is null');
+        if (quizId) {
+          // console.log('Quiz id is not null');
+          const quizPromise = await fetch("/api/db/quiz/" + quizId, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+
+          const quizData = await quizPromise?.json();
+          if (
+            quizData &&
+            JSON.stringify(quizData) !== JSON.stringify(currentQuiz)
+          ) {
+            console.log("Quiz data and current state is not null");
+            let userReport = { test: "data" };
+            const reportPromise = await fetch(
+              "/api/db/report/" + currentUser._id + "/reports/" + quizData._id
+            );
+            if (reportPromise.status === 404) {
+              userReport = {
+                id: quizData._id,
+                rank: 1,
+                status: 0,
+                questionsAttended: [],
+                time: {
+                  taken: 0,
+                  total: quizData.duration,
+                },
+                score: {
+                  taken: 0,
+                  total: quizData.questions.length,
+                },
+                report: [],
+              };
+              console.log("new report => ", userReport);
+              const newReportPromise = fetch(
+                "/api/db/report/" + currentUser._id + "/reports/add",
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(userReport),
+                }
+              );
+              if (newReportPromise.status === 200) {
+                console.log(
+                  "new reports created and pushed into db => ",
+                  report
+                );
+                userReport = await newReportPromise.json();
               }
-            });
-          })
-          .catch((err) =>
-            console.error("error in quiz taking useeffect" + err)
-          );
-      } else console.log("failed loading quiz id in address bar");
-    } else {
-      // console.log('Not null==============');
-      if (!currentQuiz.hasOwnProperty("questions")) {
-        // console.log('does not has own poperty==============');
-        setCurrentQuiz(JSON.parse(quizInCache));
+            } else if (reportPromise.status === 200) {
+              userReport = await reportPromise.json();
+            }
+            
+            userReport.report.map((attendedQuestion) => {
+              console.log(attendedQuestion);
+              quizData.questions.map((question) => {
+                console.log(question);
+                if(question.id == attendedQuestion.id) {
+                  question.answer = attendedQuestion.answer
+                }
+              })
+            })
+
+            quizData.duration = userReport?.time?.taken
+              ? userReport.time.taken
+              : quizData.duration;
+
+            console.log("Current Quiz => ", quizData);
+            console.log("userReport => ", userReport);
+
+            setCurrentQuiz(quizData);
+            localStorage.setItem("currentQuiz", JSON.stringify(quizData));
+          }
+        } else console.log("failed loading quiz id in address bar");
       } else {
-        if (currentQuiz.title === quizId) {
-          // console.log('same title==============');
-          localStorage.setItem("currentQuiz", JSON.stringify(currentQuiz));
-        } else if (quizId) {
-          // console.log("title => "+currentQuiz.title+"  id=>"+quizId);
-          // console.log("id removed for some reason");
-          localStorage.removeItem("currentQuiz");
-          setCurrentQuiz({});
+        // console.log('Not null==============');
+        if (!currentQuiz.hasOwnProperty("questions")) {
+          // console.log('does not has own poperty==============');
+          setCurrentQuiz(JSON.parse(quizInCache));
+        } else {
+          if (currentQuiz.title === quizId) {
+            // console.log('same title==============');
+            localStorage.setItem("currentQuiz", JSON.stringify(currentQuiz));
+          } else if (quizId) {
+            // console.log("title => "+currentQuiz.title+"  id=>"+quizId);
+            // console.log("id removed for some reason");
+            localStorage.removeItem("currentQuiz");
+            setCurrentQuiz({});
+          }
         }
       }
-    }
+    };
+    triggerUseEffect();
   }, [currentQuiz, quizId]);
 
   const handleRadioSelect = (e, option) => {
