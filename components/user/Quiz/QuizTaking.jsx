@@ -80,7 +80,7 @@ const QuizTaking = () => {
              End Quiz
             </button> */}
 
-            <Link href="congratulations">
+            <Link href="/">
                 <a  id={style.exitBtn} className="redBtn">End Quiz</a>
             </Link>
             

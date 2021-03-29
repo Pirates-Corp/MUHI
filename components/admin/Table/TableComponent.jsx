@@ -17,6 +17,7 @@ const TableComponent = (props) => {
     feature,
   } = props;
  
+  
  
     //Quiz List
     apiData.allQuiz.map((quiz) => {

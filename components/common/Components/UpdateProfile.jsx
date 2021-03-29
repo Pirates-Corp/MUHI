@@ -29,10 +29,10 @@ const UpdateProfile = () =>{
        body: JSON.stringify(updatedData)
        });
 
-       if(res.status)
-       {
-         alert("Your data has been updated")
-       }
+      //  if(res.status)
+      //  {
+      //    alert("Your data has been updated")
+      //  }
 
 
 
@@ -41,14 +41,18 @@ const UpdateProfile = () =>{
     const updatePassword = (e)=>{
        e.preventDefault();
        let updatePassword = {password: e.currentTarget.currentPassword.value, newPassword:e.currentTarget.newPassword.value, reNewPassword: e.currentTarget.retypePassword.value}
+      
+      
+       if(updatePassword.newPassword === updatePassword.reNewPassword )
+       {
+            
+       }
+       else
+       {
+         alert("Passwords don't match")
+       }
+
        console.log(updatePassword);
-
-      
-
-
-      
-      
-
     }
 
     console.log(userData);

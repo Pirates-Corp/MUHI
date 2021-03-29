@@ -1,10 +1,27 @@
+import {useContext } from 'react'
+import {useRouter} from "next/router"
 import style from "../Layouts/BaseLayout.module.scss"
 import SideBar from "../common/Components/SideBar"
+import {AuthContext} from '../context/AuthContext'
 
 const BaseLayout = ({children}) =>
 {
-  let type;
+  const router = useRouter();
 
+  const [user] = useContext(AuthContext);
+
+   if(user === null)
+   {
+   router.push('/')
+   }
+
+
+  
+
+   
+
+
+  let type;
   try {
     type = (children[0].props.type == "user") ? "user" : " ";
   } catch (error) {

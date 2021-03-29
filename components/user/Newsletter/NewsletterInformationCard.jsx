@@ -29,7 +29,7 @@ const Newsletter = () => {
     });
 
     setNewsLetters(ActiveNewsLetter);
-  });
+  },[]);
 
   return (
     <>

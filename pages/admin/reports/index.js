@@ -4,40 +4,10 @@ import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import BaseLayout from "../../../components/Layouts/BaseLayout.jsx";
 export default function studentReport({props}) {
 
-  console.log(props);
+  //console.log(props);
 
 
-  const data = [
-      ['Siva prakash','1','400','3hr','4',"/admin/report/siva"],
-      ['Adile','22','400','3hr','4',"/admin/report/siva"],
-      ['Cinta Vj','23','400','3hr','4',"/admin/report/siva"],
-      ['Sam','34','400','3hr','4',"/admin/report/siva"],
-      ['GodWin','14','400','3hr','4',"/admin/report/siva"],
-      ['tharun','1w','400','3hr','4',"/admin/report/siva"],
-      ['kitty','1w','400','3hr','5',"/admin/report/siva"],
-      ['tharun','1w','400','3hr','4',"/admin/report/siva"],
-      ['tharun','1w','400','3hr','4',"/admin/report/siva"]
-]
 
-const apiData = [
-  ['api Siva prakash','1','400','3hr','4',"/admin/report/siva"],
-  ['api Adile','22','400','3hr','4',"/admin/report/siva"],
-  ['api Cinta Vj','23','400','3hr','4',"/admin/report/siva"],
-  ['api Sam','34','400','3hr','4',"/admin/report/siva"],
-  ['api GodWin','14','400','3hr','4',"/admin/report/siva"],
-  ['api tharun','1w','400','3hr','4',"/admin/report/siva"],
-  ['api kitty','1w','400','3hr','5',"/admin/report/siva"],
-  ['api tharun','1w','400','3hr','4',"/admin/report/siva"],
-  ['api tharun','1w','400','3hr','4',"/admin/report/siva"]
-]
-
-  // useEffect( async()=>{
-  //   let res  = await fetch("api/db/report/all", {
-  //         method: "GET",
-  //         headers: { "Content-Type": "application/json" },
-  //       });
-      
-  // })
 
 
   return (
@@ -77,6 +47,7 @@ studentReport.getInitialProps = async (ctx) => {
     headers: { "Content-Type": "application/json", cookie },
   });
   
+
   const reportRes  = await fetch('http://localhost/api/db/report/all', {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
@@ -86,18 +57,15 @@ studentReport.getInitialProps = async (ctx) => {
   let allQuiz;
   let allUsers;
 
-  try {
+
     allReports = await reportRes.json();
-    allReports = allReports ? allReports : {}
+
 
     allQuiz    = await quizRes.json();
-    allQuiz    = allQuiz ? allQuiz:{};
+
 
     allUsers    = await userRes.json();
-    allUsers    = allUsers ? allUsers:{};
+    
   
-  } catch (err) {
-    console.error(err);
-  }
   return { props: {allReports , allQuiz , allUsers } };
 };

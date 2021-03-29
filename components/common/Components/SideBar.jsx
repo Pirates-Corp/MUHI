@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from "next/link"
 import { useRouter } from "next/router";
-
+import { useContext } from 'react'
+import {AuthContext} from '../../context/AuthContext'
 import style from "../../common/Components/SideBar.module.scss"
 
 const adminSideBarItems = [
@@ -27,11 +28,23 @@ let cssStyle = {};
 export default function AdminSideBar(props){
     const router = useRouter();
 
+    const [user] = useContext(AuthContext);
+
+
+
     const logout = async (e)=>{
      e.preventDefault();
       await fetch("/api/auth/logout",
             {method: 'PUT'});
-        window.location.href="/";
+        if(user.role === "admin" || user.role === "moderator")
+        {
+            window.location.href="/admin/login";
+        }
+        else
+        {
+            window.location.href="/";
+        }
+
     }
     
     cssStyle = (props.type == "user") ? {"--height" : "32vh","--holder-height":"340px" ,"--background":"#286da9","--activeBackground":"#4ca2ee" }
@@ -50,8 +63,8 @@ export default function AdminSideBar(props){
                   {
 
                       (props.type == "user")?
-                      (userSideBarItems.map((item) => (
-                        <li >
+                      (userSideBarItems.map((item,index) => (
+                        <li key={index} >
                             <Link href={item.href}>
                                 <a>
                                     <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
@@ -60,8 +73,8 @@ export default function AdminSideBar(props){
                             </Link>
                         </li>
                     ))):
-                    (adminSideBarItems.map((item) => (
-                        <li >
+                    (adminSideBarItems.map((item,index) => (
+                        <li  key={index} style={ (user.role === "moderator" && item.text ==='Account Management')?{'display' : 'none' }:{'display' : 'block' }}>
                             <Link href={item.href}>
                                 <a>
                                     <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
