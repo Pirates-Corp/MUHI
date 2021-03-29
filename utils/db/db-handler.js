@@ -1149,6 +1149,7 @@ const updateResultsInQuizReports = async (doc, duration = -1) => {
       });
     });
     if (duration >= 0)  doc.time.taken = duration;
+    if(doc.questionsAttended.length === quizResult[1].questions.length) doc.status = 1
   } else {
     console.log("Report document is null for id " + doc.id);
   }

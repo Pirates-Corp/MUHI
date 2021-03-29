@@ -15,25 +15,23 @@ const Timer = ({ props }) => {
 
   const [second, setSecond] = useState(parseInt(Math.ceil(currentCount % 60)));
 
-  const [started, setStarted] = useState("-1");
+  const [started, setStarted] = useState(-1);
 
-  if (started === "-1") {
+  if (started === -1) {
     props.currentQuiz.totalDuration = props.currentQuiz.duration;
     const isStarted = confirm(
       "Quiz is about to start. Kindly click ok to start"
     );
     if (isStarted) {
-      setStarted("0");
+      setStarted(0);
     } else {
       router.push("/quiz");
     }
   }
 
   useEffect(() => {
-    if (started === "0") {
-      if (currentCount <= 0) {
-        props.currentQuiz.status = 1;
-        props.currentQuiz.duration = 0;
+    if (started === 0) {
+      if (currentCount === 0) {
         props.endQuiz()
         return;
       }

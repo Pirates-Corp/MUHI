@@ -122,11 +122,11 @@ function QuizTaking({ props }) {
       const report = {}
       if (option!=undefined) {
         currentQuiz.questions[questionId].answer = option;
-        report.chapter = currentQuiz.questions[questionId].chapter
-        report.section = currentQuiz.questions[questionId].section
-        report.answer = currentQuiz.questions[questionId].answer
       }
       
+      report.chapter = currentQuiz.questions[questionId].chapter
+      report.section = currentQuiz.questions[questionId].section
+      report.answer = currentQuiz.questions[questionId].answer ? currentQuiz.questions[questionId].answer : ""
       report.duration = currentQuiz.totalDuration - currentQuiz.duration
       
       fetch(
