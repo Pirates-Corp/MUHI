@@ -9,7 +9,7 @@ const CenterLayout = ({children}) =>
 
   const [user] = useContext(AuthContext);
 
-   if(user === null || (router.pathname.startsWith("/quiz")) )
+   if(user === null )
    {
    router.push('/')
    }

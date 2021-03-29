@@ -133,6 +133,7 @@ export const handleDocumentReadAll = async (req, res) => {
     console.log("Error getting all documents =>  " + err);
   }
   res.statusCode = resCode;
+  // res.setHeader("Access-Control-Allow-Origin", "*");
   resCode[0] === 200 ? res.json(resBody) : res.send(resBody);
 };
 

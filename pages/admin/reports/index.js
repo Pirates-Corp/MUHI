@@ -4,7 +4,7 @@ import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import BaseLayout from "../../../components/Layouts/BaseLayout.jsx";
 export default function studentReport({props}) {
 
-  //console.log(props);
+  console.log(props);
 
 
 
@@ -37,18 +37,18 @@ export default function studentReport({props}) {
 studentReport.getInitialProps = async (ctx) => {
   const cookie = ctx.req ? ctx.req.headers.cookie : null;
 
-  const quizRes = await fetch('http://localhost/api/db/quiz/all', {
+  const quizRes = await fetch('http://localhost:3000/api/db/quiz/all', {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
 
-  const userRes = await fetch('http://localhost/api/db/user/all', {
+  const userRes = await fetch('http://localhost:3000/api/db/user/all', {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
   
 
-  const reportRes  = await fetch('http://localhost/api/db/report/all', {
+  const reportRes  = await fetch('http://localhost:3000/api/db/report/all', {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
@@ -69,3 +69,4 @@ studentReport.getInitialProps = async (ctx) => {
   
   return { props: {allReports , allQuiz , allUsers } };
 };
+

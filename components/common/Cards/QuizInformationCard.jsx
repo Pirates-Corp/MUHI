@@ -21,7 +21,7 @@ const quizInformationCard = (props) => {
 
         {
             apiData.map((data)=>
-            <div id={style.InfoCard}>
+            <div id={style.InfoCard} className="mt-3">
             <div id={style.header}>
                 <img  src="/imgs/svgs/NameBar.svg"/>
                 <h3>{data.quizName}</h3>
@@ -51,27 +51,27 @@ const quizInformationCard = (props) => {
 
                 <div id={style.tagReports}>
                      
-                 {
+                 { (view.tagData) ? (
                    data.tagData.map((tag)=><>
                    <div id={style.report}>
                             <p id={style.sectionName}>{tag.tagname}</p>
                             <h4>{tag.data}</h4>
                         </div>
                    </>)
-                 }
+                  ) : ("") }
                 </div>
                 </div>
 
             </div>
     
-            <div id={style.footer} style={(!view.showButtons)? {"display" : "none"} : {}  } >
+         <div id={style.footer} style={(!view.showButtons)? {"display" : "none"} : {}  } >
                <button id={style.editBtn} className="greenRoundBtn">
                    <img src="/imgs/svgs/Edit.svg"/>
                </button>
                <button id={style.deleteBtn} onClick={e=>{apiFunction(e,data.buttonData.apiUrl,data.buttonData.reqType,data.buttonData.bodyData)}}  className="redRoundBtn">
                    <img src="/imgs/svgs/Delete.svg"/>
                </button>
-            </div>
+            </div> 
         </div>)
         }
         </div>

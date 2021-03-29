@@ -6,7 +6,7 @@ const Newsletter = () => {
   const [NewsLetters, setNewsLetters] = useState([]);
 
   useEffect(async () => {
-    const res = await fetch("http://localhost/api/db/newsletter/all", {
+    const res = await fetch("/api/db/newsletter/all", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

@@ -7,6 +7,7 @@ import QuizInformationCard from '../common/Cards/QuizInformationCard'
 const userDashboard = () => {
 
   const [overallRowCardData ,setOverallRowCardData] = useState([]);
+  const [QuizInformationCardData , setQuizInformationCardData] = useState([]);
 ;
  
   
@@ -36,96 +37,7 @@ const userDashboard = () => {
 
 
 
-      let QuizInformationCardData = 
-      
-       [ {
-          quizName : "Basic of Islam",
-          quizData : [
-            {
-              heading : "Total Score",
-              icon : "/imgs/svgs/TotalScore.svg",
-              data: "20/40"
-            },
-            {
-              heading : "Time Taken",
-              icon : "/imgs/svgs/TimeTaken.svg",
-              data: "25 Min"
-            },
-            {
-              heading : "Rank",
-              icon : "/imgs/svgs/Rank.svg",
-              data: "3"
-            }
-          ]
-        ,
-          tagData: [
-
-            {
-              tagname : "Abu - personal",
-              data: "2"
-            },
-            {
-              tagname : "Abu - private",
-              data: "5"
-            },
-            {
-              tagname : "Abu - personal",
-              data: "3"
-            }
-
-          ]
-          ,
-          buttonData:{
-            apiUrl: "google.com",
-            reqType:"POST"
-          }
-          
-        },
-        {
-          quizName : "Holy Quran",
-          quizData : [
-            {
-              heading : "Total Score",
-              icon : "/imgs/svgs/TotalScore.svg",
-              data: "20/40"
-            },
-            {
-              heading : "Time Taken",
-              icon : "/imgs/svgs/TimeTaken.svg",
-              data: "25 Min"
-            },
-            {
-              heading : "Rank",
-              icon : "/imgs/svgs/Rank.svg",
-              data: "3"
-            }
-          ]
-        ,
-          tagData: [
-
-            {
-              tagname : "Abu - personal",
-              data: "2"
-            },
-            {
-              tagname : "Abu - private",
-              data: "5"
-            },
-            {
-              tagname : "Abu - personal",
-              data: "3"
-            }
-
-          ]
-          ,
-          buttonData:{
-            apiUrl: "google.com",
-            reqType:"POST",
-            bodyData : {test : "hello"}
-          }
-          
-        }
-      ]
+    
       
 
 
@@ -135,21 +47,21 @@ const userDashboard = () => {
 
  useEffect(async ()=>{
    
-    const userRes = await fetch("http://localhost/api/db/user", {
+    const userRes = await fetch("/api/db/user", {
     method: "GET",
     headers: { "Content-Type": "application/json"},
     });
 
    const user = await userRes.json();
 
-   const userReportsRes = await fetch(`http://localhost/api/db/report/${user.email}`, {
+   const userReportsRes = await fetch(`/api/db/report/${user.email}`, {
     method: "GET",
     headers: { "Content-Type": "application/json"},
     });
     
     const userReports = await userReportsRes.json();
 
-    const allQuizRes = await fetch(`http://localhost/api/db/quiz/all`, {
+    const allQuizRes = await fetch(`/api/db/quiz/all`, {
       method: "GET",
       headers: { "Content-Type": "application/json"},
       });
@@ -163,14 +75,37 @@ const userDashboard = () => {
           {
             if((Boolean(quiz.quizTag.split('-')[1])))
             {
-                reports.push(takenQuiz);
+              console.log(takenQuiz);
+              
+              let  singleQuiz = { quizName : takenQuiz.id,
+                                  quizData : [
+                                    {
+                                      heading : "Total Score",
+                                      icon : "/imgs/svgs/TotalScore.svg",
+                                      data: takenQuiz.score.taken+"/"+takenQuiz.score.total
+                                    },
+                                    {
+                                      heading : "Time Taken",
+                                      icon : "/imgs/svgs/TimeTaken.svg",
+                                      data: takenQuiz.time.taken+"/"+takenQuiz.time.total
+                                    },
+                                    {
+                                      heading : "Rank",
+                                      icon : "/imgs/svgs/Rank.svg",
+                                      data: takenQuiz.rank
+                                    }
+                                  ]
+                                }
+  
+  
+                reports.push(singleQuiz);
             }
           }
         })
       })
 
-   console.log("currentUserReports",reports);
 
+   setQuizInformationCardData(reports)
    setOverallRowCardData(userReports);
 
  },[])
@@ -197,3 +132,109 @@ const userDashboard = () => {
 };
 
 export default userDashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let QuizInformationCardData = 
+              
+// [ {
+//   quizName : "Basic of Islam",
+//   quizData : [
+//     {
+//       heading : "Total Score",
+//       icon : "/imgs/svgs/TotalScore.svg",
+//       data: "20/40"
+//     },
+//     {
+//       heading : "Time Taken",
+//       icon : "/imgs/svgs/TimeTaken.svg",
+//       data: "25 Min"
+//     },
+//     {
+//       heading : "Rank",
+//       icon : "/imgs/svgs/Rank.svg",
+//       data: "3"
+//     }
+//   ]
+// ,
+//   tagData: [
+
+//     {
+//       tagname : "Abu - personal",
+//       data: "2"
+//     },
+//     {
+//       tagname : "Abu - private",
+//       data: "5"
+//     },
+//     {
+//       tagname : "Abu - personal",
+//       data: "3"
+//     }
+
+//   ]
+//   ,
+//   buttonData:{
+//     apiUrl: "google.com",
+//     reqType:"POST"
+//   }
+  
+// },
+// {
+//   quizName : "Holy Quran",
+//   quizData : [
+//     {
+//       heading : "Total Score",
+//       icon : "/imgs/svgs/TotalScore.svg",
+//       data: "20/40"
+//     },
+//     {
+//       heading : "Time Taken",
+//       icon : "/imgs/svgs/TimeTaken.svg",
+//       data: "25 Min"
+//     },
+//     {
+//       heading : "Rank",
+//       icon : "/imgs/svgs/Rank.svg",
+//       data: "3"
+//     }
+//   ]
+// ,
+//   tagData: [
+
+//     {
+//       tagname : "Abu - personal",
+//       data: "2"
+//     },
+//     {
+//       tagname : "Abu - private",
+//       data: "5"
+//     },
+//     {
+//       tagname : "Abu - personal",
+//       data: "3"
+//     }
+
+//   ]
+//   ,
+//   buttonData:{
+//     apiUrl: "google.com",
+//     reqType:"POST",
+//     bodyData : {test : "hello"}
+//   }
+  
+// }
+// ]
+
+
