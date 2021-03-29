@@ -41,7 +41,7 @@ function QuizTaking({ props }) {
             if (reportPromise.status === 404) {
               userReport = {
                 id: quizData._id,
-                rank: 1,
+                rank: 0,
                 status: 0,
                 questionsAttended: [],
                 time: {
@@ -75,19 +75,17 @@ function QuizTaking({ props }) {
             } else if (reportPromise.status === 200) {
               userReport = await reportPromise.json();
             }
-            
-            userReport.report.map((attendedQuestion) => {
-              console.log(attendedQuestion);
-              quizData.questions.map((question) => {
-                console.log(question);
-                if(question.id == attendedQuestion.id) {
-                  question.answer = attendedQuestion.answer
-                }
-              })
-            })
 
-            quizData.duration = userReport?.time?.taken
-              ? userReport.time.taken
+            userReport.report.map((attendedQuestion) => {
+              quizData.questions.map((question) => {
+                if (question.id == attendedQuestion.id) {
+                  question.answer = attendedQuestion.answer;
+                }
+              });
+            });
+
+            quizData.duration = userReport.time.taken > 0
+              ? quizData.totalDuration - userReport.time.taken
               : quizData.duration;
 
             console.log("Current Quiz => ", quizData);
@@ -116,13 +114,50 @@ function QuizTaking({ props }) {
       }
     };
     triggerUseEffect();
+    handleRadioSelect();
   }, [currentQuiz, quizId]);
 
-  const handleRadioSelect = (e, option) => {
-    currentQuiz.questions[questionId].answer = option;
-    setCurrentQuiz({ ...currentQuiz });
-    console.log(currentQuiz);
+  const handleRadioSelect = (e = undefined, option = undefined) => {
+    if (currentQuiz && currentQuiz.questions) {
+      const report = {}
+      if (option!=undefined) {
+        currentQuiz.questions[questionId].answer = option;
+        report.chapter = currentQuiz.questions[questionId].chapter
+        report.section = currentQuiz.questions[questionId].section
+        report.answer = currentQuiz.questions[questionId].answer
+      }
+      
+      report.duration = currentQuiz.totalDuration - currentQuiz.duration
+      
+      fetch(
+        "/api/db/report/" +
+          currentUser._id +
+          "/reports/" +
+          currentQuiz._id +
+          "/report/" +
+          (questionId + 1) +
+          "/update",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(report),
+        }
+      ).then((res) => {
+        if(res.status == 200) {
+          console.log("DB Updated");
+        }
+      });
+      if(option!=undefined) {
+        setCurrentQuiz({ ...currentQuiz });
+        console.log(currentQuiz);
+      }
+    }
   };
+
+  const endQuiz = () => {
+    setCurrentQuiz(currentQuiz)
+    localStorage.removeItem('currentQuiz')
+  }
 
   return (
     <>
@@ -137,6 +172,7 @@ function QuizTaking({ props }) {
               props={{
                 currentQuiz,
                 setCurrentQuiz,
+                endQuiz
               }}
             />
             <div id={style.quiz}>

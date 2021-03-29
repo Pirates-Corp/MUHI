@@ -34,11 +34,11 @@ const Timer = ({ props }) => {
       if (currentCount <= 0) {
         props.currentQuiz.status = 1;
         props.currentQuiz.duration = 0;
-        props.setCurrentQuiz({ ...props.currentQuiz });
+        props.endQuiz()
         return;
       }
       const id = setInterval(() => {
-        setCount(currentCount - 1);
+        if(currentCount>0) setCount(currentCount - 1);
       }, 1000);
       // if (props.currentQuiz && minute > parseInt(Math.ceil(currentCount / 60))) {
       props.currentQuiz.status = 0;
@@ -46,8 +46,8 @@ const Timer = ({ props }) => {
       // console.log(props.currentQuiz.duration);
       props.setCurrentQuiz({ ...props.currentQuiz });
       // }
-      setMinute(parseInt(Math.floor(currentCount / 60)));
-      setSecond(parseInt(Math.floor(currentCount % 60)));
+      setMinute(parseInt(Math.floor(currentCount / 60))) 
+      setSecond(parseInt(Math.floor(currentCount % 60)))
       return () => clearInterval(id);
     }
   }, [currentCount]);

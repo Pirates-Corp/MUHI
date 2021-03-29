@@ -14,7 +14,7 @@ import {
 } from "./db/helpers/db-util";
 import nodemailer from "nodemailer";
 import { constants } from "./constants";
-import {addUserReport} from './db/db-handler'
+import { addUserReport } from "./db/db-handler";
 
 const emailRegex = new RegExp(/\S+@\S+\.\S+/);
 
@@ -113,20 +113,22 @@ export const login = async (httpReq, httpRes) => {
           } else {
             console.log("Invalid password for the user => " + userDetails.id);
             httpRes.redirect(
-              httpReq.headers.referer.split("?")[0] + process.env.routes.invalidPassword
+              httpReq.headers.referer.split("?")[0] +
+                process.env.routes.invalidPassword
             );
             return;
           }
         } else {
-          resText = "User Not found => " + userDetails.id
+          resText = "User Not found => " + userDetails.id;
           resCode = 400;
-          console.log(resText)
-          if(httpReq.headers.referer) {
+          console.log(resText);
+          if (httpReq.headers.referer) {
             httpRes.redirect(
-              httpReq.headers.referer.split("?")[0] + process.env.routes.invalidUser
+              httpReq.headers.referer.split("?")[0] +
+                process.env.routes.invalidUser
             );
             return;
-          } 
+          }
         }
       } else {
         resText = "Required fields missing";
@@ -181,14 +183,18 @@ export const signup = async (httpReq, httpRes) => {
       let userDetails = httpReq.body;
       if (userDetails.name && userDetails.email && userDetails.role) {
         userDetails._id = new String(
-          userDetails.role === constants.roles.admin ? userDetails.name : userDetails.email
+          userDetails.role === constants.roles.admin
+            ? userDetails.name
+            : userDetails.email
         ).toLowerCase();
         userDetails.mobileNo = userDetails.mobileNo;
         userDetails.role = new String(userDetails.role).toLowerCase();
-        userDetails.state = new String(userDetails.state ? userDetails.state : "active").toLowerCase()
-        userDetails.accountType = new String(userDetails.accountType
-          ? userDetails.accountType
-          : "muhi").toLowerCase()
+        userDetails.state = new String(
+          userDetails.state ? userDetails.state : "active"
+        ).toLowerCase();
+        userDetails.accountType = new String(
+          userDetails.accountType ? userDetails.accountType : "muhi"
+        ).toLowerCase();
         if (userDetails.accountType !== "google" && !userDetails.password) {
           resText = "Please provide the password";
           console.log(resText);
@@ -196,9 +202,13 @@ export const signup = async (httpReq, httpRes) => {
           resText = "Unusual email pattern. Signup request rejected";
           console.log(resText);
         } else {
-          const plainPassword = userDetails.password
-          userDetails.password = bcrypt.hashSync(userDetails.password, process.env.hashSaltRounds);
+          const plainPassword = userDetails.password;
+          userDetails.password = bcrypt.hashSync(
+            userDetails.password,
+            process.env.hashSaltRounds
+          );
           userDetails.lastLogin = Date.now();
+          userDetails.email = userDetails.email.trim().toLowerCase()
           const result = await createUser(userDetails);
           if (result.length >= 1 && result[0] === true) {
             resText =
@@ -224,13 +234,16 @@ export const signup = async (httpReq, httpRes) => {
             } else {
               httpRes.redirect(process.env.routes.loginRedirectUser);
             }
-            const reportCreationResult = await addUserReport(userDetails._id)
-            if(reportCreationResult && reportCreationResult[0] === 201) {
-              resText = resText+"and Report is created for user"
+            const reportCreationResult = await addUserReport(userDetails._id);
+            if (reportCreationResult && reportCreationResult[0] === 201) {
+              resText = resText + "and Report is created for user";
             } else {
-              resText = resText+"and Report creation is failed for user =>"+reportCreationResult[1]
+              resText =
+                resText +
+                "and Report creation is failed for user =>" +
+                reportCreationResult[1];
             }
-            console.log("Singup result => "+resText);
+            console.log("Singup result => " + resText);
             return;
           } else if (result.length >= 1 && result[0] === false) {
             if (result[1].code == 11000) {
@@ -283,21 +296,31 @@ export const forgotPassword = async (httpReq, httpRes) => {
           } else {
             email = id;
           }
-          const encodedToken = encodePayload({ id }, process.env.resetTokenExpiryTime);
-          const result = await updatePasswordResetTokenForTheUser(id, encodedToken);
-          if(result && result[0]===true) {
+          const encodedToken = encodePayload(
+            { id },
+            process.env.resetTokenExpiryTime
+          );
+          const result = await updatePasswordResetTokenForTheUser(
+            id,
+            encodedToken
+          );
+          if (result && result[0] === true) {
             const mailBody = getMailBody(
               httpReq,
               process.env.passwordResetRequest,
               process.env.routes.passwordResetPath,
               encodedToken
             );
-            await sendMail(email, process.env.mailSubject_passwordResetRequest, mailBody);
+            await sendMail(
+              email,
+              process.env.mailSubject_passwordResetRequest,
+              mailBody
+            );
             resCode = 200;
             resText = "Reset token sent to mail";
             console.log(resText);
           } else {
-            resText = result[1]
+            resText = result[1];
             console.log(result);
           }
         } else {
@@ -341,10 +364,20 @@ export const updatePassword = async (httpReq, httpRes) => {
       if (id && newPassword) {
         const user = await getUser(id);
         if (user) {
-          let passwordHash = bcrypt.hashSync(newPassword, process.env.hashSaltRounds);
+          let passwordHash = bcrypt.hashSync(
+            newPassword,
+            process.env.hashSaltRounds
+          );
           await updateUserPassword(id, passwordHash);
-          const mailBody = getMailBody(httpReq, process.env.passwordResetNotification);
-          await sendMail(id, process.env.mailSubject_passwordResetNotification, mailBody);
+          const mailBody = getMailBody(
+            httpReq,
+            process.env.passwordResetNotification
+          );
+          await sendMail(
+            id,
+            process.env.mailSubject_passwordResetNotification,
+            mailBody
+          );
           const jwtToken = encodePayload(
             { id, password: newPassword },
             process.env.authTokenExpiryTime
@@ -386,7 +419,7 @@ export const validateResetToken = async (httpReq, httpRes) => {
       if (token) {
         const decoded = decodePayload(token);
         if (decoded) {
-          const user = await getUser(decoded.id,true);
+          const user = await getUser(decoded.id, true);
           console.log(user);
           if (user && token === user.resetToken) {
             console.log("User found in DB => " + user._id);
@@ -424,7 +457,11 @@ export const validateResetToken = async (httpReq, httpRes) => {
  */
 
 export const createUser = async (userDetails) => {
-  return await insertDocument(constants.collectionMap.user.collectionName, constants.collectionMap.user.schema, userDetails);
+  return await insertDocument(
+    constants.collectionMap.user.collectionName,
+    constants.collectionMap.user.schema,
+    userDetails
+  );
 };
 
 export const updatePasswordResetTokenForTheUser = async (id, encodedToken) => {
@@ -466,12 +503,17 @@ export const updateUserPassword = async (id, password) => {
   }
 };
 
-export const getUser = async (id,isDbReq = false) => {
+export const getUser = async (id, isDbReq = false) => {
   const currentUser = getCurrentUser();
-  if (currentUser && currentUser._id == id && isDbReq===false) return currentUser;
-  const queryResponse = await getDocument(constants.collectionMap.user.collectionName, constants.collectionMap.user.schema, {
-    _id: new String(id).toLowerCase(),
-  });
+  if (currentUser && currentUser._id == id && isDbReq === false)
+    return currentUser;
+  const queryResponse = await getDocument(
+    constants.collectionMap.user.collectionName,
+    constants.collectionMap.user.schema,
+    {
+      _id: new String(id).toLowerCase(),
+    }
+  );
 
   if (!queryResponse[0]) {
     console.log("Error getting user => " + queryResponse[1]);

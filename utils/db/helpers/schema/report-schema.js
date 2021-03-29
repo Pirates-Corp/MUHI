@@ -8,7 +8,7 @@ export const reportSchema = {
         bsonType: "string",
       },
       rank: {
-        bsonType: "string",
+        bsonType: "number",
       },
       avgScore: {
         bsonType: "number",
@@ -72,7 +72,7 @@ export const reportSchema = {
               additionalItems: false,
               items: {
                 bsonType: "object",
-                required: ["id", "chapter", "section", "result","answer"],
+                required: ["id", "chapter", "section","answer"],
                 additionalProperties: false,
                 properties: {
                   id: {

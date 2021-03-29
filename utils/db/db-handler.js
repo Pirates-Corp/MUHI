@@ -499,7 +499,6 @@ export const handleFieldInsert = async (req, res) => {
 export const handleFieldDelete = async (req, res) => {
   let resCode = 400;
   let resBody = "";
-  console.log(req);
   try {
     if (req.method === "DELETE") {
       const collection = decodeURIComponent(req.query?.collection);
@@ -795,7 +794,7 @@ export const handleSubFieldUpdate = async (req, res) => {
       const subFieldId = decodeURIComponent(req.query?.subFieldId)
         .trim()
         .toLowerCase();
-      const newDoc = req.body;
+      const newDoc = req?.body;
       newDoc.id = parseInt(subFieldId);
       const result = await getDoc(req);
       if (result && result[0] === 200) {
@@ -871,17 +870,17 @@ const getDoc = async (req) => {
     const authResult = await authenticate(req);
     if (authResult && authResult[0] === 200) {
       const collection = decodeURIComponent(req.query?.collection);
-      const documentId = decodeURIComponent(req.query?.document);
+      const documentId = decodeURIComponent(req.query?.document).trim().toLowerCase();
       const collectionDetails = constants.collectionMap[collection];
       if (
         (authResult[1].role !== constants.roles.admin &&
           collectionDetails.collectionName ===
             constants.collectionMap.user.collectionName &&
-          authResult[1].email !== documentId) ||
+          authResult[1]._id !== documentId) ||
         (authResult[1].role === constants.roles.user &&
           collectionDetails.collectionName ===
             constants.collectionMap.report.collectionName &&
-          authResult[1].email !== documentId)
+          authResult[1]._id !== documentId)
       ) {
         resCode = 401;
         resBody =
@@ -1114,7 +1113,7 @@ const insertDoc = async (collectionDetails, doc) => {
 export const addUserReport = async (id) => {
   const newReport = {
     id,
-    rank: "NIL",
+    rank: 0,
     avgScore: 0,
     reports: [],
   };
@@ -1131,6 +1130,7 @@ const updateResultsInQuizReports = async (doc, duration = -1) => {
   // console.log("quizResult for corresponding report is => ",quizResult);
   if (quizResult && quizResult[0] == true && quizResult[1] !== null) {
     console.log("doc   ===>   ", doc);
+    doc.score.taken = 0
     quizResult[1].questions.map((question) => {
       doc.report.map((report) => {
         if (question.id === report.id) {
@@ -1145,12 +1145,10 @@ const updateResultsInQuizReports = async (doc, duration = -1) => {
           }
           if (!doc.questionsAttended.includes(question.id))
             doc.questionsAttended.push(question.id);
-          if (duration >= 0) {
-            doc.time.taken = duration;
-          }
         }
       });
     });
+    if (duration >= 0)  doc.time.taken = duration;
   } else {
     console.log("Report document is null for id " + doc.id);
   }
