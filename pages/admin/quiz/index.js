@@ -23,7 +23,7 @@ export default function quizzes(props) {
             {
               heading : "DURATION",
               icon : "/imgs/svgs/TimeTaken.svg",
-              data: quiz.duration
+              data: parseInt(quiz.duration/60)
             },
             {
               heading : "START DATE",
@@ -48,7 +48,7 @@ export default function quizzes(props) {
             {
               heading : "RESULT",
               icon : "/imgs/svgs/Result.svg",
-              data: quiz.quizTag.split('-')[0]
+              data: (Boolean(quiz.quizTag.split('-')[1])) ? "Hidden" : "Visible"
             }
        ],
        buttonData:{
@@ -78,17 +78,10 @@ export default function quizzes(props) {
     <>
       <BaseLayout>
         <PrimaryHeading heading="Quiz"/>
-
-        {/* <Link href='quiz/create-quiz'>
-            <a  className='blueBtn' >
-               <img  className="mt-1" src="/imgs/svgs/OptionPlus.svg"></img>
-               Create
-            </a>
-        </Link> */}
  
         <button className='blueBtn' onClick={e=>{creatQuiz(e)}}>
         <img  className="mt-1" src="/imgs/svgs/OptionPlus.svg"></img>
-               Create
+        Create
         </button>
 
         <QuizInformationCard 

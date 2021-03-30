@@ -74,7 +74,7 @@ export default function AdminSideBar(props){
                         </li>
                     ))):
                     (adminSideBarItems.map((item,index) => (
-                        <li  key={index} style={ (user.role === "moderator" && item.text ==='Account Management')?{'display' : 'none' }:{'display' : 'block' }}>
+                        <li  key={index} style={ (user.role === "moderator" || user.role === "admin" && item.text ==='Account Management')?{'display' : 'none' }:{'display' : 'block' }}>
                             <Link href={item.href}>
                                 <a>
                                     <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>

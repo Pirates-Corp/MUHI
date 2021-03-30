@@ -77,12 +77,12 @@ export default function studentReportAll() {
               {
                 heading : "Total Score",
                 icon : "/imgs/svgs/TotalScore.svg",
-                data: quiz.score.taken +"/"+ quiz.score.total
+                data: (quiz.score.taken) +"/"+ quiz.score.total
               },
               {
                 heading : "Time Taken",
                 icon : "/imgs/svgs/TimeTaken.svg",
-                data: quiz.time.taken+"/"+quiz.time.total
+                data: parseInt(quiz.time.taken/60)+"/"+parseInt(quiz.time.total/60)
               },
               {
                 heading : "Rank",
@@ -132,7 +132,7 @@ export default function studentReportAll() {
         <QuizInformationCard 
           view={{
             quizData : true,
-            tagData :  true,
+            tagData :  false,
             showButtons : true
           }}
         apiData={allReports}

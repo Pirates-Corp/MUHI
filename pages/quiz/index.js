@@ -15,14 +15,14 @@ function quiztopic({ props }) {
 quiztopic.getInitialProps = async (ctx) => {
   const cookie = ctx.req ? ctx.req.headers.cookie : null;
 
-  const allQuizzes = await fetch("http://localhost/api/db/quiz/all", {
+  const allQuizzes = await fetch("http://localhost:3000/api/db/quiz/all", {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
 
   
 
-  const user = await fetch("http://localhost/api/db/user", {
+  const user = await fetch("http://localhost:3000/api/db/user", {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
@@ -32,7 +32,7 @@ quiztopic.getInitialProps = async (ctx) => {
 
 
 
-  const userReportRes = await fetch(`http://localhost/api/db/report/${currentUser.email}`, {
+  const userReportRes = await fetch(`http://localhost:3000/api/db/report/${currentUser.email}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });

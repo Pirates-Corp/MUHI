@@ -394,7 +394,7 @@
                       }
                      #footer
                      {
-                       
+                          margin-top: 1rem;
                           display: flex;
                           justify-content: flex-end;
                        #editBtn
@@ -467,6 +467,7 @@
                           display: grid;
                           grid-template-columns: repeat(5,1fr);
                           grid-column-gap: 1rem ;
+                          grid-row-gap: 1.2rem;
               
                            .quizInfoItem
                            {
@@ -537,7 +538,7 @@
                       }
                      #footer
                      {
-                       
+                          margin-top: 1.5rem;
                           display: flex;
                           justify-content: flex-end;
                        #editBtn
@@ -611,6 +612,7 @@
                           display: grid;
                           grid-template-columns: repeat(4,1fr);
                           grid-column-gap: 2rem ;
+                          grid-row-gap: 1.2rem;
                           
               
                            .quizInfoItem
@@ -683,7 +685,7 @@
                       }
                      #footer
                      {
-                       
+                          margin-top: 1rem;
                           display: flex;
                           justify-content: flex-end;
                        #editBtn
@@ -757,6 +759,7 @@
                           display: grid;
                           grid-template-columns: repeat(3,1fr);
                           grid-column-gap: 2rem ;
+                          grid-row-gap: 1rem;
                           
               
                            .quizInfoItem
@@ -829,7 +832,7 @@
                       }
                      #footer
                      {
-                       
+                          margin-top: 1rem;
                           display: flex;
                           justify-content: flex-end;
                        #editBtn

@@ -73,9 +73,12 @@ const userDashboard = () => {
         allQuiz.map(quiz=>{
           if(takenQuiz.id === quiz._id)
           {
-            if((Boolean(quiz.quizTag.split('-')[1])))
+
+            if(!(Boolean(quiz.quizTag.split('-')[1])))
             {
-              console.log(takenQuiz);
+              
+            // console.log("test",quiz.quizTag,takenQuiz.id);
+            // //   console.log(takenQuiz);
               
               let  singleQuiz = { quizName : takenQuiz.id,
                                   quizData : [
@@ -87,7 +90,7 @@ const userDashboard = () => {
                                     {
                                       heading : "Time Taken",
                                       icon : "/imgs/svgs/TimeTaken.svg",
-                                      data: takenQuiz.time.taken+"/"+takenQuiz.time.total
+                                      data: parseInt(takenQuiz.time.taken/60) +"/"+parseInt(takenQuiz.time.total/60)
                                     },
                                     {
                                       heading : "Rank",
