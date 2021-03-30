@@ -27,14 +27,24 @@ const Timer = ({ props }) => {
     } else {
       router.push("/quiz");
     }
+
   }
+
+
+  console.log(props.currentQuiz.totalDuration);
 
   useEffect(() => {
     if (started === 0) {
-      if (currentCount === 0) {
+     
+
+      if (currentCount === -1) {
+        props.currentQuiz.status = 1;
         props.endQuiz()
+        
         return;
       }
+
+
       const id = setInterval(() => {
         if(currentCount>0) setCount(currentCount - 1);
       }, 1000);
@@ -46,7 +56,10 @@ const Timer = ({ props }) => {
       // }
       setMinute(parseInt(Math.floor(currentCount / 60))) 
       setSecond(parseInt(Math.floor(currentCount % 60)))
+
+     
       return () => clearInterval(id);
+
     }
   }, [currentCount]);
 

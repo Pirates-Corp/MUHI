@@ -20,22 +20,36 @@ quiztopic.getInitialProps = async (ctx) => {
     headers: { "Content-Type": "application/json", cookie },
   });
 
+  
+
   const user = await fetch("http://localhost/api/db/user", {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });
 
+ 
+  let currentUser = await user.json()
+
+
+
+  const userReportRes = await fetch(`http://localhost/api/db/report/${currentUser.email}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", cookie },
+  });
+
+
+
   let quizData
-  let currentUser
+  let currentUserReport
   try {
     quizData = await allQuizzes.json();
     quizData = quizData ? quizData : {}
-    currentUser = await user.json()
     currentUser = currentUser ? currentUser : null
+    currentUserReport = await userReportRes.json();
   } catch (err) {
     console.error("Error in get initial props =>"+err);
   }
-  return { props: {quizData,currentUser} };
+  return { props: {quizData,currentUser,currentUserReport} };
 };
 
 export default quiztopic;
