@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import XLSX from "xlsx";
 import style from "../../admin/Table/TableComponent.module.scss";
-import Link from "next/link";
 import saveAs from "../../../utils/other/fileSaver";
+import {useRouter} from "next/router"
+import { route } from "next/dist/next-server/server/router";
 
 const TableComponent = (props) => {
+   const router = useRouter();
   const QuizList = [];
 
   const {
@@ -38,11 +40,11 @@ const TableComponent = (props) => {
     apiData.allReports.map((user) => {
       let row = Object.values(user).slice(1, 3);
       row.push(user.reports.length);
-      row.push("www.google.com");
       apiData.allUsers.map((student)=>{
         if(user._id===student._id)
         {
           row.unshift(student.name);
+          row.push(student.email);
         }
      })
       allStudents.push(row);
@@ -101,11 +103,11 @@ const TableComponent = (props) => {
                  row = Object.values(user).slice(1,3);
                  row.push(quiz.score.taken+'/'+quiz.score.total);
                  row.push(quiz.time.taken+'/'+quiz.time.total)
-                 row.push("www.google.com");
                  apiData.allUsers.map((student)=>{
                     if(user._id===student._id)
                     {
                       row.unshift(student.name);
+                      row.push(student.email);
                     }
                  })
                  studentData.push(row);
@@ -268,6 +270,21 @@ const TableComponent = (props) => {
     );
   };
 
+ //Button Action
+ const onButtonAction = async(url,StudentName,buttonText)=>{
+   
+   if(buttonText.toLowerCase().startsWith("view"))
+   {
+      console.log(url,buttonText);
+       router.push({
+        pathname: '/admin/reports/student',
+        query: { data: JSON.stringify(url+'-'+StudentName)}
+      })
+    }
+
+ }
+
+
   return (
     <div id={style.tableBox}>
       <div className={style.tableFeature}>
@@ -370,9 +387,9 @@ const TableComponent = (props) => {
                 {arr.slice(0, arr.length - 1).map((e) => (
                   <p>{e}</p>
                 ))}
-                <Link href={arr[arr.length - 1]}>
-                  <a className={buttonColor + "Btn"}>{buttonText}</a>
-                </Link>
+
+                <button style={{"font-size":"1rem"}} className={buttonColor + "Btn"} onClick={()=>onButtonAction(arr[arr.length - 1],arr[0],buttonText)}>{buttonText}</button>
+              
               </li>
             ))
           )}

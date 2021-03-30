@@ -42,11 +42,6 @@ const  QuizTopicCardComponent = () =>
           </div>
         </div>
 
-
-       
-     
-     
-
       </div>
       </>
       

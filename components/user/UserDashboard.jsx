@@ -231,6 +231,8 @@ export default userDashboard;
 //   buttonData:{
 //     apiUrl: "google.com",
 //     reqType:"POST",
+//     edit : true,
+//     delete : true,
 //     bodyData : {test : "hello"}
 //   }
   

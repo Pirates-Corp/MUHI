@@ -49,7 +49,16 @@ export default function quizzes(props) {
               icon : "/imgs/svgs/Result.svg",
               data: quiz.quizTag.split('-')[0]
             }
-       ]
+       ],
+       buttonData:{
+        apiUrl: "google.com",
+        reqType:"POST",
+        edit : true,
+        delete : true,
+        editAction : "editQuiz",
+        deleteAction : "deleteQuiz",
+        bodyData : {test : "hello"}
+      }
      }
 
      allQuiz.push(item)
