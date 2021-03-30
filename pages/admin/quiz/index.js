@@ -1,12 +1,13 @@
 import {useState} from 'react'
+import {useRouter} from 'next/router'
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx';
-import Link from 'next/link';
 import QuizInformationCard from '../../../components/common/Cards/QuizInformationCard'
 export default function quizzes(props) {
 
  console.log(props);
 
+ const router = useRouter();
  
  const [QuizInformationCardData , setQuizInformationCardData] = useState([]);
  
@@ -57,45 +58,38 @@ export default function quizzes(props) {
         delete : true,
         editAction : "editQuiz",
         deleteAction : "deleteQuiz",
-        bodyData : {test : "hello"}
+        bodyData : {currentQuiz : quiz }
       }
      }
 
      allQuiz.push(item)
   })
   
-  //setQuizInformationCardData();
 
+  const creatQuiz=(e)=>{
+    e.preventDefault();
+    sessionStorage.clear();
+    router.push('quiz/create-quiz');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }
+  
 
   return (
     <>
       <BaseLayout>
         <PrimaryHeading heading="Quiz"/>
 
-        <Link href='quiz/create-quiz'>
-            <a  className='blueBtn'>
+        {/* <Link href='quiz/create-quiz'>
+            <a  className='blueBtn' >
                <img  className="mt-1" src="/imgs/svgs/OptionPlus.svg"></img>
                Create
             </a>
-        </Link>
-
+        </Link> */}
+ 
+        <button className='blueBtn' onClick={e=>{creatQuiz(e)}}>
+        <img  className="mt-1" src="/imgs/svgs/OptionPlus.svg"></img>
+               Create
+        </button>
 
         <QuizInformationCard 
       view={{
@@ -124,7 +118,8 @@ quizzes.getInitialProps = async (ctx) => {
 
 
   let allQuiz;
- 
+  
+   
     allQuiz = await quizRes.json();
     
   

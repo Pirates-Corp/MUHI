@@ -94,7 +94,14 @@ const userDashboard = () => {
                                       icon : "/imgs/svgs/Rank.svg",
                                       data: takenQuiz.rank
                                     }
-                                  ]
+                                  ],
+                                  buttonData:{
+                                        apiUrl: "",
+                                        reqType:"",
+                                        edit : false,
+                                        delete : false,
+                                        bodyData : {}
+                                      }
                                 }
   
   

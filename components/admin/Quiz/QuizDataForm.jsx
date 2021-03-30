@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import CenterLayout from "../../Layouts/CenterLayout";
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import style from "./QuizDataForm.module.scss";
-import { session } from "next-session";
+
 
 
 
@@ -135,9 +135,16 @@ const QuizDataForm = () => {
     }
 
 
+    const ExitBtn = (e) =>{
+      e.preventDefault();
+      sessionStorage.clear();
+      router.push('/admin/quiz');
+    }
+
+
   return (
     <CenterLayout>
-      <PrimaryHeading heading="Create Quiz" />
+      <PrimaryHeading heading={(router.query.data) ? router.query.data+" Quiz" : "Create Quiz" } />
       <div id={style.formBox}>
         <form  onSubmit={e=> AddQuestions(e)} >
           <div id={style.dataForm}>
@@ -254,14 +261,17 @@ const QuizDataForm = () => {
           </div>
 
           <div className={style.buttonHolder}>
-            <Link href="/admin/quiz">
+            {/* <Link href="/admin/quiz">
               <a id={style.exit} className="redBtn">Exit</a>
-            </Link>
+            </Link> */}
+
+            <button id={style.exit} className="redBtn" onClick={e=>{ExitBtn(e)}} >Exit</button>
+
             <input
               type="submit"
               className="blueBtn"
-              name="Add Questions"
-              value="Add Questions"
+              name={(router.query.data) ? router.query.data+" Questions" : "Add Questions" }
+              value={(router.query.data) ? router.query.data+" Questions" : "Add Questions" }
             />
           </div>
         </form>
