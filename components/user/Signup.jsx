@@ -3,34 +3,40 @@ import style from "../user/Signup.module.scss"
 
 export default function Signup() {
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const body = {
-            name: e.currentTarget.name.value,
-            email: e.currentTarget.email.value,
-            password: e.currentTarget.password.value,
-            role: 'user',
-            accountType: 'muhi',
-            mobileNo : e.currentTarget.mobileNo.value
-        };
-
-        console.log(body);
-
-        let res = await fetch("/api/auth/signup", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        });
-
-        console.log(res);
-        if (res.status === 200 && res.redirected === true) {
-           window.location = res.url
-        } else {
-            
+   const doSignUp = async (e) =>{
+       
+    e.preventDefault();
+     
+    const body = {
+            name : e.currentTarget.name.value,
+            password : e.currentTarget.password.value,
+            email : e.currentTarget.email.value,
+            mobileNo : e.currentTarget.mobileNo.value,
+            role: e.currentTarget.role.value,
+            accountType : e.currentTarget.accountType.value,
         }
+    
+       const res =  await fetch('api/auth/signup',{
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'      
+        },
+        redirect: 'follow',
+        body : JSON.stringify(body)
+      })
+      console.log(res);
+  
+      if(res.status==409)
+      { 
+        alert("User Already Exist")
+      }
+      else
+      {
+       window.location.assign(res.url);
+      }
+   }
 
-    }
+   //action="/api/auth/signup" method="PUT"
    
     return (
         <>
@@ -41,7 +47,7 @@ export default function Signup() {
                  <h3>Create MUHI Account</h3>
             </div>
            
-            <form id={style.loginForm}  onSubmit={e=>handleSubmit(e)} >
+            <form id={style.loginForm} onSubmit={e=>{doSignUp(e)}} >
 
                 <div className="TextBox" id={style.TextBox}>
                     <img src="/imgs/svgs/UserName.svg" alt="user" />
@@ -58,13 +64,16 @@ export default function Signup() {
                     <input type="password"  name="password" placeholder="Password"  minLength='6' required />
                 </div>
 
+                <input  type="text" name="role" defaultValue="user" hidden/>
+                <input  type="text" name="accountType" defaultValue="muhi" hidden/>
+
                 <div className="TextBox" id={style.TextBox}>
                     <img src="/imgs/svgs/MobileNumber.svg" alt="password" />
                     <input type="number"  name="mobileNo" placeholder="Mobile Number"  minLength='5' required />
                 </div>
 
                 <div id={style.btnHolder}>
-                     <input className="prBtn" type="submit" value="Sign Up"/>
+                     <input className="prBtn" type="submit"  value="Sign Up"/>
                 </div>
 
              </form>
@@ -72,19 +81,15 @@ export default function Signup() {
              <div id={style.otherOptions}>
 
              <div id={style.line}></div>  
-                <button className="blueBtn" id={style.gBtn}>
+                {/* <button className="blueBtn" id={style.gBtn}>
                     <img src="imgs/svgs/Google.svg"/>
                     Start with Google
-                </button>
+                </button> */}
 
                 <p>Already have an account ? </p> 
                 <Link href="/">
                     <a className={style.forgetPassword} id={style.signUp}>Login </a>
                 </Link>
-
-
-               
-            
              </div>
 
         </div>

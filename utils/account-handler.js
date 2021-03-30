@@ -232,7 +232,7 @@ export const signup = async (httpReq, httpRes) => {
             } else if (userDetails.role === constants.roles.moderator) {
               httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else {
-              httpRes.redirect(process.env.routes.loginRedirectUser);
+              httpRes.redirect(307,process.env.routes.loginRedirectUser);
             }
             const reportCreationResult = await addUserReport(userDetails._id);
             if (reportCreationResult && reportCreationResult[0] === 201) {

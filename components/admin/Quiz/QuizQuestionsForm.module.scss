@@ -10,6 +10,12 @@
       height: 100%;  
 }
 
+#center
+{
+  text-align: center;
+  width: 100%;
+}
+
 /*-----------------------
         Animations
 -------------------------*/
@@ -666,17 +672,17 @@
         {
          font-family: TextRegular;
          font-size: 1rem;
-         margin: 0 0 .5rem 4rem;
+         margin: 0 0 .5rem 6rem;
         }
 
         .ScrollBox
         {
           display: block;
           width: 100%;
-          max-height: 53vh;    
+          height: 52vh;    
           overflow: hidden;
           overflow-y: scroll;
-          padding: 0 4rem;
+          padding: 0 6rem;
 
           
 

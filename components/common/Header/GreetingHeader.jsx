@@ -24,8 +24,8 @@ const GreetingHeader = (props) => {
 
 
 
-
-  console.log(props);
+  // {for: "user"}
+  // console.log(props);
   cssStyle = (props.for == "user") ?
                {  
                  "background" : "var(--adminColor)"

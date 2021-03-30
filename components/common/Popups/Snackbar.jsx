@@ -1,29 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "../../common/Popups/Snackbar.module.scss";
-const Snackbar = (props) => {
-const [show, setShow] = React.useState(0);
 
-  const snackBarStyle = {
-   "animation-name": "fadeInDown",
-    "animation-duration": "1s",
-    "visibility": "hidden",
-  };
+const snackVisible = {
+  "animation": "fadein 1s, fadeout 0.5s 2.5s",
+  "animation-duration": "1s",
+  "visibility": "visible",
+ };
+ const snackHidden = {
+  "animation-name": "fadeInDown",
+  "animation-duration": "1s",
+  "visibility": "hidden",
+ };
+const Snackbar = (props) => {
+
+  const [snackBarStyle, setSnackbarStyle] = useState(snackVisible);
+  React.useEffect(()=>{
+    setSnackbarStyle(snackVisible)
+  },[props.open])
+  
   const getTimeout = () => {
-    setTimeout(() => {
-      setShow(1);
-    }, Number(props.time));
+    if(props.open){
+      setTimeout(() => {
+        setSnackbarStyle(snackHidden);
+        props.setOpen(false)
+      }, 1000);
+    }
   };
-  return show == 0 ? (
-    <div id={style.snackBox} className={props.color+"Bg"}>
-      <p>{props.message}</p>
+
+  return  (
+    <>
+      <div id={style.snackBox} className={props.color+"Bg"} style={snackBarStyle} >
+        <p>{props.message}</p>
+      </div>
       {getTimeout()}
-    </div>
-  ) : (
-    <div id={style.snackBox} style={snackBarStyle} >
-      <p>{props.message}</p>
-      {getTimeout()}
-    </div>
-  );
+    </>
+
+  )
 };
 
 

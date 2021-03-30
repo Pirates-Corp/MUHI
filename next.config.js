@@ -1,6 +1,7 @@
 module.exports = {
   env: {
     nodeEnv: "development",
+    domainUrl : "http://localhost",
     dbUser: "muhi",
     dbPass: "muhi.org",
     dbHost: "quiz.manng.mongodb.net",
