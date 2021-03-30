@@ -159,7 +159,10 @@ function QuizTaking({ props }) {
 
   const endQuiz = () => {
     localStorage.removeItem('currentQuiz')
-    router.push("/quiz/congratulations")
+    router.push({
+      pathname: '/quiz/congratulations',
+      query: { quizId:currentQuiz._id,userId:currentUser._id}
+    })
   }
 
   return (
@@ -279,7 +282,14 @@ function QuizTaking({ props }) {
                   </ul>
                 </div>
 
-                <Link href="congratulations">
+                <Link
+                 href={{
+                  pathname: "congratulations/",
+                  query: {
+                    quizId: currentQuiz._id,
+                    userId: currentUser._id
+                  },
+                }}>
                   <a id={style.exitBtn} className="redBtn">
                     {questionId === currentQuiz.questions.length - 1
                       ? "Finish"
