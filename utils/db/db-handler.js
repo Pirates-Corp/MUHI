@@ -511,10 +511,14 @@ export const handleFieldDelete = async (req, res) => {
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
-        const matchedFields = document[fieldName].filter((doc) => {
-          return doc.id != fieldId;
-        });
-        document[fieldName] = matchedFields;
+        if(fieldId === "all") {
+          document[fieldName] = []
+        } else {
+          const matchedFields = document[fieldName].filter((doc) => {
+            return doc.id != fieldId;
+          });
+          document[fieldName] = matchedFields;
+        }
         const updateResponse = await updateDoc(
           collectionDetails,
           documentId,
@@ -743,12 +747,17 @@ export const handleSubFieldDelete = async (req, res) => {
           return doc.id == fieldId;
         });
         if (matchedFields[0]) {
-          const matchedSubFields = matchedFields[0][subFieldName].filter(
-            (doc) => {
-              return doc.id != subFieldId;
-            }
-          );
-          matchedFields[0][subFieldName] = matchedSubFields;
+          if(subFieldId === "all") {
+            matchedFields[0][subFieldName] = [];
+          } else {
+            const matchedSubFields = matchedFields[0][subFieldName].filter(
+              (doc) => {
+                return doc.id != subFieldId;
+              }
+            );
+            matchedFields[0][subFieldName] = matchedSubFields;
+          }
+
           const updateResponse = await updateDoc(
             collectionDetails,
             documentId,
@@ -815,7 +824,7 @@ export const handleSubFieldUpdate = async (req, res) => {
               return doc;
             }
           );
-          if (!modifiedSubField) {
+          if (!modifiedSubField && newDoc.answer!=="") {
             modifiedSubFields.push(newDoc);
           }
           matchedFields[0][subFieldName] = modifiedSubFields;
@@ -827,7 +836,7 @@ export const handleSubFieldUpdate = async (req, res) => {
             console.log("Result updated doc =>", matchedFields[0]);
           }
 
-          if (modifiedSubFields[0]) {
+          if (modifiedSubFields[0] || newDoc.answer==="") {
             const updateResponse = await updateDoc(
               collectionDetails,
               documentId,
@@ -1143,7 +1152,7 @@ const updateResultsInQuizReports = async (doc, duration = -1) => {
           } else {
             report.result = 0;
           }
-          if (!doc.questionsAttended.includes(question.id))
+          if (!doc.questionsAttended.includes(question.id) && report.answer!=="answer")
             doc.questionsAttended.push(question.id);
         }
       });

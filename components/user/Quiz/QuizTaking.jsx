@@ -75,7 +75,10 @@ function QuizTaking({ props }) {
             } else if (reportPromise.status === 200) {
               userReport = await reportPromise.json();
             }
-
+            if(userReport.status === 1 ) {
+              localStorage.removeItem('currentQuiz')
+              router.push("/quiz")
+            }
             userReport.report.map((attendedQuestion) => {
               quizData.questions.map((question) => {
                 if (question.id == attendedQuestion.id) {
@@ -155,8 +158,8 @@ function QuizTaking({ props }) {
   };
 
   const endQuiz = () => {
-    setCurrentQuiz(currentQuiz)
     localStorage.removeItem('currentQuiz')
+    router.push("/quiz/congratulations")
   }
 
   return (

@@ -25,9 +25,8 @@ const Timer = ({ props }) => {
     if (isStarted) {
       setStarted(0);
     } else {
-      router.push("/quiz");
+      router.push("/quiz/congratulations");
     }
-
   }
 
 
@@ -35,18 +34,14 @@ const Timer = ({ props }) => {
 
   useEffect(() => {
     if (started === 0) {
-     
-
-      if (currentCount === -1) {
-        props.currentQuiz.status = 1;
-        props.endQuiz()
-        
-        return;
-      }
-
-
       const id = setInterval(() => {
         if(currentCount>0) setCount(currentCount - 1);
+        if (currentCount === 0) {
+          console.log('Quiz ended');
+          props.currentQuiz.duration = 0
+          props.currentQuiz.status = 1;
+          props.endQuiz()
+        }
       }, 1000);
       // if (props.currentQuiz && minute > parseInt(Math.ceil(currentCount / 60))) {
       props.currentQuiz.status = 0;
@@ -56,8 +51,6 @@ const Timer = ({ props }) => {
       // }
       setMinute(parseInt(Math.floor(currentCount / 60))) 
       setSecond(parseInt(Math.floor(currentCount % 60)))
-
-     
       return () => clearInterval(id);
 
     }
