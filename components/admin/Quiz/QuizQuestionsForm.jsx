@@ -34,12 +34,29 @@ const QuizQuestionsForm = () => {
   console.log("onStart", Quiz);
 
   const loadDoc = (e) => {
-    document
+  
+
+  
+  if(!['xlsx','xlsm','xlsb','xltx'].includes(e.target.value.replace(/.*(\/|\\)/, "").split('.')[1]))
+    {
+      document
+      .getElementById("file")
+      .setAttribute("data", "Upload Questions");
+      alert("Not an Excel File");
+      return;
+    }
+    else
+    {
+      document
       .getElementById("file")
       .setAttribute("data", e.target.value.replace(/.*(\/|\\)/, ""));
+    }
+      
 
     let fileObj = e.target.files[0];
+    
 
+     
     ExcelRenderer(fileObj, (err, resp) => {
       if (err) {
         console.log(err);
@@ -210,7 +227,7 @@ const QuizQuestionsForm = () => {
     const sessionData = (Quiz)? Quiz.questions : undefined;
     if(sessionData !== undefined )
     {
-      updateLoadedQuestion(sessionData);
+      updateLoadedQuestion([...sessionData]);
       console.log(sessionData);
     }
   },[flag]);
@@ -223,6 +240,7 @@ const QuizQuestionsForm = () => {
 
 
     const BackBtn=(e)=>{
+
         if(router.query.data)
         {
           router.push({
@@ -232,6 +250,7 @@ const QuizQuestionsForm = () => {
         }
         else
         {
+         
           router.push('/admin/quiz/create-quiz')
         }
     }
@@ -257,7 +276,8 @@ const QuizQuestionsForm = () => {
                 <>
                   {loadedQuestions.map((question, QIndex) => (
                     <div id={style.questionBox} key={QIndex}>
-                      <button
+
+                      {/* <button
                         id={style.close}
                         className="redRoundBtn"
                         onClick={(e) =>
@@ -265,7 +285,7 @@ const QuizQuestionsForm = () => {
                         }
                       >
                         <img src="/imgs/svgs/CloseMenu.svg" alt="X" />
-                      </button>
+                      </button> */}
 
                       <div className={style.metaData}>
                         <h3>{"Q" + (QIndex + 1)}</h3>
@@ -399,15 +419,9 @@ const QuizQuestionsForm = () => {
                   Back
                 </a>
               </Link> */}
-
-
               <button className="redBtn" onClick={e=>BackBtn(e)}><img src="/imgs/svgs/Back.svg"></img>Back</button>
-
-
-
-
-
-              <button
+              
+              {/* <button
                 className="blueBtn"
                 onClick={(e) =>
                   modifyQuiz(e, {
@@ -418,7 +432,7 @@ const QuizQuestionsForm = () => {
               >
                 <img src="/imgs/svgs/OptionPlus.svg"></img>
                 Add Question
-              </button>
+              </button> */}
 
               <button
                 className="greenBtn"

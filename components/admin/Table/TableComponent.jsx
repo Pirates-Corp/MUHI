@@ -102,7 +102,7 @@ const TableComponent = (props) => {
                {
                  row = Object.values(user).slice(1,3);
                  row.push(quiz.score.taken+'/'+quiz.score.total);
-                 row.push(quiz.time.taken+'/'+quiz.time.total)
+                 row.push(parseInt(quiz.time.taken/60)+'/'+parseInt(quiz.time.total/60))
                  apiData.allUsers.map((student)=>{
                     if(user._id===student._id)
                     {
@@ -203,7 +203,7 @@ const TableComponent = (props) => {
             if (quiz.id.toLowerCase() == exportHeader.toLowerCase()) {
               row = Object.values(user).slice(0, 3);
               row.push(quiz.score.taken + "/" + quiz.score.total);
-              row.push(quiz.time.taken + "/" + quiz.time.total + "Mins");
+              row.push(parseInt(quiz.time.taken/60) + "/" + parseInt(quiz.time.total/60) + "Mins");
               row.push((quiz.status)?"Completed" : "InComplete");
               row.push(quiz.questionsAttended.length);
               apiData.allUsers.map((student)=>{

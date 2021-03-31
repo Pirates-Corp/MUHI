@@ -7,6 +7,11 @@ const UpdateProfile = () =>{
 
     const [userData, setUserData] = React.useState({username: " ",mobile:" "})
 
+    const getDataFromDB = async()=>{
+      const result = await fetch("/api/db/user", { method: "GET" });
+      const userData = await result.json();
+      return userData;
+    }
 
     const enableFunction =(e,id)=>
     {
@@ -18,8 +23,11 @@ const UpdateProfile = () =>{
 
     const updateAccount = async(e)=>{
        e.preventDefault();
-       console.log(userData.email);
+      
        let updatedData = {name : e.currentTarget.username.value+"" ,mobileNo: e.currentTarget.mobile.value+""}
+
+       let userData = {username : e.currentTarget.username.value+"" ,mobileNo: e.currentTarget.mobile.value+""}
+
        console.log(updatedData);
 
        let res = await fetch(`/api/db/user/${userData.email}/update`, { method: "PUT" ,
@@ -29,40 +37,55 @@ const UpdateProfile = () =>{
        body: JSON.stringify(updatedData)
        });
 
-      //  if(res.status)
-      //  {
-      //    alert("Your data has been updated")
-      //  }
+       if(res.status)
+       {
+         document.getElementById('username').disabled = true;
+         document.getElementById('mobile').disabled = true;
+         const {email,mobileNo, name} = await getDataFromDB(); 
+         setUserData({email,mobileNo,name});
+         alert("Your data has been updated");
+       }
 
 
 
     }
 
-    const updatePassword = (e)=>{
-       e.preventDefault();
-       let updatePassword = {password: e.currentTarget.currentPassword.value, newPassword:e.currentTarget.newPassword.value, reNewPassword: e.currentTarget.retypePassword.value}
-      
-      
-       if(updatePassword.newPassword === updatePassword.reNewPassword )
+    const updatePassword = async(e)=>{
+       e.preventDefault();  
+       if(e.currentTarget.newPassword.value === e.currentTarget.retypePassword.value )
        {
-            
+              let updatedData = { password : e.currentTarget.newPassword.value}
+
+              console.log(updatedData);
+              let res = await fetch(`/api/auth/password/update`, { method: "PUT" ,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedData)
+              });
+
+              if(res.status===200)
+              {
+                alert("Password Updated successfully ,Login Again");
+                window.location.assign('/');
+              }
        }
        else
        {
          alert("Passwords don't match")
        }
 
-       console.log(updatePassword);
+       
     }
 
     console.log(userData);
 
 
     React.useEffect(async () => {
-      const result = await fetch("/api/db/user", { method: "GET" });
-      const userData = await result.json();
-      const {email,mobileNo, name} = userData;
+      
+      const {email,mobileNo, name} = await getDataFromDB(); 
       setUserData({email,mobileNo,name});
+
     }, []);
   
     
@@ -102,10 +125,11 @@ const UpdateProfile = () =>{
 
           <SubHeading  heading="Update Password"/>
             <form id={style.passwordForm} onSubmit={e=>updatePassword(e)}>
-            <div className="TextBox">
+
+            {/* <div className="TextBox">
             <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
             <input type="password" id="currentPassword" name="password" placeholder="Current Password" required  />  
-            </div>
+            </div> */}
 
 
             <div className="TextBox">

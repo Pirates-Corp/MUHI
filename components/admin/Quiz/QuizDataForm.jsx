@@ -149,7 +149,7 @@ const QuizDataForm = () => {
     const ExitBtn = (e) =>{
       e.preventDefault();
       sessionStorage.clear();
-      router.push('/admin/quiz');
+      window.location.assign('/admin/quiz');
     }
 
 
