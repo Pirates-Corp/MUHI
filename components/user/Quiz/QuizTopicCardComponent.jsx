@@ -19,14 +19,14 @@ const QuizTopicCardComponent = ({ props }) => {
   };
 
   const isCompleted = (quiz) => {
-    let result = false
+    let result = false;
     currentUserReport.reports.map((report) => {
       if (report.id === quiz._id) {
-        result = report.status === 1
+        result = report.status === 1;
       }
     });
-    return result
-  }
+    return result;
+  };
 
   let QuizToShow = [];
   let quizCardData;
@@ -55,7 +55,8 @@ const QuizTopicCardComponent = ({ props }) => {
       <PrimaryHeader heading="MUHI Quiz" />
       <div id={style.quizCardsHolder}>
         {quizArray.map((quiz, index) => (
-          <div className={style.quizCard}>
+          quiz.schedule.startTime < Date.now() && quiz.schedule.endTime > Date.now() ? (
+            <div className={style.quizCard}>
             <h2>{quiz.title}</h2>
             <ul>
               <li>
@@ -101,7 +102,7 @@ const QuizTopicCardComponent = ({ props }) => {
                 </Link>
               )}
             </div>
-          </div>
+          </div>   ) :("")
         ))}
       </div>
     </>

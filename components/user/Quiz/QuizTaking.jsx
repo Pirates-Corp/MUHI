@@ -70,7 +70,7 @@ function QuizTaking({ props }) {
               if (newReportPromise.status === 200) {
                 console.log(
                   "new reports created and pushed into db => ",
-                  report
+                  userReport
                 );
                 userReport = await newReportPromise.json();
               }
