@@ -98,7 +98,7 @@
       display: grid;
       width: 100%;
       margin-top: 3rem;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 70% 30%;
       place-content: center;
       align-items: center;
       
@@ -121,9 +121,9 @@
       #btnHolder
       {
        place-self: end;
-       input
+       a
        {
-          
+         float: right;
           margin: 0;    
        }
         

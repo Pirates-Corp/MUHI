@@ -1,12 +1,27 @@
-import React from "react"
+import React,{useContext } from "react"
 import Link from "next/link";
 import style from "../user/Login.module.scss";
-import { useRouter ,useState} from 'next/router'
+import { useRouter } from 'next/router'
+import {AuthContext} from '../context/AuthContext'
 // import Snackbar from '../../components/common/Popups/Snackbar'
 export default function Login() {
 
-
   const router = useRouter();
+
+  const [user] = useContext(AuthContext);
+
+  if(user!==null)
+  {
+    if(user.role=="user")
+    {
+       router.push('/dashboard')
+    }
+    if(user.role=="admin" || user.role=="moderator")
+    {
+      router.push('/admin/dashboard')
+    }
+  }
+
 
   if(router.asPath === "/?incorrect")
   {

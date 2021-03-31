@@ -48,7 +48,7 @@ export default function quizzes(props) {
             {
               heading : "RESULT",
               icon : "/imgs/svgs/Result.svg",
-              data: (Boolean(quiz.quizTag.split('-')[1])) ? "Hidden" : "Visible"
+              data: (quiz.quizTag.split('-')[1]==="true") ? "Hidden" : "Visible"
             }
        ],
        buttonData:{

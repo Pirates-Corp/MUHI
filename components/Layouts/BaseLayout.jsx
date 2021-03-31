@@ -15,12 +15,6 @@ const BaseLayout = ({children}) =>
     router.push('/')
    }
 
-   
-  
-
-   
-
-
   let type;
   try {
     type = (children[0].props.type == "user") ? "user" : " ";

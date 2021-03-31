@@ -1,7 +1,29 @@
 import Link from "next/link";
+import {useContext} from 'react'
+import { useRouter } from 'next/router'
+import {AuthContext} from '../context/AuthContext'
 import style from "../user/Signup.module.scss"
 
 export default function Signup() {
+
+    const router = useRouter();
+
+    const [user] = useContext(AuthContext);
+
+    if(user!==null)
+    {
+      if(user.role=="user")
+      {
+         router.push('/dashboard')
+      }
+      if(user.role=="admin" || user.role=="moderator")
+      {
+        router.push('/admin/dashboard')
+      }
+    }
+  
+
+
 
    const doSignUp = async (e) =>{
        

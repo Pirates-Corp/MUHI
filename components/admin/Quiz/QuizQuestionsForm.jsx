@@ -155,16 +155,32 @@ const QuizQuestionsForm = () => {
     tempQuiz.totalMarks = tempQuiz.questions.length;
     tempQuiz.duration = tempQuiz.duration * 60;
     // console.log(JSON.stringify(tempQuiz));
-    let res = await fetch("/api/db/quiz/add", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(tempQuiz),
-    });
-    console.log(res);
 
-    if(201===res.status)
+    
+    let res ;
+
+    if(router.query.data)
+    {
+      console.log(tempQuiz._id);
+      res = await fetch(`/api/db/quiz/${tempQuiz._id}/update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body : JSON.stringify(tempQuiz)
+      });
+    }
+    else{
+      
+      res = await fetch("/api/db/quiz/add", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tempQuiz),
+      });
+      console.log(res);
+    }
+
+    if(201===res.status || 200===res.status)
     {
       sessionStorage.removeItem("Quiz");
       router.push('/admin/quiz');
@@ -204,11 +220,26 @@ const QuizQuestionsForm = () => {
     if(loadedQuestions.length==1 || loadedQuestions==null ){
         flag = false;
     } 
+
+
+    const BackBtn=(e)=>{
+        if(router.query.data)
+        {
+          router.push({
+            pathname: '/admin/quiz/create-quiz',
+            query: { data : "Edit"}
+          })
+        }
+        else
+        {
+          router.push('/admin/quiz/create-quiz')
+        }
+    }
   
 
   return (
     <CenterLayout>
-      <PrimaryHeading heading="Add Questions" />
+      <PrimaryHeading heading={(router.query.data)? "Edit Questions" : "Add Questions"}  />
 
       <div id={style.formBox}>
         <div id={style.fileForm}>
@@ -362,12 +393,19 @@ const QuizQuestionsForm = () => {
             </div>
 
             <div id={style.formFooter}>
-              <Link href="/admin/quiz/create-quiz">
+              {/* <Link href="/admin/quiz/create-quiz">
                 <a className="redBtn">
-                  <img src="/imgs/svgs/Back.svg"></img>
+               
                   Back
                 </a>
-              </Link>
+              </Link> */}
+
+
+              <button className="redBtn" onClick={e=>BackBtn(e)}><img src="/imgs/svgs/Back.svg"></img>Back</button>
+
+
+
+
 
               <button
                 className="blueBtn"

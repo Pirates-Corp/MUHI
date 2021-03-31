@@ -117,7 +117,7 @@ const QuizDataForm = () => {
       e.preventDefault();
         QuizData = {
         title : e.currentTarget.quizName.value,
-        duration : Number(e.currentTarget.duration.value),
+        duration : Number(e.currentTarget.duration.value) ,
         quizTag : e.currentTarget.type.value +"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-"+ e.currentTarget.quizTag.value ,
         schedule : 
          {  startTime : new Date( e.currentTarget.startTime.value).getTime(),
@@ -130,7 +130,18 @@ const QuizDataForm = () => {
       currentStorage = {...currentStorage,...QuizData};
       console.log("Current",currentStorage);
       sessionStorage.setItem('Quiz',JSON.stringify(currentStorage))
-      router.push("questions")
+
+      if((router.query.data))
+      {
+        router.push({
+          pathname: 'questions',
+          query: { data : "Edit"}
+        })
+      }
+      else
+      {
+        router.push("questions");
+      }
       
     }
 
@@ -139,6 +150,45 @@ const QuizDataForm = () => {
       e.preventDefault();
       sessionStorage.clear();
       router.push('/admin/quiz');
+    }
+
+
+    const EditSaveBtn = async(e) =>{
+        e.preventDefault();
+
+      let currentQuizFromStorage =  JSON.parse(sessionStorage.getItem('Quiz'));
+
+
+      let  QuizData = {
+          title : document.getElementById('quizName').value,  
+          duration : Number(document.getElementById('quizTime').value) * 60,
+          quizTag : ((document.getElementsByName('type')[0].checked) ? "open" : "close")+"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-"+ document.getElementById('quizTag').value,
+          schedule : 
+           {  startTime : new Date( document.getElementById("startTime").value).getTime(),
+              endTime : new Date(document.getElementById("endTime").value).getTime()
+           },
+          state : (document.getElementById('state').checked == true)? "Active" : "Inactive",
+        }
+
+        console.log("from save",QuizData);
+
+
+        let updatedQuizData = {...currentQuizFromStorage,...QuizData}
+
+
+        let res = await fetch(`/api/db/quiz/${currentQuizFromStorage._id}/update`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body : JSON.stringify(updatedQuizData)
+        });
+        
+        if(res.status===200)
+        {
+          router.push('/admin/quiz');
+        }
+      
+      
+
     }
 
 
@@ -166,7 +216,7 @@ const QuizDataForm = () => {
                   type="text"
                   id="quizTime"
                   name="duration"
-                  defaultValue = {(Quiz.noData)  ? "" : Quiz.data.duration}
+                  defaultValue = {(Quiz.noData)  ? "" : parseInt(Quiz.data.duration/60)}
                   placeholder="Duration In mins"
                   required
                 />
@@ -266,6 +316,12 @@ const QuizDataForm = () => {
             </Link> */}
 
             <button id={style.exit} className="redBtn" onClick={e=>{ExitBtn(e)}} >Exit</button>
+
+
+            {
+
+            (router.query.data) ? <button id={style.exit} className="greenBtn ml-3" onClick={e=>{EditSaveBtn(e)}} >Save & Exit </button> : ""
+            }
 
             <input
               type="submit"
