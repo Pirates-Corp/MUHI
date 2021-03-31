@@ -809,6 +809,7 @@ export const handleSubFieldUpdate = async (req, res) => {
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         let duration = newDoc.duration ? newDoc.duration : -1;
+        let status = newDoc.status ? newDoc.status : undefined;
         delete newDoc.duration;
         const document = result[1];
         const matchedFields = document[fieldName].filter((doc) => {
@@ -833,7 +834,7 @@ export const handleSubFieldUpdate = async (req, res) => {
             collectionDetails.collectionName ===
             constants.collectionMap.report.collectionName
           ) {
-            await updateResultsInQuizReports(matchedFields[0], duration);
+            await updateResultsInQuizReports(matchedFields[0], duration,status);
             console.log("Result updated doc =>", matchedFields[0]);
           }
 
@@ -1131,7 +1132,7 @@ export const addUserReport = async (id) => {
   return result;
 };
 
-const updateResultsInQuizReports = async (doc, duration = -1) => {
+const updateResultsInQuizReports = async (doc, duration = -1,status = undefined) => {
   const quizResult = await getDocument(
     constants.collectionMap.quiz.collectionName,
     constants.collectionMap.quiz.schema,
@@ -1159,7 +1160,7 @@ const updateResultsInQuizReports = async (doc, duration = -1) => {
       });
     });
     if (duration >= 0)  doc.time.taken = duration;
-    if(doc.questionsAttended.length === quizResult[1].questions.length || doc.time.taken===doc.time.total) doc.status = 1
+    if(doc.questionsAttended.length === quizResult[1].questions.length || doc.time.taken===doc.time.total || (status!=undefined && status==1)) doc.status = 1
   } else {
     console.log("Report document is null for id " + doc.id);
   }
