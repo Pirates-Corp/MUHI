@@ -15,6 +15,12 @@ const BaseLayout = ({children}) =>
     router.push('/')
    }
 
+   if(user.role=="user" && (router.pathname).startsWith('/admin'))
+   {
+    router.push('/dashboard');
+   }
+
+
   let type;
   try {
     type = (children[0].props.type == "user") ? "user" : " ";
