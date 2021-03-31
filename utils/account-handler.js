@@ -497,7 +497,9 @@ export const updateUserPassword = async (id, password) => {
       },
     };
     const queryOptions = { upsert: false };
-    return await updateUserDetails(id, updateCondition, queryOptions);
+    const result = await updateUserDetails(id, updateCondition, queryOptions);
+    cached.collections[constants.collectionMap.user.collectionName] = null
+    return result
   } catch (err) {
     console.log("Error while updating last login time for user=> " + err);
   }

@@ -28,13 +28,15 @@ function QuizTaking({ props }) {
             headers: { "Content-Type": "application/json" },
           });
 
-          const quizData = await quizPromise?.json();
+          const quizData = await quizPromise.json();
+          console.log("Current Quiz => ", quizData.duration);
+          console.log("Current Quiz => ", quizData);
           if (
             quizData &&
             JSON.stringify(quizData) !== JSON.stringify(currentQuiz)
           ) {
             console.log("Quiz data and current state is not null");
-            let userReport = { test: "data" };
+            let userReport = {};
             const reportPromise = await fetch(
               "/api/db/report/" + currentUser._id + "/reports/" + quizData._id
             );
@@ -55,7 +57,7 @@ function QuizTaking({ props }) {
                 report: [],
               };
               console.log("new report => ", userReport);
-              const newReportPromise = fetch(
+              const newReportPromise = await fetch(
                 "/api/db/report/" + currentUser._id + "/reports/add",
                 {
                   method: "PUT",
@@ -75,6 +77,7 @@ function QuizTaking({ props }) {
             } else if (reportPromise.status === 200) {
               userReport = await reportPromise.json();
             }
+            console.log("userReport => ", userReport);
             if(userReport.status === 1 ) {
               localStorage.removeItem('currentQuiz')
               router.push("/quiz")
@@ -87,12 +90,7 @@ function QuizTaking({ props }) {
               });
             });
 
-            quizData.duration = userReport.time.taken > 0
-              ? quizData.totalDuration - userReport.time.taken
-              : quizData.duration;
-
-            console.log("Current Quiz => ", quizData);
-            console.log("userReport => ", userReport);
+            quizData.duration = quizData.duration - userReport.time.taken
 
             setCurrentQuiz(quizData);
             localStorage.setItem("currentQuiz", JSON.stringify(quizData));
@@ -126,11 +124,17 @@ function QuizTaking({ props }) {
       if (option!=undefined) {
         currentQuiz.questions[questionId].answer = option;
       }
+
+      if(currentQuiz.status === 1) {
+        console.log("Quiz status updated to completed");
+        report.status = 1
+      }
       
       report.chapter = currentQuiz.questions[questionId].chapter
       report.section = currentQuiz.questions[questionId].section
       report.answer = currentQuiz.questions[questionId].answer ? currentQuiz.questions[questionId].answer : ""
       report.duration = currentQuiz.totalDuration - currentQuiz.duration
+      
       
       fetch(
         "/api/db/report/" +
@@ -158,12 +162,22 @@ function QuizTaking({ props }) {
   };
 
   const endQuiz = () => {
+    handleRadioSelect()
     localStorage.removeItem('currentQuiz')
-    router.push({
-      pathname: '/quiz/congratulations',
-      query: { quizId:currentQuiz._id,userId:currentUser._id}
-    })
+    setCurrentQuiz({...currentUser})
+    setTimeout(()=>{
+      router.push({
+        pathname: '/quiz/congratulations',
+        query: { quizId:currentQuiz._id,userId:currentUser._id}
+      })
+    },1000)
   }
+
+  const handleEndQuiz = (e) => {
+    currentQuiz.status = 1
+    endQuiz()
+  }
+
 
   return (
     <>
@@ -296,6 +310,12 @@ function QuizTaking({ props }) {
                       : "End Quiz"}
                   </a>
                 </Link>
+
+                <button id={style.exitBtn} className="redBtn" onClick={e=> {handleEndQuiz(e)}}>
+                    {questionId === currentQuiz.questions.length - 1
+                      ? "Finish"
+                      : "End Quiz"}
+                  </button>
               </div>
             </div>
           </>

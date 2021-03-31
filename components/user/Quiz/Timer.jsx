@@ -5,9 +5,7 @@ import style from "../../user/Quiz/QuizTaking.module.scss";
 const Timer = ({ props }) => {
   const router = useRouter();
 
-  const [currentCount, setCount] = useState(
-    parseInt(props.currentQuiz.duration)
-  );
+  const [currentCount, setCount] = useState(props.currentQuiz.duration );
 
   console.log("time in seconds =>",currentCount);
 
@@ -18,19 +16,20 @@ const Timer = ({ props }) => {
   const [started, setStarted] = useState(-1);
 
   if (started === -1) {
-    props.currentQuiz.totalDuration = props.currentQuiz.duration;
-    const isStarted = confirm(
-      "Quiz is about to start. Kindly click ok to start"
-    );
-    if (isStarted) {
-      setStarted(0);
+    if(props.currentQuiz.duration != null) {
+      props.currentQuiz.totalDuration = props.currentQuiz.duration;
+      const isStarted = confirm(
+        "Quiz is about to start. Kindly click ok to start"
+      );
+      if (isStarted) {
+        setStarted(0);
+      } else {
+        router.push("/quiz");
+      }
     } else {
-      router.push("/quiz/congratulations");
+      router.push("/quiz");
     }
   }
-
-
-  console.log(props.currentQuiz.totalDuration);
 
   useEffect(() => {
     if (started === 0) {
