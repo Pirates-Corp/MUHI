@@ -74,7 +74,7 @@ const userDashboard = () => {
           if(takenQuiz.id === quiz._id)
           {
 
-            if(!(Boolean(quiz.quizTag.split('-')[1])))
+            if(quiz.quizTag.split('-')[1]=="false")
             {
               
             // console.log("test",quiz.quizTag,takenQuiz.id);
