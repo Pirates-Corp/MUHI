@@ -88,93 +88,65 @@ export default function AdminSideBar(props) {
 
   const [user] = useContext(AuthContext);
 
-  const logout = async (e) => {
-    e.preventDefault();
-    const logoutResp = await fetch("/api/auth/logout", { method: "PUT" });
-    if (logoutResp.status === 200) {
-      sessionStorage.clear();
-      localStorage.clear();
-      if (user.role === "admin" || user.role === "moderator") {
-        window.location.href = "/admin/login";
-      } else {
-        window.location.href = "/";
+ 
+
+    const logout = async (e)=>{
+     e.preventDefault();
+      let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
+      if(logRes.status===200)
+      {
+          sessionStorage.clear();
+          localStorage.clear();
+          
+          if(user.role === "admin" || user.role === "moderator")
+          {
+              window.location.href="/admin/login";
+          }
+          else
+          {
+              window.location.href="/";
+          }
       }
+
     }
-  };
+    
+    cssStyle = (props.type == "user") ? {"--height" : "32vh","--holder-height":"340px" ,"--background":"#286da9","--activeBackground":"#4ca2ee" }
+                                        :{"--height" : "25vh","--holder-height":"460px","--background":"#343131","--activeBackground":"#7a7979" };
+    return(
+        <div>
+            <div id={style.nav} >
+                <input id="check-box" className={style.checkBox} type="checkbox" />
+                <label htmlFor="check-box" >
+                    <div id={style.openMenu}>
+                        <img src='/imgs/svgs/OpenMenu.svg' alt="-" />
+                    </div>
+                </label>
+                                            
+                <ul id={style.holder} style={cssStyle}>
+                  {
 
-  cssStyle =
-    props.type == "user"
-      ? {
-          "--height": "32vh",
-          "--holder-height": "340px",
-          "--background": "#286da9",
-          "--activeBackground": "#4ca2ee",
-        }
-      : {
-          "--height": "25vh",
-          "--holder-height": "460px",
-          "--background": "#343131",
-          "--activeBackground": "#7a7979",
-        };
-  return (
-    <div>
-      <div id={style.nav}>
-        <input id="check-box" className={style.checkBox} type="checkbox" />
-        <label htmlFor="check-box">
-          <div id={style.openMenu}>
-            <img src="/imgs/svgs/OpenMenu.svg" alt="-" />
-          </div>
-        </label>
-
-        <ul id={style.holder} style={cssStyle}>
-          {props.type == "user"
-            ? userSideBarItems.map((item, index) => (
-                <li key={index}>
-                  <Link href={item.href}>
-                    <a>
-                      <div
-                        className={
-                          router.pathname === item.href
-                            ? `${style.circle}  ${style.active}`
-                            : `${style.circle}`
-                        }
-                      >
-                        <img src={item.src} alt={item.alt} />
-                      </div>
-                      <div className={style.navText}>{item.text}</div>
-                    </a>
-                  </Link>
-                </li>
-              ))
-            : adminSideBarItems.map((item, index) => (
-                <li
-                  key={index}
-                  style={
-                    (user) ?(
-                   (user.role === "moderator" ||
-                    (user.role === "admin" &&
-                      item.text === "Account Management"))
-                      ? { display: "none" }
-                      : { display: "block" }) :{ display: "block" }
+                      (props.type == "user")?
+                      (userSideBarItems.map((item,index) => (
+                        <li key={index} >
+                            <Link href={item.href}>
+                                <a>
+                                    <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
+                                    <div className={style.navText}>{item.text}</div>
+                                </a> 
+                            </Link>
+                        </li>
+                    ))):
+                    (adminSideBarItems.map((item,index) => (
+                        <li  key={index} style={ (user) ? ((user.role === "moderator" || user.role === "admin" && item.text ==='Account Management')?{'display' : 'none' }:{'display' : 'block' }): {'display' : 'block' } }>
+                            <Link href={item.href}>
+                                <a>
+                                    <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
+                                    <div className={style.navText}>{item.text}</div>
+                                </a> 
+                            </Link>
+                        </li>
+                    )))
                   }
-                >
-                  <Link href={item.href}>
-                    <a>
-                      <div
-                        className={
-                          router.pathname === item.href
-                            ? `${style.circle}  ${style.active}`
-                            : `${style.circle}`
-                        }
-                      >
-                        <img src={item.src} alt={item.alt} />
-                      </div>
-                      <div className={style.navText}>{item.text}</div>
-                    </a>
-                  </Link>
-                </li>
-              ))}
-
           <li>
             <Link href="">
               <a onClick={(e) => logout(e)}>

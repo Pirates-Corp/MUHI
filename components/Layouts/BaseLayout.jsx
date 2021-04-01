@@ -10,7 +10,7 @@ const BaseLayout = ({children}) =>
 
   const [user] = useContext(AuthContext);
 
-   if(user === null)
+   if(user === null  )
    {
     router.push('/')
    }
@@ -25,6 +25,7 @@ const BaseLayout = ({children}) =>
    else{
     router.push('/');
    }
+   
 
 
   let type;

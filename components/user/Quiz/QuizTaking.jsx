@@ -171,6 +171,7 @@ function QuizTaking({ props }) {
   };
 
   const endQuiz = () => {
+    //setCurrentQuiz({...currentQuiz})
     handleRadioSelect()
     // setCurrentQuiz({...currentQuiz});
     setTimeout(() => {
@@ -305,14 +306,13 @@ function QuizTaking({ props }) {
                 </div>
 
                 {/* <Link
-                  href={{
-                    pathname: "congratulations/",
-                    query: {
-                      quizId: currentQuiz._id,
-                      userId: currentUser._id,
-                    },
-                  }}
-                >
+                 href={{
+                  pathname: "congratulations/",
+                  query: {
+                    quizId: currentQuiz._id,
+                    userId: currentUser._id
+                  },
+                }}>
                   <a id={style.exitBtn} className="redBtn">
                     {questionId === currentQuiz.questions.length - 1
                       ? "Finish"

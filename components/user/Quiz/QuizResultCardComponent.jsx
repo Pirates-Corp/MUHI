@@ -18,7 +18,9 @@ const QuizResultCard = ({ props }) => {
 
   return (
     <>
-      <div id={style.conCard}>
+    {
+      (props.quizData) ? (
+        <div id={style.conCard}>
         <div className={style.header}>
           <h1>Congratulations 🎉</h1>
         </div>
@@ -71,6 +73,9 @@ const QuizResultCard = ({ props }) => {
           </div>
         </div>
       </div>
+      ) : <p>Loading</p>
+    }
+      
     </>
   );
 };
