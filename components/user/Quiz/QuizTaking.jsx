@@ -162,9 +162,9 @@ function QuizTaking({ props }) {
   };
 
   const endQuiz = () => {
+    setCurrentQuiz({...currentUser})
     handleRadioSelect()
     localStorage.removeItem('currentQuiz')
-    setCurrentQuiz({...currentUser})
     setTimeout(()=>{
       router.push({
         pathname: '/quiz/congratulations',
@@ -296,7 +296,7 @@ function QuizTaking({ props }) {
                   </ul>
                 </div>
 
-                <Link
+                {/* <Link
                  href={{
                   pathname: "congratulations/",
                   query: {
@@ -309,7 +309,7 @@ function QuizTaking({ props }) {
                       ? "Finish"
                       : "End Quiz"}
                   </a>
-                </Link>
+                </Link> */}
 
                 <button id={style.exitBtn} className="redBtn" onClick={e=> {handleEndQuiz(e)}}>
                     {questionId === currentQuiz.questions.length - 1

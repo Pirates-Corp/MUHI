@@ -17,11 +17,7 @@ const Newsletter = () => {
 
     allNewsletters.map((newsletter) => {
       if (String(newsletter.state).toLowerCase() === "active") {
-        if (
-          (newsletter.schedule.startTime == 0 &&
-            newsletter.schedule.endTime == 0) ||
-          (new Date().getTime() < 1617215400000 &&
-            new Date().getTime() > 1617301800000)
+        if (newsletter.schedule.startTime < Date.now() && newsletter.schedule.endTime> Date.now()
         ) {
           ActiveNewsLetter.push(newsletter);
         }
@@ -53,7 +49,7 @@ const Newsletter = () => {
             ))}
           </>
         ) : (
-          <><p>No NewLetters Updated</p></>
+          <><p>No NewLetters to Show</p></>
         )}
       </div>
     </>

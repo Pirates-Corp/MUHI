@@ -92,11 +92,11 @@ const userDashboard = () => {
                                       icon : "/imgs/svgs/TimeTaken.svg",
                                       data: parseInt(takenQuiz.time.taken/60) +"/"+parseInt(takenQuiz.time.total/60)
                                     },
-                                    {
-                                      heading : "Rank",
-                                      icon : "/imgs/svgs/Rank.svg",
-                                      data: takenQuiz.rank
-                                    }
+                                    // {
+                                    //   heading : "Rank",
+                                    //   icon : "/imgs/svgs/Rank.svg",
+                                    //   data: takenQuiz.rank
+                                    // }
                                   ],
                                   buttonData:{
                                         apiUrl: "",

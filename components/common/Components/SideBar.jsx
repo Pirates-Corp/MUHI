@@ -34,16 +34,21 @@ export default function AdminSideBar(props){
 
     const logout = async (e)=>{
      e.preventDefault();
-      await fetch("/api/auth/logout",
-            {method: 'PUT'});
-        if(user.role === "admin" || user.role === "moderator")
-        {
-            window.location.href="/admin/login";
-        }
-        else
-        {
-            window.location.href="/";
-        }
+      let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
+      if(logRes.status===200)
+      {
+          sessionStorage.clear();
+          localStorage.clear();
+          
+          if(user.role === "admin" || user.role === "moderator")
+          {
+              window.location.href="/admin/login";
+          }
+          else
+          {
+              window.location.href="/";
+          }
+      }
 
     }
     
@@ -74,7 +79,7 @@ export default function AdminSideBar(props){
                         </li>
                     ))):
                     (adminSideBarItems.map((item,index) => (
-                        <li  key={index} style={ (user.role === "moderator" || user.role === "admin" && item.text ==='Account Management')?{'display' : 'none' }:{'display' : 'block' }}>
+                        <li  key={index} style={ (user) ? ((user.role === "moderator" || user.role === "admin" && item.text ==='Account Management')?{'display' : 'none' }:{'display' : 'block' }): {'display' : 'block' } }>
                             <Link href={item.href}>
                                 <a>
                                     <div className={router.pathname ===  item.href ? `${style.circle}  ${style.active}` : `${style.circle}`}><img src={item.src} alt={item.alt}/></div>
