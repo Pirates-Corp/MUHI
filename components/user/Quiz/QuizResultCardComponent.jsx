@@ -49,6 +49,7 @@ const QuizResultCard = ({ props }) => {
         </div>
 
         <div id={style.footer}>
+         
           {props.quizData.quizTag.split("-")[1].toLowerCase().trim() ===
           "true" ? (
             <div id={style.markHolder}>

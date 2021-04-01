@@ -92,6 +92,8 @@ export default function AdminSideBar(props) {
     e.preventDefault();
     const logoutResp = await fetch("/api/auth/logout", { method: "PUT" });
     if (logoutResp.status === 200) {
+      sessionStorage.clear();
+      localStorage.clear();
       if (user.role === "admin" || user.role === "moderator") {
         window.location.href = "/admin/login";
       } else {
@@ -148,11 +150,12 @@ export default function AdminSideBar(props) {
                 <li
                   key={index}
                   style={
-                    user.role === "moderator" ||
+                    (user) ?(
+                   (user.role === "moderator" ||
                     (user.role === "admin" &&
-                      item.text === "Account Management")
+                      item.text === "Account Management"))
                       ? { display: "none" }
-                      : { display: "block" }
+                      : { display: "block" }) :{ display: "block" }
                   }
                 >
                   <Link href={item.href}>

@@ -15,9 +15,15 @@ const BaseLayout = ({children}) =>
     router.push('/')
    }
 
-   if(user.role=="user" && (router.pathname).startsWith('/admin'))
+   if(user)
    {
-    router.push('/dashboard');
+     if(user.role=="user" && (router.pathname).startsWith('/admin'))
+     {
+      router.push('/dashboard');
+     }
+   }
+   else{
+    router.push('/');
    }
 
 
