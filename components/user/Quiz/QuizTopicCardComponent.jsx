@@ -48,19 +48,20 @@ const QuizTopicCardComponent = ({ props }) => {
           endTime: quiz.schedule.endTime,
           pathname: "quiz/" + quiz.title,
           status: report.status === 1 ? false : true,
+          state : quiz.state
         };
       }
     });
     QuizToShow.push(quizCardData);
     // }
   });
-
+   console.log(QuizToShow);
   return (
     <>
       <PrimaryHeader heading="MUHI Quiz" />
       <div id={style.quizCardsHolder}>
         {quizArray.map((quiz, index) => (
-          quiz.schedule.startTime < Date.now() && quiz.schedule.endTime > Date.now() ? (
+          quiz.schedule.startTime < Date.now() && quiz.schedule.endTime > Date.now() && quiz.state==="Active" ? (
             <div className={style.quizCard}>
             <h2>{quiz.title}</h2>
             <ul>

@@ -17,8 +17,8 @@ const Newsletter = () => {
 
     allNewsletters.map((newsletter) => {
       if (String(newsletter.state).toLowerCase() === "active") {
-        if (newsletter.schedule.startTime < Date.now() && newsletter.schedule.endTime> Date.now()
-        ) {
+        if ((newsletter.schedule.startTime < Date.now() && newsletter.schedule.endTime> Date.now()) || (newsletter.schedule.startTime === 0  && newsletter.schedule.endTime === 0) )
+         {
           ActiveNewsLetter.push(newsletter);
         }
       }
