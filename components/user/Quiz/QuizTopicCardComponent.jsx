@@ -1,10 +1,15 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import PrimaryHeader from "../../common/Header/PrimaryHeading";
 import style from "../../user/Quiz/QuizTopicCardComponent.module.scss";
 
 const QuizTopicCardComponent = ({ props }) => {
   const quizArray = props.quizData ? props.quizData : [];
-  const currentUser = props.currentUser ? props.currentUser : {};
+  const currentUser = props.currentUser;
+  let router = useRouter();
+  if(currentUser === null) {
+    router.push("localhost:3000")
+  }
   const currentUserReport = props.currentUserReport
     ? props.currentUserReport
     : {};
