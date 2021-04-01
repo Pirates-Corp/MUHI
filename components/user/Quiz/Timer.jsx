@@ -32,7 +32,7 @@ const Timer = ({ props }) => {
   }
 
   useEffect(() => {
-    if (started === 0) {
+    if (started === 0 && props.currentQuiz.status!==1) {
       const id = setInterval(() => {
         if(currentCount>0) setCount(currentCount - 1);
         if (currentCount === 0) {

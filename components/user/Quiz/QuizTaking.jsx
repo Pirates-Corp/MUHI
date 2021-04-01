@@ -8,6 +8,9 @@ import Timer from "./Timer";
 function QuizTaking({ props }) {
   const currentUser = props.currentUser;
   let router = useRouter();
+  if (currentUser === null) {
+    router.push(process.env.domainUrl);
+  }
   let quizId = router.query.quiz;
   let questionId = router.query.questionId
     ? Number(router.query.questionId)
@@ -29,7 +32,6 @@ function QuizTaking({ props }) {
           });
 
           const quizData = await quizPromise.json();
-          console.log("Current Quiz => ", quizData.duration);
           console.log("Current Quiz => ", quizData);
           if (
             quizData &&
@@ -70,30 +72,31 @@ function QuizTaking({ props }) {
               if (newReportPromise.status === 200) {
                 console.log(
                   "new reports created and pushed into db => ",
-                  report
+                  userReport
                 );
-                userReport = await newReportPromise.json();
               }
             } else if (reportPromise.status === 200) {
               userReport = await reportPromise.json();
             }
             console.log("userReport => ", userReport);
-            if(userReport.status === 1 ) {
-              localStorage.removeItem('currentQuiz')
-              router.push("/quiz")
+            if (userReport.status === 1) {
+              // localStorage.removeItem("currentQuiz");
+              router.push("/quiz");
             }
-            userReport.report.map((attendedQuestion) => {
-              quizData.questions.map((question) => {
-                if (question.id == attendedQuestion.id) {
-                  question.answer = attendedQuestion.answer;
-                }
+            // if (userReport.report) {
+              userReport.report.map((attendedQuestion) => {
+                quizData.questions.map((question) => {
+                  if (question.id == attendedQuestion.id) {
+                    question.answer = attendedQuestion.answer;
+                  }
+                });
               });
-            });
+              // if (userReport.time)
+                quizData.duration = quizData.duration - userReport.time.taken;
 
-            quizData.duration = quizData.duration - userReport.time.taken
-
-            setCurrentQuiz(quizData);
-            localStorage.setItem("currentQuiz", JSON.stringify(quizData));
+              setCurrentQuiz(quizData);
+              localStorage.setItem("currentQuiz", JSON.stringify(quizData));
+            // }
           }
         } else console.log("failed loading quiz id in address bar");
       } else {
@@ -104,11 +107,16 @@ function QuizTaking({ props }) {
         } else {
           if (currentQuiz.title === quizId) {
             // console.log('same title==============');
-            localStorage.setItem("currentQuiz", JSON.stringify(currentQuiz));
+            if (currentQuiz.status === 1) {
+              // localStorage.removeItem("currentQuiz");
+              endQuiz()
+            } else {
+              localStorage.setItem("currentQuiz", JSON.stringify(currentQuiz));
+            }
           } else if (quizId) {
             // console.log("title => "+currentQuiz.title+"  id=>"+quizId);
             // console.log("id removed for some reason");
-            localStorage.removeItem("currentQuiz");
+            // localStorage.removeItem("currentQuiz");
             setCurrentQuiz({});
           }
         }
@@ -120,22 +128,23 @@ function QuizTaking({ props }) {
 
   const handleRadioSelect = (e = undefined, option = undefined) => {
     if (currentQuiz && currentQuiz.questions) {
-      const report = {}
-      if (option!=undefined) {
+      const report = {};
+      if (option != undefined) {
         currentQuiz.questions[questionId].answer = option;
       }
 
-      if(currentQuiz.status === 1) {
+      if (currentQuiz.status === 1) {
         console.log("Quiz status updated to completed");
-        report.status = 1
+        report.status = 1;
       }
-      
-      report.chapter = currentQuiz.questions[questionId].chapter
-      report.section = currentQuiz.questions[questionId].section
-      report.answer = currentQuiz.questions[questionId].answer ? currentQuiz.questions[questionId].answer : ""
-      report.duration = currentQuiz.totalDuration - currentQuiz.duration
-      
-      
+
+      report.chapter = currentQuiz.questions[questionId].chapter;
+      report.section = currentQuiz.questions[questionId].section;
+      report.answer = currentQuiz.questions[questionId].answer
+        ? currentQuiz.questions[questionId].answer
+        : "";
+      report.duration = currentQuiz.totalDuration - currentQuiz.duration;
+
       fetch(
         "/api/db/report/" +
           currentUser._id +
@@ -150,11 +159,11 @@ function QuizTaking({ props }) {
           body: JSON.stringify(report),
         }
       ).then((res) => {
-        if(res.status == 200) {
+        if (res.status == 200) {
           console.log("DB Updated");
         }
       });
-      if(option!=undefined) {
+      if (option != undefined) {
         setCurrentQuiz({ ...currentQuiz });
         console.log(currentQuiz);
       }
@@ -164,20 +173,20 @@ function QuizTaking({ props }) {
   const endQuiz = () => {
     setCurrentQuiz({...currentUser})
     handleRadioSelect()
-    localStorage.removeItem('currentQuiz')
-    setTimeout(()=>{
+    // setCurrentQuiz({...currentQuiz});
+    setTimeout(() => {
+      localStorage.removeItem("currentQuiz");
       router.push({
-        pathname: '/quiz/congratulations',
-        query: { quizId:currentQuiz._id,userId:currentUser._id}
-      })
-    },1000)
-  }
+        pathname: "/quiz/congratulations",
+        query: { quizId: currentQuiz._id, userId: currentUser._id },
+      });
+    }, 1000);
+  };
 
   const handleEndQuiz = (e) => {
-    currentQuiz.status = 1
-    endQuiz()
-  }
-
+    currentQuiz.status = 1;
+    endQuiz();
+  };
 
   return (
     <>
@@ -192,7 +201,7 @@ function QuizTaking({ props }) {
               props={{
                 currentQuiz,
                 setCurrentQuiz,
-                endQuiz
+                endQuiz,
               }}
             />
             <div id={style.quiz}>
@@ -311,11 +320,17 @@ function QuizTaking({ props }) {
                   </a>
                 </Link> */}
 
-                <button id={style.exitBtn} className="redBtn" onClick={e=> {handleEndQuiz(e)}}>
-                    {questionId === currentQuiz.questions.length - 1
-                      ? "Finish"
-                      : "End Quiz"}
-                  </button>
+                <button
+                  id={style.exitBtn}
+                  className="redBtn"
+                  onClick={(e) => {
+                    handleEndQuiz(e);
+                  }}
+                >
+                  {questionId === currentQuiz.questions.length - 1
+                    ? "Finish"
+                    : "End Quiz"}
+                </button>
               </div>
             </div>
           </>

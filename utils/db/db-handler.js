@@ -512,8 +512,8 @@ export const handleFieldDelete = async (req, res) => {
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         const document = result[1];
-        if(fieldId === "all") {
-          document[fieldName] = []
+        if (fieldId === "all") {
+          document[fieldName] = [];
         } else {
           const matchedFields = document[fieldName].filter((doc) => {
             return doc.id != fieldId;
@@ -748,7 +748,7 @@ export const handleSubFieldDelete = async (req, res) => {
           return doc.id == fieldId;
         });
         if (matchedFields[0]) {
-          if(subFieldId === "all") {
+          if (subFieldId === "all") {
             matchedFields[0][subFieldName] = [];
           } else {
             const matchedSubFields = matchedFields[0][subFieldName].filter(
@@ -826,7 +826,7 @@ export const handleSubFieldUpdate = async (req, res) => {
               return doc;
             }
           );
-          if (!modifiedSubField && newDoc.answer!=="") {
+          if (!modifiedSubField && newDoc.answer !== "") {
             modifiedSubFields.push(newDoc);
           }
           matchedFields[0][subFieldName] = modifiedSubFields;
@@ -834,11 +834,18 @@ export const handleSubFieldUpdate = async (req, res) => {
             collectionDetails.collectionName ===
             constants.collectionMap.report.collectionName
           ) {
-            await updateResultsInQuizReports(matchedFields[0], duration,status);
+            await updateResultsInQuizReports(
+              matchedFields[0],
+              duration,
+              status
+            );
+            if (matchedFields[0] && matchedFields[0].status === 1) {
+              await handleQuizCompletedEvent(document, matchedFields[0].id);
+            }
             console.log("Result updated doc =>", matchedFields[0]);
           }
 
-          if (modifiedSubFields[0] || newDoc.answer==="") {
+          if (modifiedSubFields[0] || newDoc.answer === "") {
             const updateResponse = await updateDoc(
               collectionDetails,
               documentId,
@@ -881,7 +888,9 @@ const getDoc = async (req) => {
     const authResult = await authenticate(req);
     if (authResult && authResult[0] === 200) {
       const collection = decodeURIComponent(req.query?.collection);
-      const documentId = decodeURIComponent(req.query?.document).trim().toLowerCase();
+      const documentId = decodeURIComponent(req.query?.document)
+        .trim()
+        .toLowerCase();
       const collectionDetails = constants.collectionMap[collection];
       if (
         (authResult[1].role !== constants.roles.admin &&
@@ -986,6 +995,13 @@ const updateDoc = async (collectionDetails, documentId, document) => {
   let resBody = "";
   try {
     const filter = { _id: new String(documentId).toLowerCase() };
+    if (
+      collectionDetails.collectionName ===
+        constants.collectionMap.report.collectionName &&
+      document.reports.length === 0
+    ) {
+      document.avgScore = 0;
+    }
     const updateDoc = {
       $set: {
         ...document,
@@ -1132,7 +1148,11 @@ export const addUserReport = async (id) => {
   return result;
 };
 
-const updateResultsInQuizReports = async (doc, duration = -1,status = undefined) => {
+const updateResultsInQuizReports = async (
+  doc,
+  duration = -1,
+  status = undefined
+) => {
   const quizResult = await getDocument(
     constants.collectionMap.quiz.collectionName,
     constants.collectionMap.quiz.schema,
@@ -1141,7 +1161,7 @@ const updateResultsInQuizReports = async (doc, duration = -1,status = undefined)
   // console.log("quizResult for corresponding report is => ",quizResult);
   if (quizResult && quizResult[0] == true && quizResult[1] !== null) {
     console.log("doc   ===>   ", doc);
-    doc.score.taken = 0
+    doc.score.taken = 0;
     quizResult[1].questions.map((question) => {
       doc.report.map((report) => {
         if (question.id === report.id) {
@@ -1154,14 +1174,66 @@ const updateResultsInQuizReports = async (doc, duration = -1,status = undefined)
           } else {
             report.result = 0;
           }
-          if (!doc.questionsAttended.includes(question.id) && report.answer!=="answer")
+          if (
+            !doc.questionsAttended.includes(question.id) &&
+            report.answer !== "answer"
+          )
             doc.questionsAttended.push(question.id);
         }
       });
     });
-    if (duration >= 0)  doc.time.taken = duration;
-    if(doc.questionsAttended.length === quizResult[1].questions.length || doc.time.taken===doc.time.total || (status!=undefined && status==1)) doc.status = 1
+    if (duration >= 0) doc.time.taken = duration;
+    if (
+      doc.questionsAttended.length === quizResult[1].questions.length ||
+      doc.time.taken === doc.time.total ||
+      (status != undefined && status == 1)
+    )
+      doc.status = 1;
   } else {
     console.log("Report document is null for id " + doc.id);
   }
 };
+
+const handleQuizCompletedEvent = async (currentUserReport, currentQuizId) => {
+  updateAvgScore(currentUserReport, currentQuizId);
+  const query = {};
+  const allReportsQueryResponse = await getDocuments(
+    constants.collectionMap.report.collectionName,
+    constants.collectionMap.report.schema,
+    query
+  );
+  const cursor = allReportsQueryResponse[0] ? allReportsQueryResponse[1] : undefined;
+  if (cursor) {
+    const collectionsArray = [];
+    if ((await cursor.count()) === 0) {
+      console.log(
+        "No documents found in the collection => " +
+          collectionDetails.collectionName
+      );
+    } else {
+      await cursor.forEach((doc) => {
+        // console.log("report needs to be ranked", doc);
+      });
+    }
+  } else {
+    console.log(
+      "Problem in Cursor fetched from DB in handle quiz completed method"
+    );
+  }
+};
+
+const updateAvgScore = (currentUserReport, currentQuizId) => {
+  let totalMarks = 0;
+  currentUserReport.reports.map((report) => {
+    console.log(
+      "avg score is updated in doc. report score taken =>",
+      report.score.taken
+    );
+    totalMarks += report.score.taken;
+  });
+  currentUserReport.avgScore = (
+    totalMarks / currentUserReport.reports.length
+  ).toFixed(2);
+};
+
+const updateQuizRank = (currentQuizId) => {};

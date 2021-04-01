@@ -1,36 +1,104 @@
-import React from 'react';
-import Link from "next/link"
+import React from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from 'react'
-import {AuthContext} from '../../context/AuthContext'
-import style from "../../common/Components/SideBar.module.scss"
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import style from "../../common/Components/SideBar.module.scss";
 
 const adminSideBarItems = [
-    {id : 1, href: "/admin/profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
-    {id : 2, href: "/admin/dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
-    {id : 3, href: "/admin/newsletter", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletter Creation"},
-    {id : 4, href: "/admin/quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"},
-    {id : 5, href: "/admin/reports", src: "/imgs/svgs/Report.svg", alt: "Report", text: "Reports"},
-    {id : 6, href: "/admin/accounts", src: "/imgs/svgs/ManageAccounts.svg", alt: "Account-Management", text: "Account Management"}
-    
-]
-
+  {
+    id: 1,
+    href: "/admin/profile",
+    src: "/imgs/svgs/Profile.svg",
+    alt: "Profile",
+    text: "Profile",
+  },
+  {
+    id: 2,
+    href: "/admin/dashboard",
+    src: "/imgs/svgs/Home.svg",
+    alt: "Home",
+    text: "Home",
+  },
+  {
+    id: 3,
+    href: "/admin/newsletter",
+    src: "/imgs/svgs/Notification.svg",
+    alt: "Notification",
+    text: "Newsletter Creation",
+  },
+  {
+    id: 4,
+    href: "/admin/quiz",
+    src: "/imgs/svgs/Quiz.svg",
+    alt: "Quiz",
+    text: "Quiz",
+  },
+  {
+    id: 5,
+    href: "/admin/reports",
+    src: "/imgs/svgs/Report.svg",
+    alt: "Report",
+    text: "Reports",
+  },
+  {
+    id: 6,
+    href: "/admin/accounts",
+    src: "/imgs/svgs/ManageAccounts.svg",
+    alt: "Account-Management",
+    text: "Account Management",
+  },
+];
 
 const userSideBarItems = [
-    {id : 1, href: "/profile", src: "/imgs/svgs/Profile.svg", alt: "Profile", text: "Profile"},
-    {id : 2, href: "/dashboard", src: "/imgs/svgs/Home.svg", alt: "Home", text: "Home"},
-    {id : 3, href: "/newsletters", src: "/imgs/svgs/Notification.svg", alt: "Notification", text: "Newsletters"},
-    {id : 4, href: "/quiz", src: "/imgs/svgs/Quiz.svg", alt: "Quiz", text: "Quiz"}   
-]
+  {
+    id: 1,
+    href: "/profile",
+    src: "/imgs/svgs/Profile.svg",
+    alt: "Profile",
+    text: "Profile",
+  },
+  {
+    id: 2,
+    href: "/dashboard",
+    src: "/imgs/svgs/Home.svg",
+    alt: "Home",
+    text: "Home",
+  },
+  {
+    id: 3,
+    href: "/newsletters",
+    src: "/imgs/svgs/Notification.svg",
+    alt: "Notification",
+    text: "Newsletters",
+  },
+  {
+    id: 4,
+    href: "/quiz",
+    src: "/imgs/svgs/Quiz.svg",
+    alt: "Quiz",
+    text: "Quiz",
+  },
+];
 
-let cssStyle = {}; 
+let cssStyle = {};
 
-export default function AdminSideBar(props){
-    const router = useRouter();
+export default function AdminSideBar(props) {
+  const router = useRouter();
 
-    const [user] = useContext(AuthContext);
+  const [user] = useContext(AuthContext);
 
-
+  const logout = async (e) => {
+    e.preventDefault();
+    const logoutResp = await fetch("/api/auth/logout", { method: "PUT" });
+    if (logoutResp.status === 200) {
+      if (user.role === "admin" || user.role === "moderator") {
+        window.location.href = "/admin/login";
+      } else {
+        window.location.href = "/";
+      }
+    }
+  };
 
     const logout = async (e)=>{
      e.preventDefault();
@@ -89,22 +157,41 @@ export default function AdminSideBar(props){
                         </li>
                     )))
                   }
+                >
+                  <Link href={item.href}>
+                    <a>
+                      <div
+                        className={
+                          router.pathname === item.href
+                            ? `${style.circle}  ${style.active}`
+                            : `${style.circle}`
+                        }
+                      >
+                        <img src={item.src} alt={item.alt} />
+                      </div>
+                      <div className={style.navText}>{item.text}</div>
+                    </a>
+                  </Link>
+                </li>
+              ))}
 
-                    <li>
-                        <Link href="">
-                            <a  onClick={e=>logout(e)}>
-                                <div  className={style.circle}><img src="/imgs/svgs/Logout.svg"  alt="logout"/> </div>
-                                <div className={style.navText}>Logout</div>
-                            </a> 
-                        </Link>
-                    </li>
-                    <label id={style.hide} htmlFor="check-box">
-                        <div id={style.closeMenu}>
-                            <img src='/imgs/svgs/CloseMenu.svg' alt="-" />
-                        </div>
-                    </label>
-                </ul>
+          <li>
+            <Link href="">
+              <a onClick={(e) => logout(e)}>
+                <div className={style.circle}>
+                  <img src="/imgs/svgs/Logout.svg" alt="logout" />{" "}
+                </div>
+                <div className={style.navText}>Logout</div>
+              </a>
+            </Link>
+          </li>
+          <label id={style.hide} htmlFor="check-box">
+            <div id={style.closeMenu}>
+              <img src="/imgs/svgs/CloseMenu.svg" alt="-" />
             </div>
-        </div>
-    )
+          </label>
+        </ul>
+      </div>
+    </div>
+  );
 }

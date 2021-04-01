@@ -1,6 +1,6 @@
 import QuizResultCard from "../../components/user/Quiz/QuizResultCardComponent";
 import CenterLayout from "../../components/Layouts/CenterLayout.jsx";
-export default function quiztopic({props}) {
+export default function quiztopic({ props }) {
   return (
     <CenterLayout>
       <QuizResultCard props={props} />
@@ -9,20 +9,27 @@ export default function quiztopic({props}) {
 }
 
 quiztopic.getInitialProps = async (ctx) => {
+  let userReport, quizData;
   const cookie = ctx.req ? ctx.req.headers.cookie : null;
-
-  const report = await fetch("http://localhost:3000/api/db/report/"+ctx.query.userId+"/reports/"+ctx.query.quizId, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", cookie },
-  });
-
-  const quiz = await fetch("http://localhost:3000/api/db/quiz/"+ctx.query.quizId, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", cookie },
-  });
-
-  let userReport,quizData;
   try {
+    const report = await fetch(
+      "http://localhost:3000/api/db/report/" +
+        ctx.query.userId +
+        "/reports/" +
+        ctx.query.quizId,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json", cookie },
+      }
+    );
+
+    const quiz = await fetch(
+      "http://localhost:3000/api/db/quiz/" + ctx.query.quizId,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json", cookie },
+      }
+    );
     userReport = await report.json();
     userReport = userReport ? userReport : null;
     quizData = await quiz.json();
@@ -31,5 +38,5 @@ quiztopic.getInitialProps = async (ctx) => {
     console.error(err);
   }
 
-  return { props: { userReport,quizData,userId:ctx.query.userId } };
+  return { props: { userReport, quizData, userId: ctx.query.userId } };
 };
