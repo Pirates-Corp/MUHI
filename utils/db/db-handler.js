@@ -805,6 +805,7 @@ export const handleSubFieldUpdate = async (req, res) => {
         .trim()
         .toLowerCase();
       const newDoc = req?.body;
+      console.log("report received for update => ",newDoc);
       newDoc.id = parseInt(subFieldId);
       const result = await getDoc(req);
       if (result && result[0] === 200) {
@@ -840,7 +841,7 @@ export const handleSubFieldUpdate = async (req, res) => {
               status
             );
             if (matchedFields[0] && matchedFields[0].status === 1) {
-              await handleQuizCompletedEvent(document, matchedFields[0].id);
+              updateAvgScore(document, matchedFields[0].id);
             }
             console.log("Result updated doc =>", matchedFields[0]);
           }
@@ -853,6 +854,11 @@ export const handleSubFieldUpdate = async (req, res) => {
             );
             resCode = updateResponse[0];
             resBody = updateResponse[1];
+            if(resCode ==200) {
+              if (matchedFields[0] && matchedFields[0].status === 1) {
+                await handleQuizCompletedEvent(document, matchedFields[0].id);
+              }
+            }
           }
         } else {
           resCode = 404;
@@ -1160,7 +1166,6 @@ const updateResultsInQuizReports = async (
   );
   // console.log("quizResult for corresponding report is => ",quizResult);
   if (quizResult && quizResult[0] == true && quizResult[1] !== null) {
-    console.log("doc   ===>   ", doc);
     doc.score.taken = 0;
     quizResult[1].questions.map((question) => {
       doc.report.map((report) => {
@@ -1195,7 +1200,6 @@ const updateResultsInQuizReports = async (
 };
 
 const handleQuizCompletedEvent = async (currentUserReport, currentQuizId) => {
-  updateAvgScore(currentUserReport, currentQuizId);
   const query = {};
   const allReportsQueryResponse = await getDocuments(
     constants.collectionMap.report.collectionName,
@@ -1211,9 +1215,12 @@ const handleQuizCompletedEvent = async (currentUserReport, currentQuizId) => {
           collectionDetails.collectionName
       );
     } else {
-      await cursor.forEach((doc) => {
-        // console.log("report needs to be ranked", doc);
+      const docsArray = await cursor.toArray()
+      console.log("docsArray=>",docsArray);
+      docsArray.sort(function(a, b) { 
+        return a.avgScore - b.avgScore
       });
+      console.log("docsArraySorted=>",docsArray);
     }
   } else {
     console.log(
@@ -1234,6 +1241,7 @@ const updateAvgScore = (currentUserReport, currentQuizId) => {
   currentUserReport.avgScore = (
     totalMarks / currentUserReport.reports.length
   ).toFixed(2);
+  console.log("Avg score updated in doc => ",currentUserReport);
 };
 
 const updateQuizRank = (currentQuizId) => {};
