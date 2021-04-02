@@ -31,6 +31,7 @@
             border: 2px solid var(--primary-light); 
             border-radius: 5px;  
             padding: .2rem;
+            text-transform: capitalize;
             font-size: 1.2rem;
             color: var(--dark-light);
          }
@@ -50,6 +51,7 @@
                 margin-top: .3rem;
                 font-family: TextBold;
                 font-size: 2.5rem; 
+                text-transform: capitalize;
                 width: 100%; 
             }
       }
@@ -93,6 +95,7 @@
         border: 2px solid var(--primary-light); 
         border-radius: 5px;  
         padding: .2rem;
+        text-transform: capitalize;
         font-size: .8rem;
         color: var(--dark-light);
      }
@@ -111,6 +114,7 @@
             margin-top: .3rem;
             display: block;
             font-family: TextBold;
+            text-transform: capitalize;
             font-size: 2rem; 
             width: 100%; 
         }
@@ -153,6 +157,7 @@
             width: fit-content;
             border: 2px solid var(--primary-light); 
             border-radius: 5px;  
+            text-transform: capitalize;
             padding: .2rem;
             font-size: 1rem;
             color: var(--dark-light);
@@ -172,6 +177,7 @@
                 margin-top: .3rem;
                 display: block;
                 font-family: TextBold;
+                text-transform: capitalize;
                 font-size: 2.5rem; 
                 width: 100%; 
             }
@@ -233,6 +239,7 @@
             border-radius: 5px;  
             padding: .2rem;
             font-size: 1.2rem;
+            text-transform: capitalize;
             color: var(--dark-light);
          }
       }
@@ -249,6 +256,7 @@
             {   
                 word-wrap: break-word;
                 margin-top: .3rem;
+                text-transform: capitalize;
                 font-family: TextBold;
                 font-size: 2.5rem; 
                 width: 100%; 
@@ -295,6 +303,7 @@
             width: fit-content;
             border: 2px solid var(--primary-light); 
             border-radius: 5px;  
+            text-transform: capitalize;
             padding: .2rem;
             font-size: 1.2rem;
             color: var(--dark-light);
@@ -313,6 +322,7 @@
             {   
                 word-wrap: break-word;
                 margin-top: .3rem;
+                text-transform: capitalize;
                 font-family: TextBold;
                 font-size: 3rem; 
                 width: 100%; 

@@ -34,9 +34,6 @@ const QuizQuestionsForm = () => {
   console.log("onStart", Quiz);
 
   const loadDoc = (e) => {
-  
-
-  
   if(!['xlsx','xlsm','xlsb','xltx'].includes(e.target.value.replace(/.*(\/|\\)/, "").split('.')[1]))
     {
       document
@@ -63,18 +60,21 @@ const QuizQuestionsForm = () => {
       } else {
         fileData = resp.rows.slice(1);
         fileData.map((questions) => {
-          let data = {
-            id: questions[0],
-            question: questions[1],
-            options: questions.slice(2, questions.length - 4),
-            correctAnswer: questions[questions.length - 4],
-            chapter: questions[questions.length - 3],
-            section: questions[questions.length - 2],
-            syllabus: questions[questions.length - 1],
-          };
-          quizQuestions.push(data);
+          if(!(questions.length===0))
+          {
+            let data = {
+              id: questions[0],
+              question: questions[1],
+              options: questions.slice(2, questions.length - 4),
+              correctAnswer: questions[questions.length - 4],
+              chapter: questions[questions.length - 3],
+              section: questions[questions.length - 2],
+              syllabus: questions[questions.length - 1],
+            };
+            quizQuestions.push(data);
+          }
         });
-        console.log(quizQuestions);
+        console.log("Questions from file",quizQuestions);
 
         loadedQuestions.map((obj)=>{
 
@@ -94,8 +94,7 @@ const QuizQuestionsForm = () => {
         Quiz.questions = quizQuestions;
         sessionStorage.setItem("Quiz",JSON.stringify(Quiz))
         updateLoadedQuestion([...quizQuestions]);
-        
-        
+        quizQuestions = [];
       }
     });
   };
@@ -166,13 +165,25 @@ const QuizQuestionsForm = () => {
    
   };
 
+
+  const arrangeId = (questionArray) =>{
+    const resultArray = []
+    questionArray.map((question,index)=>{
+         question.id = index + 1;
+         resultArray.push(question);
+    })
+    return resultArray;
+  }
+
   const QuizDataFrom = async (e) => {
     e.preventDefault();
     let tempQuiz = Quiz;
     tempQuiz.totalMarks = tempQuiz.questions.length;
-    tempQuiz.duration = tempQuiz.duration * 60;
-    // console.log(JSON.stringify(tempQuiz));
+    //tempQuiz.duration = tempQuiz.duration * 60;
+    tempQuiz.questions = arrangeId(tempQuiz.questions);
 
+   
+    console.log(tempQuiz);
     
     let res ;
 
@@ -277,7 +288,7 @@ const QuizQuestionsForm = () => {
                   {loadedQuestions.map((question, QIndex) => (
                     <div id={style.questionBox} key={QIndex}>
 
-                      {/* <button
+                      <button
                         id={style.close}
                         className="redRoundBtn"
                         onClick={(e) =>
@@ -285,7 +296,7 @@ const QuizQuestionsForm = () => {
                         }
                       >
                         <img src="/imgs/svgs/CloseMenu.svg" alt="X" />
-                      </button> */}
+                      </button>
 
                       <div className={style.metaData}>
                         <h3>{"Q" + (QIndex + 1)}</h3>
@@ -421,7 +432,7 @@ const QuizQuestionsForm = () => {
               </Link> */}
               <button className="redBtn" onClick={e=>BackBtn(e)}><img src="/imgs/svgs/Back.svg"></img>Back</button>
               
-              {/* <button
+              <button
                 className="blueBtn"
                 onClick={(e) =>
                   modifyQuiz(e, {
@@ -432,7 +443,7 @@ const QuizQuestionsForm = () => {
               >
                 <img src="/imgs/svgs/OptionPlus.svg"></img>
                 Add Question
-              </button> */}
+              </button>
 
               <button
                 className="greenBtn"
