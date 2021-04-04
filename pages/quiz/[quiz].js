@@ -14,7 +14,7 @@ export default function takequiz({ props }) {
 takequiz.getInitialProps = async (ctx) => {
   const cookie = ctx.req ? ctx.req.headers.cookie : null;
 
-  const user = await fetch(`${process.env.domainUrl}/api/db/user`, {
+  const user = await fetch(`http://localhost:3000/api/db/user`, {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie },
   });

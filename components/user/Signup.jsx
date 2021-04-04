@@ -52,6 +52,10 @@ export default function Signup() {
       { 
         alert("User Already Exist")
       }
+      if(res.status==401)
+      { 
+        alert("Something went wrong , Try again")
+      }
       else
       {
        window.location.assign(res.url);

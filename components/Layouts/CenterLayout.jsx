@@ -11,8 +11,12 @@ const CenterLayout = ({children}) =>
 
    if(user === null )
    {
-   router.push('/')
+    if(!router.pathname.startsWith('/openquiz'))
+    {
+      router.push('/')
+    }
    }
+
 
 
 

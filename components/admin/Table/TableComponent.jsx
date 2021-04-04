@@ -3,7 +3,7 @@ import XLSX from "xlsx";
 import style from "../../admin/Table/TableComponent.module.scss";
 import saveAs from "../../../utils/other/fileSaver";
 import {useRouter} from "next/router"
-import { route } from "next/dist/next-server/server/router";
+
 
 const TableComponent = (props) => {
    const router = useRouter();
@@ -19,12 +19,14 @@ const TableComponent = (props) => {
     feature,
   } = props;
  
-  
  
-    //Quiz List
+  //Quiz List
+  if(tableData.length==0)
+  {
     apiData.allQuiz.map((quiz) => {
       QuizList.push(quiz.title);
     });
+  }
   
 
   let studentCol = [
@@ -37,33 +39,54 @@ const TableComponent = (props) => {
    //Load initial Student Data
    const initialStudentsData = () => {
     let allStudents = [];
-    apiData.allReports.map((user) => {
-      let row = Object.values(user).slice(1, 3);
-      row.push(user.reports.length);
-      apiData.allUsers.map((student)=>{
-        if(user._id===student._id)
+      apiData.allReports.map((user) => {
+        let row = Object.values(user).slice(1, 3);
+        row.push(user.reports.length);
+        apiData.allUsers.map((student)=>{
+          if(user._id===student._id)
+          {
+            if(student.role=="user")
+            {
+              row.unshift(student.name);
+              row.push(student.email);
+            }
+            else
+            {
+              row = [];
+            }
+          }
+       })
+        if(row.length!==0)
         {
-          row.unshift(student.name);
-          row.push(student.email);
+          allStudents.push(row);
         }
-     })
-      allStudents.push(row);
-    });
+      });
     return allStudents;
+
+
+
   };
 
   const [tableCol, setTableCol] = React.useState(col);
   const [quizListState, setQuizListState] = React.useState(QuizList);
-  const [viewColNames, setViewColName] = React.useState(
-    tableData.length == 0 ? studentCol : colNames
-  );
-  const [exportHeader, setExportHeader] = React.useState("All students");
-  const [rawTableData, setRawTableData] = React.useState(initialStudentsData());
-  const [viewData, setViewData] = React.useState(rawTableData);
+  const [viewColNames, setViewColName] = React.useState(tableData.length == 0 ? studentCol : colNames);
+  const [exportHeader, setExportHeader] = React.useState((tableData.length==0) ?"All students" : "tableDataExport");
+  const [rawTableData, setRawTableData] = React.useState((tableData.length==0) ? initialStudentsData() : tableData);
+  const [viewData, setViewData] = React.useState( (tableData.length==0) ? rawTableData  : tableData);
 
   useEffect(() => {
-    setViewData(rawTableData)
-  },[rawTableData])
+
+    if(tableData.length==0)
+    {
+      setViewData(rawTableData)
+    }
+    else
+    {
+      setViewData(tableData)
+      setRawTableData(tableData)
+    }
+
+  },[rawTableData,tableData])
 
   console.log("rawTableData=>",rawTableData);
 
@@ -182,7 +205,15 @@ const TableComponent = (props) => {
           ExportData.push(row);
         });
         ExportData.unshift(exportStudentCol);
-      } else {
+      } 
+      else if(exportHeader == "tableDataExport")
+      {
+        console.log(tableData);
+        ExportData.push(viewColNames);
+        ExportData.push(...tableData.map(e=>e.splice(0,5)));
+
+      }
+      else {
         let row = [];
         const exportQuizCol = [
           "Student Name",
@@ -272,7 +303,7 @@ const TableComponent = (props) => {
 
  //Button Action
  const onButtonAction = async(url,StudentName,buttonText)=>{
-   
+   console.log(buttonText);
    if(buttonText.toLowerCase().startsWith("view"))
    {
       console.log(url,buttonText);
@@ -280,6 +311,24 @@ const TableComponent = (props) => {
         pathname: '/admin/reports/student',
         query: { data: JSON.stringify(url+'-'+StudentName)}
       })
+    }
+    else if(buttonText.toLowerCase().startsWith("allow"))
+    {
+      let res = confirm(`Are sure , want to Active the ${StudentName} ?`)
+      if(res) 
+      {
+        await fetch(url.split('-')[0],{method : 'PUT'});
+        window.location.reload();
+      }
+    }
+    else if(buttonText.toLowerCase().startsWith("suspend"))
+    {
+      let res = confirm(`Are sure , want to Suspend the ${StudentName} ?`)
+      if(res) 
+      {
+        await fetch(url,{method : 'PUT'});
+        window.location.reload();
+      }
     }
 
  }
@@ -374,7 +423,7 @@ const TableComponent = (props) => {
               <p>{colName}</p>
             ))}
           </li>
-          {viewData.length == 0 ? (
+          {(viewData.length == 0)  ? (
             <li id={style.noDataBox}>
               <center>
                 <p>No Data Found</p>
@@ -388,7 +437,9 @@ const TableComponent = (props) => {
                   <p>{e}</p>
                 ))}
 
-                <button style={{"font-size":"1rem"}} className={buttonColor + "Btn"} onClick={()=>onButtonAction(arr[arr.length - 1],arr[0],buttonText)}>{buttonText}</button>
+                <button style={{"font-size":"1rem"}} className={((arr[arr.length - 1].split('-')[1]=='suspend')?"green":buttonColor)+"Btn"} onClick={()=>onButtonAction(arr[arr.length - 1],    arr[0]   ,(arr[arr.length - 1].split('-')[1]=='suspend')?"Allow":buttonText)}>
+                    {(arr[arr.length - 1].split('-')[1]=='suspend')?"Active":buttonText}  
+                </button>
               
               </li>
             ))

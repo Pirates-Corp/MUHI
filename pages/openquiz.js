@@ -1,9 +1,10 @@
-import OpenQUiz from '../components/common/Components/OpenQuiz';
+import OpenQuiz from "../components/common/Components/OpenQuiz";
+
 
 export default function openQuiz(){
     return (
-        <div>
-          <OpenQUiz />
-        </div>
+        <>
+            <OpenQuiz/>
+        </>
       );
 }

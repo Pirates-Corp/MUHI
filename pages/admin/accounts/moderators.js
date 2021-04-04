@@ -1,10 +1,10 @@
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx'
-import ModeratorAccount from "../../../components/admin/AccountManagement/ModeratorAccount"
+import Accounts from "../../../components/admin/AccountManagement/Accounts"
 export default function accounts() {
   return (
     <div>
       <BaseLayout>
-      <ModeratorAccount/>
+      <Accounts/>
       </BaseLayout>
     </div>
   )

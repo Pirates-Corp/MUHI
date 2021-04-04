@@ -5,10 +5,44 @@ import style from "../../admin/AccountManagement/ManageAccounts.module.scss";
 
 const ManageAccounts = () =>{
 
-    function handleSubmit(e)
+    async  function handleSubmit(e)
     {
         e.preventDefault();
-        //create moderator
+        const body = {
+                name : e.currentTarget.name.value,
+                password : e.currentTarget.password.value,
+                email : e.currentTarget.email.value,
+                mobileNo : e.currentTarget.mobileNo.value,
+                role: e.currentTarget.role.value,
+                accountType : e.currentTarget.accountType.value,
+            }
+            const res =  await fetch('/api/auth/signup',{
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'      
+                },
+                body : JSON.stringify(body)
+              })
+
+              
+            if(res.status==409)
+            { 
+                alert("Moderator Already Exist");
+
+            }
+            else if(res.status==201)
+            {
+                
+                alert("Moderator Created Successfully");
+                Object.keys(body).splice(0,4).map(id=>{
+                    document.getElementById(id).value = "";
+                })
+            }
+            else
+            {
+                alert("Something went Wrong, Try again later");
+                
+            }
     }
 
     return(
@@ -21,24 +55,26 @@ const ManageAccounts = () =>{
 
                     <div className="TextBox" id={style.TextBox}>
                         <img src="/imgs/svgs/UserName.svg" alt="user" />
-                        <input type="text"  name="name" placeholder="username"  required />
+                        <input type="text" id="name"  name="name" placeholder="username"  required />
                     </div>
 
                     <div className="TextBox" id={style.TextBox}>
                         <img src="/imgs/svgs/Email.svg" alt="email" />
-                        <input type="email"  name="email" placeholder="E - mail"  required />
+                        <input type="email" id="email"  name="email" placeholder="E - mail"  required />
                     </div>
 
                     <div className="TextBox" id={style.TextBox}>
                         <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
-                        <input type="password"  name="password" placeholder="Password"    minLength='6' required />
+                        <input type="password" id="password" name="password" placeholder="Password"    minLength='6' required />
                     </div>
 
                     <input  type="text" name="role" value="moderator" hidden/>
+                    <input  type="text" id="accountType" name="accountType" value="muhi" hidden/>
+              
 
                     <div className="TextBox" id={style.TextBox}>
                         <img src="/imgs/svgs/MobileNumber.svg" alt="password" />
-                        <input type="number"  name="mobileNo" placeholder="Mobile Number" minLength='5' required />
+                        <input type="number" id="mobileNo"  name="mobileNo" placeholder="Mobile Number" minLength='5' required />
                     </div>
 
                     <div id={style.btnHolder}>

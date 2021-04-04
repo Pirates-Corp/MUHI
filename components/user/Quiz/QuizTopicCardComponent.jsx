@@ -33,29 +33,29 @@ const QuizTopicCardComponent = ({ props }) => {
     return result;
   };
 
-  let QuizToShow = [];
-  let quizCardData;
+  // let QuizToShow = [];
+  // let quizCardData;
 
-  quizArray.map((quiz) => {
-    // if(quiz.quizTag.split('-')[0].toLowerCase() === 'close')
-    // {
-    currentUserReport.reports.map((report) => {
-      if (report.id === quiz._id) {
-        quizCardData = {
-          title: quiz.title,
-          duration: quiz.duration,
-          questions: quiz.questions.length,
-          endTime: quiz.schedule.endTime,
-          pathname: "quiz/" + quiz.title,
-          status: report.status === 1 ? false : true,
-          state : quiz.state
-        };
-      }
-    });
-    QuizToShow.push(quizCardData);
-    // }
-  });
-   console.log(QuizToShow);
+  // quizArray.map((quiz) => {
+  //   // if(quiz.quizTag.split('-')[0].toLowerCase() === 'close')
+  //   // {
+  //   currentUserReport.reports.map((report) => {
+  //     if (report.id === quiz._id) {
+  //       quizCardData = {
+  //         title: quiz.title,
+  //         duration: quiz.duration,
+  //         questions: quiz.questions.length,
+  //         endTime: quiz.schedule.endTime,
+  //         pathname: "quiz/" + quiz.title,
+  //         status: report.status === 1 ? false : true,
+  //         state : quiz.state
+  //       };
+  //     }
+  //   });
+  //   QuizToShow.push(quizCardData);
+  //   // }
+  // });
+  //  console.log(QuizToShow);
   return (
     <>
       <PrimaryHeader heading="MUHI Quiz" />

@@ -75,12 +75,12 @@ export default function Login() {
               </a>
             </Link>
 
-            {/* <div id={style.line}></div>
+            <div id={style.line}></div>
             <Link href="/openquiz">
               <a id={style.opBtn} className="prBtn">
                 Take Quizz without Login
               </a>
-            </Link> */}
+            </Link>
           </div>
         </div>
       </div>
