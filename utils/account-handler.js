@@ -26,7 +26,7 @@ export const authenticate = async (httpReq) => {
   let resCode = 400;
   let resBody = null;
   try {
-    const token = getTokenFromCookie(httpReq);
+    const token = getTokenFromCookie(httpReq)
     if (token) {
       const decoded = decodePayload(token);
       if (decoded) {
@@ -172,7 +172,7 @@ export const signup = async (httpReq, httpRes) => {
     if (httpReq.method !== "PUT") {
       resCode = 401;
       resText = "";
-    } else if (authResult[0] === 200) {
+    } else if (authResult[0] === 200 && authResult[1].role !== constants.roles.admin) {
       if (authResult[1].role === constants.roles.user) {
         httpRes.redirect(process.env.routes.loginRedirectUser);
       } else {
@@ -215,6 +215,13 @@ export const signup = async (httpReq, httpRes) => {
               "Account created for the user : " +
               JSON.stringify(userDetails) +
               ";";
+
+            if(constants.roles.moderator === userDetails.role) {
+              httpRes.statusCode = 201
+              httpRes.send(resText)
+              return
+            }  
+
             const jwtToken = encodePayload(
               { id: userDetails._id, password: plainPassword },
               process.env.authTokenExpiryTime

@@ -61,11 +61,11 @@ export const handleDocumentReadAll = async (req, res) => {
   let resBody = "";
   try {
     if (req.method === "GET") {
+      const collection = decodeURIComponent(req.query?.collection);
+      const collectionDetails = constants.collectionMap[collection];
       const result = await authenticate(req);
-      if (result && result[0] === 200) {
-        const collection = decodeURIComponent(req.query?.collection);
-        const collectionDetails = constants.collectionMap[collection];
-        if (
+      if (collectionDetails.collectionName === constants.collectionMap.quiz.collectionName || (result && result[0] === 200)) {
+        if ( result &&
           (result[1].role === constants.roles.moderator &&
             collectionDetails.collectionName ===
               constants.collectionMap.user.collectionName) ||
@@ -82,7 +82,10 @@ export const handleDocumentReadAll = async (req, res) => {
           console.log(resBody);
         } else {
           if (collectionDetails) {
-            const query = {};
+            let query = {};
+            if((!result || result[0]!==200) && collectionDetails.collectionName === constants.collectionMap.quiz.collectionName) {
+              query = { quizTag: /open-/}
+            }
             const queryResponse = await getDocuments(
               collectionDetails.collectionName,
               collectionDetails.schema,
@@ -892,13 +895,13 @@ const getDoc = async (req) => {
   let resCode, resBody;
   try {
     const authResult = await authenticate(req);
-    if (authResult && authResult[0] === 200) {
-      const collection = decodeURIComponent(req.query?.collection);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    if (constants.collectionMap.quiz.collectionName === collectionDetails.collectionName || constants.collectionMap.report.collectionName === collectionDetails.collectionName || (authResult && authResult[0] === 200)) {
       const documentId = decodeURIComponent(req.query?.document)
         .trim()
         .toLowerCase();
-      const collectionDetails = constants.collectionMap[collection];
-      if (
+      if ( authResult[0]==200 &&
         (authResult[1].role !== constants.roles.admin &&
           collectionDetails.collectionName ===
             constants.collectionMap.user.collectionName &&
@@ -964,6 +967,10 @@ const getDoc = async (req) => {
             }
             resBody = document;
             resCode = 200;
+            if(!authResult && constants.collectionMap.quiz.collectionName && !document.quizTag.toLowerCase().trim().startsWith("open")) {
+              resCode = 401
+              resBody = 'Restricted Operation'
+            }
             console.log(
               "returning the document for the id " +
                 documentId +
