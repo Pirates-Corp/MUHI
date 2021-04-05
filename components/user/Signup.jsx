@@ -1,7 +1,10 @@
 import Link from "next/link";
 import {useContext} from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
+//import GoogleAuth from 'google-auth-library';
 import {AuthContext} from '../context/AuthContext'
+
 import style from "../user/Signup.module.scss"
 
 export default function Signup() {
@@ -62,10 +65,28 @@ export default function Signup() {
       }
    }
 
-   //action="/api/auth/signup" method="PUT"
    
+   const googleSignUp = ()=>{
+    
+     //googleUser
+      // var profile = googleUser.getBasicProfile();
+      // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      // console.log('Name: ' + profile.getName());
+      // console.log('Image URL: ' + profile.getImageUrl());
+      // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+   }
+
+
+
     return (
         <>
+        <Head>
+        <title>Sign Up - MUHI</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        {/* <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <meta name="google-signin-client_id" content="268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com"></meta> */}
+      </Head>
          <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
             <div id={style.header}>
@@ -107,10 +128,12 @@ export default function Signup() {
              <div id={style.otherOptions}>
 
              <div id={style.line}></div>  
-                {/* <button className="blueBtn" id={style.gBtn}>
+                <button className="blueBtn"  onClick={googleSignUp()} id={style.gBtn}>
                     <img src="imgs/svgs/Google.svg"/>
                     Start with Google
-                </button> */}
+                </button>
+
+                {/* <div class="g-signin2" data-onsuccess="onSignIn"></div> */}
 
                 <p>Already have an account ? </p> 
                 <Link href="/">

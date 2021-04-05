@@ -638,6 +638,6 @@ export const sendMail = async (toAddress, mailSubject, mailBody) => {
 
 export const getMailBody = (httpReq, mailType, path = "", token = "") => {
   const host = process.env.domainUrl;
-  const link = `http://${host}${path}${token}`;
+  const link = `http://${host}/forgetpassword?token=${token}`;
   return `${mailType}`.replace("<link>", link);
 };

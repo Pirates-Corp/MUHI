@@ -159,7 +159,7 @@ const QuizDataForm = () => {
 
       let  QuizData = {
           title : document.getElementById('quizName').value,  
-          duration : Number(document.getElementById('quizTime').value) ,
+          duration : Number(document.getElementById('quizTime').value) *60 ,
           quizTag : ((document.getElementsByName('type')[0].checked) ? "open" : "close")+"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-"+ document.getElementById('quizTag').value,
           schedule : 
            {  startTime : new Date( document.getElementById("startTime").value).getTime(),
@@ -180,7 +180,7 @@ const QuizDataForm = () => {
           body : JSON.stringify(updatedQuizData)
         });
         
-        if(res.status===200)
+        if(res.status===200 || res.status===400)
         {
           router.push('/admin/quiz');
         }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
 import {AuthContext} from '../context/AuthContext'
+//import {OAuth2Client} from 'google-auth-library';
 // import Snackbar from '../../components/common/Popups/Snackbar'
 export default function Login() {
 
@@ -27,6 +28,12 @@ export default function Login() {
   {
     alert("Incorrect Email / Password");
   }
+
+
+  const googleLogin = async()=>{
+      
+  }
+
 
   return (
     <>
@@ -55,18 +62,18 @@ export default function Login() {
             </div>
             <div id={style.btnHolder}>
               <input className="prBtn" type="submit" value="Login" />
-              {/* <Link href="/forgetpassword">
+              <Link href="/forgetpassword">
                 <a className={style.forgetPassword}>Forgot Password</a>
-              </Link> */}
+              </Link>
             </div>
           </form>
 
           <div id={style.otherOptions}>
-
-            {/* <button className="blueBtn" id={style.gBtn}>
+          
+             <button className="blueBtn" onClick={googleLogin} id={style.gBtn}>
               <img src="imgs/svgs/Google.svg" />
               Continue with Google
-            </button> */}
+            </button>
 
             <p>Don't have an account ? </p>
             <Link href="/signup">
