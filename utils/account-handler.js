@@ -390,7 +390,6 @@ export const updatePassword = async (httpReq, httpRes) => {
             process.env.authTokenExpiryTime
           );
           updateTokenInCookie(httpRes, jwtToken);
-          updateCurrentUserInGlobalScope(user);
           resCode = 200;
           resText = "Password successfully updated !";
           console.log(resText);
@@ -505,7 +504,9 @@ export const updateUserPassword = async (id, password) => {
     };
     const queryOptions = { upsert: false };
     const result = await updateUserDetails(id, updateCondition, queryOptions);
-    cached.collections[constants.collectionMap.user.collectionName] = null
+    if(result[0] === true) {
+      updateCurrentUserInGlobalScope(await getUser(id,true))
+    }
     return result
   } catch (err) {
     console.log("Error while updating last login time for user=> " + err);
@@ -604,12 +605,12 @@ export const getCurrentUser = () => {
     "Current User doesn't exists in the global scope. Returning null"
   );
 
-  return undefined;
+  return undefined; 
 };
 
 export const updateCurrentUserInGlobalScope = (userDetails) => {
-  cached.user = userDetails;
-  console.log("Updated Current User in Global Scope.");
+  cached.user = userDetails === null ? null : {...userDetails};
+  console.log("Updated Current User in Global Scope =>",cached.user);
 };
 
 export const removeCurrentUserFromGlobalScope = () => {

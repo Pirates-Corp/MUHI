@@ -1014,16 +1014,16 @@ const getDoc = async (req) => {
     const authResult = await authenticate(req);
     const collection = decodeURIComponent(req.query?.collection);
     const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+        .trim()
+        .toLowerCase();
     if (
       constants.collectionMap.quiz.collectionName ===
         collectionDetails.collectionName ||
-      constants.collectionMap.report.collectionName ===
-        collectionDetails.collectionName ||
+      (constants.collectionMap.report.collectionName ===
+        collectionDetails.collectionName && documentId.includes('male.com')) ||
       (authResult && authResult[0] === 200)
     ) {
-      const documentId = decodeURIComponent(req.query?.document)
-        .trim()
-        .toLowerCase();
       if (
         (authResult[0] == 200 &&
           authResult[1].role !== constants.roles.admin &&
