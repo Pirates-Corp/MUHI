@@ -30,7 +30,7 @@ quiztopic.getInitialProps = async (ctx) => {
       headers: { "Content-Type": "application/json", cookie },
     });
 
-    currentUser = await user.json();
+    currentUser = user.status === 200 ? await user.json() : null
 
     const userReportRes = await fetch(
       `http://localhost:3000/api/db/report/${currentUser.email}`,
@@ -39,12 +39,11 @@ quiztopic.getInitialProps = async (ctx) => {
         headers: { "Content-Type": "application/json", cookie },
       }
     );
-    quizData = await allQuizzes.json();
-    quizData = quizData ? quizData : {};
-    currentUser = currentUser ? currentUser : null;
-    currentUserReport = await userReportRes.json();
+
+    quizData = allQuizzes.status === 200 ? await allQuizzes.json() : null
+    currentUserReport =  userReportRes.status === 200 ? await userReportRes.json() : null
   } catch (err) {
-    console.error("Error in get initial props =>" + err);
+    console.error("Error in quiz taking get initial props =>" + err);
     currentUser = null
   }
   return { props: { quizData, currentUser, currentUserReport } };

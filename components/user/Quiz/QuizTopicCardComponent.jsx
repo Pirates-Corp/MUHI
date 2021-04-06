@@ -6,9 +6,9 @@ import style from "../../user/Quiz/QuizTopicCardComponent.module.scss";
 const QuizTopicCardComponent = ({ props }) => {
   const quizArray = props.quizData ? props.quizData : [];
   const currentUser = props.currentUser;
-  let router = useRouter();
+  const router = useRouter();
   if(currentUser === null) {
-    router.push("localhost:3000")
+    // router.push("localhost:3000")
   }
   const currentUserReport = props.currentUserReport
     ? props.currentUserReport
@@ -25,11 +25,13 @@ const QuizTopicCardComponent = ({ props }) => {
 
   const isCompleted = (quiz) => {
     let result = false;
-    currentUserReport.reports.map((report) => {
-      if (report.id === quiz._id) {
-        result = report.status === 1;
-      }
-    });
+    if(currentUserReport.reports) {
+      currentUserReport.reports.map((report) => {
+        if (report.id === quiz._id) {
+          result = report.status === 1;
+        }
+      });
+    }
     return result;
   };
 
