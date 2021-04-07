@@ -26,7 +26,7 @@ export const authenticate = async (httpReq) => {
   let resCode = 400;
   let resBody = null;
   try {
-    const token = getTokenFromCookie(httpReq);
+    const token = getTokenFromCookie(httpReq)
     if (token) {
       const decoded = decodePayload(token);
       if (decoded) {
@@ -172,7 +172,7 @@ export const signup = async (httpReq, httpRes) => {
     if (httpReq.method !== "PUT") {
       resCode = 401;
       resText = "";
-    } else if (authResult[0] === 200) {
+    } else if (authResult[0] === 200 && authResult[1].role !== constants.roles.admin) {
       if (authResult[1].role === constants.roles.user) {
         httpRes.redirect(process.env.routes.loginRedirectUser);
       } else {
@@ -215,6 +215,13 @@ export const signup = async (httpReq, httpRes) => {
               "Account created for the user : " +
               JSON.stringify(userDetails) +
               ";";
+
+            if(constants.roles.moderator === userDetails.role) {
+              httpRes.statusCode = 201
+              httpRes.send(resText)
+              return
+            }  
+
             const jwtToken = encodePayload(
               { id: userDetails._id, password: plainPassword },
               process.env.authTokenExpiryTime
@@ -383,7 +390,6 @@ export const updatePassword = async (httpReq, httpRes) => {
             process.env.authTokenExpiryTime
           );
           updateTokenInCookie(httpRes, jwtToken);
-          updateCurrentUserInGlobalScope(user);
           resCode = 200;
           resText = "Password successfully updated !";
           console.log(resText);
@@ -498,7 +504,9 @@ export const updateUserPassword = async (id, password) => {
     };
     const queryOptions = { upsert: false };
     const result = await updateUserDetails(id, updateCondition, queryOptions);
-    cached.collections[constants.collectionMap.user.collectionName] = null
+    if(result[0] === true) {
+      updateCurrentUserInGlobalScope(await getUser(id,true))
+    }
     return result
   } catch (err) {
     console.log("Error while updating last login time for user=> " + err);
@@ -597,12 +605,12 @@ export const getCurrentUser = () => {
     "Current User doesn't exists in the global scope. Returning null"
   );
 
-  return undefined;
+  return undefined; 
 };
 
 export const updateCurrentUserInGlobalScope = (userDetails) => {
-  cached.user = userDetails;
-  console.log("Updated Current User in Global Scope.");
+  cached.user = userDetails === null ? null : {...userDetails};
+  console.log("Updated Current User in Global Scope =>",cached.user);
 };
 
 export const removeCurrentUserFromGlobalScope = () => {

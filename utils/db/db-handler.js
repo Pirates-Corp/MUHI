@@ -61,12 +61,17 @@ export const handleDocumentReadAll = async (req, res) => {
   let resBody = "";
   try {
     if (req.method === "GET") {
+      const collection = decodeURIComponent(req.query?.collection);
+      const collectionDetails = constants.collectionMap[collection];
       const result = await authenticate(req);
-      if (result && result[0] === 200) {
-        const collection = decodeURIComponent(req.query?.collection);
-        const collectionDetails = constants.collectionMap[collection];
+      if (
+        collectionDetails.collectionName ===
+          constants.collectionMap.quiz.collectionName ||
+        (result && result[0] === 200)
+      ) {
         if (
-          (result[1].role === constants.roles.moderator &&
+          (result &&
+            result[1].role === constants.roles.moderator &&
             collectionDetails.collectionName ===
               constants.collectionMap.user.collectionName) ||
           (result[1].role === constants.roles.user &&
@@ -82,7 +87,14 @@ export const handleDocumentReadAll = async (req, res) => {
           console.log(resBody);
         } else {
           if (collectionDetails) {
-            const query = {};
+            let query = {};
+            if (
+              (!result || result[0] !== 200) &&
+              collectionDetails.collectionName ===
+                constants.collectionMap.quiz.collectionName
+            ) {
+              query = { quizTag: /open-/ };
+            }
             const queryResponse = await getDocuments(
               collectionDetails.collectionName,
               collectionDetails.schema,
@@ -153,10 +165,15 @@ export const handleDocumentInsert = async (req, res) => {
       resBody = "Invalid request";
     } else {
       const authResult = await authenticate(req);
-      if (authResult && authResult[0] === 200) {
-        const collection = decodeURIComponent(req.query?.collection);
-        const documentReceived = req.body;
-        const collectionDetails = constants.collectionMap[collection];
+      const collection = decodeURIComponent(req.query?.collection);
+      const documentReceived = req.body;
+      const collectionDetails = constants.collectionMap[collection];
+      if (
+        (authResult && authResult[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentReceived.id.includes("male.com"))
+      ) {
         if (
           collectionDetails.collectionName ===
             constants.collectionMap.user.collectionName ||
@@ -426,7 +443,19 @@ export const handleFieldRead = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "GET") {
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "GET" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId)
         .trim()
@@ -455,6 +484,8 @@ export const handleFieldRead = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -467,7 +498,19 @@ export const handleFieldInsert = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "PUT") {
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "PUT" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
@@ -489,6 +532,8 @@ export const handleFieldInsert = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -501,7 +546,19 @@ export const handleFieldDelete = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "DELETE") {
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "DELETE" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
@@ -532,6 +589,8 @@ export const handleFieldDelete = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -545,7 +604,19 @@ export const handleFieldUpdate = async (req, res) => {
   let resBody = "";
   console.log(req);
   try {
-    if (req.method === "PUT") {
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "PUT" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const fieldName = decodeURIComponent(req.query?.fieldName);
@@ -586,6 +657,8 @@ export const handleFieldUpdate = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -598,7 +671,19 @@ export const handleSubFieldRead = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "GET") {
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "GET" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId)
         .trim()
@@ -640,6 +725,8 @@ export const handleSubFieldRead = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -652,10 +739,19 @@ export const handleSubFieldInsert = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "PUT") {
-      const collection = decodeURIComponent(req.query?.collection);
-      const documentId = decodeURIComponent(req.query?.document);
-      const collectionDetails = constants.collectionMap[collection];
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "PUT" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId)
         .trim()
@@ -717,6 +813,8 @@ export const handleSubFieldInsert = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -729,10 +827,19 @@ export const handleSubFieldDelete = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "DELETE") {
-      const collection = decodeURIComponent(req.query?.collection);
-      const documentId = decodeURIComponent(req.query?.document);
-      const collectionDetails = constants.collectionMap[collection];
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "DELETE" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId)
         .trim()
@@ -780,6 +887,8 @@ export const handleSubFieldDelete = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -792,10 +901,19 @@ export const handleSubFieldUpdate = async (req, res) => {
   let resCode = 400;
   let resBody = "";
   try {
-    if (req.method === "PUT") {
-      const collection = decodeURIComponent(req.query?.collection);
-      const documentId = decodeURIComponent(req.query?.document);
-      const collectionDetails = constants.collectionMap[collection];
+    const result = await authenticate(req);
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
+      .trim()
+      .toLowerCase();
+    if (
+      req.method === "PUT" &&
+      ((result && result[0] === 200) ||
+        (collectionDetails.collectionName ===
+          constants.collectionMap.report.collectionName &&
+          documentId.includes("male.com")))
+    ) {
       const fieldName = decodeURIComponent(req.query?.fieldName);
       const fieldId = decodeURIComponent(req.query?.fieldId)
         .trim()
@@ -805,7 +923,7 @@ export const handleSubFieldUpdate = async (req, res) => {
         .trim()
         .toLowerCase();
       const newDoc = req?.body;
-      console.log("report received for update => ",newDoc);
+      console.log("report received for update => ", newDoc);
       newDoc.id = parseInt(subFieldId);
       const result = await getDoc(req);
       if (result && result[0] === 200) {
@@ -854,7 +972,7 @@ export const handleSubFieldUpdate = async (req, res) => {
             );
             resCode = updateResponse[0];
             resBody = updateResponse[1];
-            if(resCode ==200) {
+            if (resCode == 200) {
               if (matchedFields[0] && matchedFields[0].status === 1) {
                 await handleQuizCompletedEvent(document, matchedFields[0].id);
               }
@@ -874,6 +992,8 @@ export const handleSubFieldUpdate = async (req, res) => {
         resCode = result[0];
         resBody = result[1];
       }
+    } else {
+      resBody = result[1];
     }
   } catch (err) {
     console.log("Error getting document =>  " + err);
@@ -892,14 +1012,21 @@ const getDoc = async (req) => {
   let resCode, resBody;
   try {
     const authResult = await authenticate(req);
-    if (authResult && authResult[0] === 200) {
-      const collection = decodeURIComponent(req.query?.collection);
-      const documentId = decodeURIComponent(req.query?.document)
+    const collection = decodeURIComponent(req.query?.collection);
+    const collectionDetails = constants.collectionMap[collection];
+    const documentId = decodeURIComponent(req.query?.document)
         .trim()
         .toLowerCase();
-      const collectionDetails = constants.collectionMap[collection];
+    if (
+      constants.collectionMap.quiz.collectionName ===
+        collectionDetails.collectionName ||
+      (constants.collectionMap.report.collectionName ===
+        collectionDetails.collectionName && documentId.includes('male.com')) ||
+      (authResult && authResult[0] === 200)
+    ) {
       if (
-        (authResult[1].role !== constants.roles.admin &&
+        (authResult[0] == 200 &&
+          authResult[1].role !== constants.roles.admin &&
           collectionDetails.collectionName ===
             constants.collectionMap.user.collectionName &&
           authResult[1]._id !== documentId) ||
@@ -964,6 +1091,14 @@ const getDoc = async (req) => {
             }
             resBody = document;
             resCode = 200;
+            if (
+              !authResult &&
+              constants.collectionMap.quiz.collectionName &&
+              !document.quizTag.toLowerCase().trim().startsWith("open")
+            ) {
+              resCode = 401;
+              resBody = "Restricted Operation";
+            }
             console.log(
               "returning the document for the id " +
                 documentId +
@@ -1189,7 +1324,7 @@ const updateResultsInQuizReports = async (
     });
     if (duration >= 0) doc.time.taken = duration;
     if (
-     // doc.questionsAttended.length === quizResult[1].questions.length ||
+      // doc.questionsAttended.length === quizResult[1].questions.length ||
       doc.time.taken === doc.time.total ||
       (status != undefined && status == 1)
     )
@@ -1206,7 +1341,9 @@ const handleQuizCompletedEvent = async (currentUserReport, currentQuizId) => {
     constants.collectionMap.report.schema,
     query
   );
-  const cursor = allReportsQueryResponse[0] ? allReportsQueryResponse[1] : undefined;
+  const cursor = allReportsQueryResponse[0]
+    ? allReportsQueryResponse[1]
+    : undefined;
   if (cursor) {
     const collectionsArray = [];
     if ((await cursor.count()) === 0) {
@@ -1215,12 +1352,12 @@ const handleQuizCompletedEvent = async (currentUserReport, currentQuizId) => {
           collectionDetails.collectionName
       );
     } else {
-      const docsArray = await cursor.toArray()
-      console.log("docsArray=>",docsArray);
-      docsArray.sort(function(a, b) { 
-        return a.avgScore - b.avgScore
+      const docsArray = await cursor.toArray();
+      console.log("docsArray=>", docsArray);
+      docsArray.sort(function (a, b) {
+        return a.avgScore - b.avgScore;
       });
-      console.log("docsArraySorted=>",docsArray);
+      console.log("docsArraySorted=>", docsArray);
     }
   } else {
     console.log(
@@ -1241,7 +1378,7 @@ const updateAvgScore = (currentUserReport, currentQuizId) => {
   currentUserReport.avgScore = (
     totalMarks / currentUserReport.reports.length
   ).toFixed(2);
-  console.log("Avg score updated in doc => ",currentUserReport);
+  console.log("Avg score updated in doc => ", currentUserReport);
 };
 
 const updateQuizRank = (currentQuizId) => {};
