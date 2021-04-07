@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {useContext} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 //import GoogleAuth from 'google-auth-library';
@@ -12,6 +12,8 @@ export default function Signup() {
     const router = useRouter();
 
     const [user] = useContext(AuthContext);
+
+    const [googleUser , setGoogleUser] = useState('No User');
 
     if(user!==null)
     {
@@ -66,32 +68,101 @@ export default function Signup() {
    }
 
    
-   const googleSignUp = ()=>{
+   
+
+function googleSignUp(googleUser) {
+    const body = {
+      name : googleUser.getBasicProfile().getName(),
+      email : googleUser.getBasicProfile().getEmail(),
+      role: 'user',
+      accountType : 'google',
+     }
+ 
+    console.log(body);
+
+    fetch('api/auth/signup',{
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'      
+      },
+      redirect: 'follow',
+      body : JSON.stringify(body)
+    }).then(res=>{
+      if(res.status==409)
+      { 
+        alert("User Already Exist")
+      }
+      if(res.status==401)
+      { 
+        alert("Something went wrong , Try again")
+      }
+      else
+      {
+        console.log(res);
+       //window.location.assign(res.url);
+      }
+    })  
+  }
+  
+
+
+  // function attachSignin(element,auth2) {
+  //   console.log(element.id);
+  //   auth2.attachClickHandler(element, {},
+  //       function(googleUser) {
+  //          console.log(googleUser.getBasicProfile().getName());
+  //       }, function(error) {
+  //         alert(JSON.stringify(error, undefined, 2));
+  //       });
+  // }
+
+  
+
+   useEffect(()=>{
+     if(window)
+     {
+      const script = document.createElement('script');
+      script.setAttribute( 'src', "https://apis.google.com/js/platform.js" );
+      script.async = true
+      script.defer = true
+      document.body.appendChild(script);
+ 
+      if(window.gapi){
+        gapi.load('auth2', function()
+        {
+          // Retrieve the singleton for the GoogleAuth library and set up the client.
+         let  auth2 = gapi.auth2.init({
+            client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
+            cookiepolicy: 'single_host_origin',
+            // Request scopes in addition to 'profile' and 'email'
+            //scope: 'additional_scope'
+          });
+          attachSignin(document.getElementById('gBtn'),auth2);
+        });
+      };
     
-     //googleUser
-      // var profile = googleUser.getBasicProfile();
-      // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      // console.log('Name: ' + profile.getName());
-      // console.log('Image URL: ' + profile.getImageUrl());
-      // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+      function attachSignin(element, auth2) {
+        auth2.attachClickHandler(element, {},
+            function(googleUser) {
+              googleSignUp(googleUser);
+            }, function(error) {
+            });
+       }
 
-   }
+     }
+   })
 
-
-
+ 
     return (
         <>
         <Head>
         <title>Sign Up - MUHI</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        {/* <script src="https://apis.google.com/js/platform.js" async defer></script>
-        <meta name="google-signin-client_id" content="268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com"></meta> */}
       </Head>
          <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
             <div id={style.header}>
                  <img src="imgs/svgs/muhiLogo.svg"/>
-                 <h3>Create MUHI Account</h3>
+                 <h3>Create MUHI Account </h3>
             </div>
            
             <form id={style.loginForm} onSubmit={e=>{doSignUp(e)}} >
@@ -128,12 +199,14 @@ export default function Signup() {
              <div id={style.otherOptions}>
 
              <div id={style.line}></div>  
-                <button className="blueBtn"  onClick={googleSignUp()} id={style.gBtn}>
-                    <img src="imgs/svgs/Google.svg"/>
+           
+
+                <button  id="gBtn" className="blueBtn" >
+                <img src="imgs/svgs/Google.svg"/>
                     Start with Google
                 </button>
 
-                {/* <div class="g-signin2" data-onsuccess="onSignIn"></div> */}
+                {/* <div className="g-signin2" dataOnsuccess={onSignIn}></div> */}
 
                 <p>Already have an account ? </p> 
                 <Link href="/">

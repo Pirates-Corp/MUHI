@@ -1,4 +1,4 @@
-import React,{useContext } from "react"
+import React,{useContext, useEffect } from "react"
 import Link from "next/link";
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
@@ -27,12 +27,59 @@ export default function Login() {
   if(router.asPath === "/?incorrect")
   {
     alert("Incorrect Email / Password");
+    window.location.assign('/');
   }
 
 
-  const googleLogin = async()=>{
-      
+  const googleLogin = async(googleUser)=>{
+    console.log(googleUser.tc);
+    var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+    const body = {
+
+      name : googleUser.getBasicProfile().getName(),
+      email : googleUser.getBasicProfile().getEmail(),
+      role: 'user',
+      accountType : 'google',
+     }
+     console.log(body);
+
   }
+
+
+  useEffect(()=>{
+    if(window)
+    {
+     const script = document.createElement('script');
+     script.setAttribute( 'src', "https://apis.google.com/js/platform.js" );
+     script.async = true
+     script.defer = true
+     document.body.appendChild(script);
+
+     if(window.gapi){
+       gapi.load('auth2', function()
+       {
+         // Retrieve the singleton for the GoogleAuth library and set up the client.
+        let  auth2 = gapi.auth2.init({
+           client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
+           cookiepolicy: 'single_host_origin',
+           // Request scopes in addition to 'profile' and 'email'
+           //scope: 'additional_scope'
+         });
+         attachSignin(document.getElementById('gBtn'),auth2);
+       });
+     };
+   
+     function attachSignin(element, auth2) {
+       auth2.attachClickHandler(element, {},
+           function(googleUser) {
+             googleLogin(googleUser);
+           }, function(error) {
+           });
+      }
+
+    }
+  })
 
 
   return (
@@ -70,7 +117,7 @@ export default function Login() {
 
           <div id={style.otherOptions}>
           
-             <button className="blueBtn" onClick={googleLogin} id={style.gBtn}>
+             <button className="blueBtn"  id="gBtn">
               <img src="imgs/svgs/Google.svg" />
               Continue with Google
             </button>

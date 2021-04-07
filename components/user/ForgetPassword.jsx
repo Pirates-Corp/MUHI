@@ -69,7 +69,7 @@ const ForgetPassword = () => {
       <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
           <div id={style.header}>
-            <h3>{(router.query.token)? "Set New Password" : "Forget Password"}</h3>
+            <h3>{(router.query.token)? "Create New Password" : "Forget Password"}</h3>
           </div>
 
           {router.query.token ? (
