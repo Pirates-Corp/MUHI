@@ -1,42 +1,39 @@
 import QuizResultCard from "../../components/user/Quiz/QuizResultCardComponent";
 import CenterLayout from "../../components/Layouts/CenterLayout.jsx";
-export default function quiztopic({ props }) {
+import { useEffect, useState } from "react";
+export default function quiztopic() {
+
+  const [quizData,setQuizData] = useState({})
+
+  const [userId,setUserId] = useState(null)
+
+  useEffect(()=>{
+    const quizDataInLocalStorage = localStorage.getItem("currentQuiz")
+    const userDataInLocalStorage = localStorage.getItem("userId")
+    if(JSON.stringify(quizData) !== JSON.stringify(quizDataInLocalStorage)) setQuizData(JSON.parse(quizDataInLocalStorage))
+    if(JSON.stringify(userId) !== JSON.stringify(userDataInLocalStorage)) setUserId(JSON.parse(userDataInLocalStorage))
+  })
+
+  const syllabus = {}
+
+  let marksTaken = 0
+
+  let totalMarks = quizData.hasOwnProperty('questions') ? quizData.questions.length : 0
+
+  if(quizData.hasOwnProperty('questions')) {
+    quizData.questions.map((question) => {
+      syllabus[question.chapter + " - " + question.section] = question.syllabus;
+      if(question.answer === question.correctAnswer) {
+        marksTaken+=1
+      }
+    })
+  }
+
+  totalMarks = totalMarks > 0 ? marksTaken+"/"+totalMarks : ""
+
   return (
     <CenterLayout>
-      <QuizResultCard props={props} />
+      <QuizResultCard props={{syllabus,totalMarks,userId}} />
     </CenterLayout>
   );
 }
-
-quiztopic.getInitialProps = async (ctx) => {
-  let userReport, quizData;
-  const cookie = ctx.req ? ctx.req.headers.cookie : null;
-  try {
-    const report = await fetch(
-      "http://localhost:3000/api/db/report/" +
-        ctx.query.userId +
-        "/reports/" +
-        ctx.query.quizId,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json", cookie },
-      }
-    );
-
-    const quiz = await fetch(
-      "http://localhost:3000/api/db/quiz/" + ctx.query.quizId,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json", cookie },
-      }
-    );
-    userReport = await report.json();
-    userReport = userReport ? userReport : null;
-    quizData = await quiz.json();
-    quizData = quizData ? quizData : null;
-  } catch (err) {
-    console.error(err);
-  }
-
-  return { props: { userReport, quizData, userId: ctx.query.userId } };
-};

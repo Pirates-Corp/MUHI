@@ -1017,11 +1017,12 @@ const getDoc = async (req) => {
     const documentId = decodeURIComponent(req.query?.document)
         .trim()
         .toLowerCase();
-    if (
-      constants.collectionMap.quiz.collectionName ===
+        const isUnAuthData = constants.collectionMap.quiz.collectionName ===
         collectionDetails.collectionName ||
       (constants.collectionMap.report.collectionName ===
-        collectionDetails.collectionName && documentId.includes('male.com')) ||
+        collectionDetails.collectionName && documentId.includes('male.com'))
+    if (
+       isUnAuthData ||
       (authResult && authResult[0] === 200)
     ) {
       if (
@@ -1073,7 +1074,7 @@ const getDoc = async (req) => {
             } else if (
               collectionDetails.collectionName ===
                 constants.collectionMap.quiz.collectionName &&
-              constants.roles.user === authResult[1].role
+              constants.roles.user === authResult[1].role && !isUnAuthData
             ) {
               document.questions.map((question) => {
                 delete question.correctAnswer;
