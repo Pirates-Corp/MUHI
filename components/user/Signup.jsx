@@ -74,7 +74,7 @@ function googleSignUp(googleUser) {
     const body = {
       name : googleUser.getBasicProfile().getName(),
       email : googleUser.getBasicProfile().getEmail(),
-      password : googleUser.getBasicProfile().getEmail() + "MUHI" ,
+      password : googleUser.getBasicProfile().getEmail() + "@muhi",
       role: 'user',
       accountType : 'muhi',
      }

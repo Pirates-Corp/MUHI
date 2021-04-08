@@ -39,7 +39,7 @@ export default function Login() {
 
       
       id : googleUser.getBasicProfile().getEmail(),
-      password :  googleUser.getBasicProfile().getEmail() + "MUHI",
+      password :  googleUser.getBasicProfile().getEmail() + "@muhi",
      
      }
      console.log(body);
@@ -95,6 +95,7 @@ export default function Login() {
              googleLogin(googleUser);
            }, function(error) {
              console.log("Error====>"+JSON.stringify(error));
+             
            });
       }
 
