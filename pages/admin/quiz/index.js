@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import PrimaryHeading from "../../../components/common/Header/PrimaryHeading";
 import BaseLayout from '../../../components/Layouts/BaseLayout.jsx';
@@ -12,6 +12,7 @@ export default function quizzes(props) {
  const [QuizInformationCardData , setQuizInformationCardData] = useState([]);
  
  let allQuiz = [];
+ let quizTags = [];
 
  props.props.map((quiz)=>{
 
@@ -63,8 +64,15 @@ export default function quizzes(props) {
      }
 
      allQuiz.push(item)
+     quizTags.push(quiz.quizTag.split('-')[2]);
+
   })
   
+
+  useEffect(()=>{
+    localStorage.setItem('QuizTag',JSON.stringify(quizTags));
+  })
+
 
   const creatQuiz=(e)=>{
     e.preventDefault();
@@ -111,9 +119,7 @@ quizzes.getInitialProps = async (ctx) => {
 
 
   let allQuiz;
-  
-   
-    allQuiz = await quizRes.json();
+  allQuiz = await quizRes.json();
     
   
   return { props: allQuiz };

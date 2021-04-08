@@ -4,6 +4,7 @@ import PrimaryHeader from "../../common/Header/PrimaryHeading";
 import style from "../../user/Quiz/QuizTopicCardComponent.module.scss";
 
 const QuizTopicCardComponent = ({ props }) => {
+  console.log(props.quizData);
   const quizArray = props.quizData ? props.quizData : [];
   const currentUser = props.currentUser;
   const router = useRouter();
@@ -85,7 +86,7 @@ const QuizTopicCardComponent = ({ props }) => {
               </li>
             </ul>
             <div id={style.quizBtnHolder}>
-              {isCompleted(quiz) ? (
+              {isCompleted(quiz)  ? (
                 <Link href="#">
                   <a
                     className={style.quizBtn}

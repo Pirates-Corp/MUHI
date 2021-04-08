@@ -12,6 +12,7 @@ const QuizDataForm = () => {
 
     const router = useRouter();
     const Quiz = { };
+    let tagsArray = [];
 
     Quiz.data = null;
 
@@ -34,6 +35,7 @@ const QuizDataForm = () => {
   
     useEffect(()=>{
 
+    tagsArray = JSON.parse(localStorage.getItem('QuizTag'));
       document.getElementById("endTime").disabled = true;
         
       if(!(Quiz.data===null))
@@ -78,7 +80,7 @@ const QuizDataForm = () => {
     ":" +
     new Date().toISOString().split(":")[1];
     
-    let tagsArray = ["Basic","Advance","Intermediate","Advance2"];
+   
 
      
     const showSuggestion = (e)=>

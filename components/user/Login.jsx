@@ -32,17 +32,36 @@ export default function Login() {
 
 
   const googleLogin = async(googleUser)=>{
-    console.log(googleUser.tc);
-    var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
+    // console.log(googleUser.tc);
+    // var id_token = googleUser.getAuthResponse().id_token;
+    //     console.log("ID Token: " + id_token);
     const body = {
 
-      name : googleUser.getBasicProfile().getName(),
-      email : googleUser.getBasicProfile().getEmail(),
-      role: 'user',
-      accountType : 'google',
+      
+      id : googleUser.getBasicProfile().getEmail(),
+      password :  googleUser.getBasicProfile().getEmail() + "MUHI",
+     
      }
      console.log(body);
+     fetch('/api/auth/login',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'      
+      },
+      redirect: 'follow',
+      body : JSON.stringify(body)
+    }).then(res=>{
+      if(res.status==400)
+      { 
+        alert("User Doesn't Exist")
+      }
+      else
+      {
+        console.log(res);
+       window.location.assign(res.url);
+      }
+    })  
+
 
   }
 
@@ -75,6 +94,7 @@ export default function Login() {
            function(googleUser) {
              googleLogin(googleUser);
            }, function(error) {
+             console.log("Error====>"+JSON.stringify(error));
            });
       }
 

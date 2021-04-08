@@ -74,8 +74,9 @@ function googleSignUp(googleUser) {
     const body = {
       name : googleUser.getBasicProfile().getName(),
       email : googleUser.getBasicProfile().getEmail(),
+      password : googleUser.getBasicProfile().getEmail() + "MUHI" ,
       role: 'user',
-      accountType : 'google',
+      accountType : 'muhi',
      }
  
     console.log(body);
@@ -99,7 +100,7 @@ function googleSignUp(googleUser) {
       else
       {
         console.log(res);
-       //window.location.assign(res.url);
+       window.location.assign(res.url);
       }
     })  
   }

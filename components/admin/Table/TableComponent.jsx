@@ -56,7 +56,7 @@ const TableComponent = (props) => {
             }
           }
        })
-        if(row.length!==0)
+        if(row.length!==0 && row.length>=5)
         {
           allStudents.push(row);
         }
@@ -436,7 +436,7 @@ const TableComponent = (props) => {
                 {arr.slice(0, arr.length - 1).map((e) => (
                   <p>{e}</p>
                 ))}
-
+                   {console.log(arr)}
                 <button style={{"font-size":"1rem"}} className={((arr[arr.length - 1].split('-')[1]=='suspend')?"green":buttonColor)+"Btn"} onClick={()=>onButtonAction(arr[arr.length - 1],    arr[0]   ,(arr[arr.length - 1].split('-')[1]=='suspend')?"Allow":buttonText)}>
                     {(arr[arr.length - 1].split('-')[1]=='suspend')?"Active":buttonText}  
                 </button>

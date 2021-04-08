@@ -187,7 +187,7 @@ export const signup = async (httpReq, httpRes) => {
             ? userDetails.name
             : userDetails.email
         ).toLowerCase();
-        userDetails.mobileNo = userDetails.mobileNo;
+        userDetails.mobileNo = userDetails.mobileNo ? userDetails.mobileNo : '+91 xxxxx xxxxx';
         userDetails.role = new String(userDetails.role).toLowerCase();
         userDetails.state = new String(
           userDetails.state ? userDetails.state : "active"

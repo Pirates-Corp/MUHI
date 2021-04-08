@@ -19,20 +19,15 @@ const OpenQuiz = () => {
             } catch (err) {
               console.error("Error in openQuiz useEffect =>" + err);
             }
-            console.log(quizData);
-
-            // quizData.map(quiz=>{
-            //     if(quiz.quizTag.split('-')[0].toLowerCase() === 'open')
-            //     {
-            //         console.log(quiz);
-            //     }
-            // })
+          
+            setOpenQuizData({quizData:  quizData})
+          
     },[])
+    
 
     return(
      <CenterLayout>
-         <PrimaryHeader heading="MUHI quiz" />
-           {/* <QuizTopicCard props={props} /> */}
+           <QuizTopicCard props={openQuizData} />
      </CenterLayout>
     )
 }

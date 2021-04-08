@@ -12,7 +12,7 @@ const BaseLayout = ({children}) =>
 
    if(user === null  )
    {
-    // router.push('/')
+     router.push('/')
    }
 
    if(user)
@@ -23,7 +23,7 @@ const BaseLayout = ({children}) =>
      }
    }
    else{
-    // router.push('/');
+    router.push('/');
    }
    
 

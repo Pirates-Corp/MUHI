@@ -4,6 +4,9 @@ import Propass from "../../components/Layouts/PropPass";
 import { useEffect, useState } from "react";
 
 function quiztopic({ props }) {
+ 
+  console.log(props);
+
   return (
     <BaseLayout>
       <Propass type="user" />
