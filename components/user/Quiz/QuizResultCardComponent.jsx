@@ -1,7 +1,10 @@
 import Link from "next/link";
+import {useRouter} from 'next/router'
 import style from "../../user/Quiz/QuizResultCardComponent.module.scss";
 const QuizResultCard = ({ props }) => {
   // const syllabus = {};
+
+  const router = useRouter();
 
   // if (props.userReport != undefined) {
   //   props.userReport.report.map((report) => {
@@ -15,6 +18,11 @@ const QuizResultCard = ({ props }) => {
   //     }
   //   });
   // }
+  
+  const closeBtn = () =>{
+     localStorage.clear();
+     router.push('/');
+  }
 
   return (
     <>
@@ -60,9 +68,9 @@ const QuizResultCard = ({ props }) => {
             )}
 
             <div id={style.btnHolder}>
-              <Link href="/">
-                <a className="redBtn">Close</a>
-              </Link>
+              <button className="redBtn" onClick={closeBtn}>
+                 Close
+              </button>
             </div>
           </div>
         </div>

@@ -17,11 +17,11 @@ export default function quiztopic({ props }) {
     });
   }
 
-  const totalMarks = quizData.quizTag.split("-")[1].toLowerCase().trim() === "true" ? totalMark=props.userReport.score.taken +"/" +props.userReport.score.total : "";
-
+  const totalMarks =  props.quizData && props.quizData.quizTag.split("-")[1].toLowerCase().trim() === "true"  ? totalMark=props.userReport.score.taken +"/" +props.userReport.score.total : "";
+  const userId = props.userId;
   return (
     <CenterLayout>
-      <QuizResultCard props={{syllabus,totalMarks,userId = props.userId}} />
+      <QuizResultCard props={{syllabus,totalMarks,userId}} />
     </CenterLayout>
   );
 }
