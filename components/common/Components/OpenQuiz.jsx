@@ -5,6 +5,7 @@ import PrimaryHeader from '../Header/PrimaryHeading';
 
 const OpenQuiz = () => {
     let quizData;
+    let isQuizOpen = true
     const [openQuizData , setOpenQuizData] = useState([])
 
     useEffect(async()=>{
@@ -23,11 +24,10 @@ const OpenQuiz = () => {
             setOpenQuizData({quizData:  quizData})
           
     },[])
-    
 
     return(
      <CenterLayout>
-           <QuizTopicCard props={openQuizData} />
+           <QuizTopicCard props={{...openQuizData,isQuizOpen }} />
      </CenterLayout>
     )
 }

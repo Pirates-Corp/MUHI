@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 export default function takequiz({ props }) {
+  let isQuizOpen = false
   return (
     <CenterLayout>
-      <QuizTaking props={props} />
+      <QuizTaking props={{...props,isQuizOpen}} />
     </CenterLayout>
   );
 }

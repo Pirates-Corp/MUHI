@@ -8,7 +8,7 @@ const QuizTopicCardComponent = ({ props }) => {
   const quizArray = props.quizData ? props.quizData : [];
   const currentUser = props.currentUser;
   const router = useRouter();
-  if(currentUser === null) {
+  if (currentUser === null) {
     // router.push("localhost:3000")
   }
   const currentUserReport = props.currentUserReport
@@ -26,7 +26,7 @@ const QuizTopicCardComponent = ({ props }) => {
 
   const isCompleted = (quiz) => {
     let result = false;
-    if(currentUserReport.reports) {
+    if (currentUserReport.reports) {
       currentUserReport.reports.map((report) => {
         if (report.id === quiz._id) {
           result = report.status === 1;
@@ -63,56 +63,61 @@ const QuizTopicCardComponent = ({ props }) => {
     <>
       <PrimaryHeader heading="MUHI Quiz" />
       <div id={style.quizCardsHolder}>
-        {quizArray.map((quiz, index) => (
-          quiz.schedule.startTime < Date.now() && quiz.schedule.endTime > Date.now() && quiz.state==="Active" ? (
+        {quizArray.map((quiz, index) =>
+          quiz.schedule.startTime < Date.now() &&
+          quiz.schedule.endTime > Date.now() &&
+          quiz.state === "Active" ? (
             <div className={style.quizCard}>
-            <h2>{quiz.title}</h2>
-            <ul>
-              <li>
-                <img src="imgs/svgs/TimeW.svg" alt="" />
-                <p>{`${parseInt(quiz.duration / 60)} Mins`}</p>
-              </li>
-              <li>
-                <img src="imgs/svgs/FileW.svg" alt="" />
-                <p>{`${quiz.questions.length} Questions`}</p>
-              </li>
-              {/* <li>
+              <h2>{quiz.title}</h2>
+              <ul>
+                <li>
+                  <img src="imgs/svgs/TimeW.svg" alt="" />
+                  <p>{`${parseInt(quiz.duration / 60)} Mins`}</p>
+                </li>
+                <li>
+                  <img src="imgs/svgs/FileW.svg" alt="" />
+                  <p>{`${quiz.questions.length} Questions`}</p>
+                </li>
+                {/* <li>
             <img src="imgs/svgs/EndDateW.svg" alt="" />
             <p>Start Time : {getDateString(quiz.schedule.startTime)}</p>
           </li> */}
-              <li>
-                <img src="imgs/svgs/EndDateW.svg" alt="" />
-                <p>End Time : {getDateString(quiz.schedule.endTime)}</p>
-              </li>
-            </ul>
-            <div id={style.quizBtnHolder}>
-              {isCompleted(quiz)  ? (
-                <Link href="#">
-                  <a
-                    className={style.quizBtn}
-                    style={{
-                      background: "var(--white)",
-                      color: "var(--primary)",
+                <li>
+                  <img src="imgs/svgs/EndDateW.svg" alt="" />
+                  <p>End Time : {getDateString(quiz.schedule.endTime)}</p>
+                </li>
+              </ul>
+              <div id={style.quizBtnHolder}>
+                {isCompleted(quiz) ? (
+                  <Link href="#">
+                    <a
+                      className={style.quizBtn}
+                      style={{
+                        background: "var(--white)",
+                        color: "var(--primary)",
+                      }}
+                    >
+                      Completed
+                    </a>
+                  </Link>
+                ) : (
+                  <Link
+                    href={{
+                      pathname: (props.isQuizOpen && props.isQuizOpen === true) ? "openquiz/" + quiz.title: "quiz/" + quiz.title,
+                      query: {
+                        questionId: 0,
+                      },
                     }}
                   >
-                    Completed
-                  </a>
-                </Link>
-              ) : (
-                <Link
-                  href={{
-                    pathname: "quiz/" + quiz.title,
-                    query: {
-                      questionId: 0,
-                    },
-                  }}
-                >
-                  <a className={style.quizBtn}>Take Quiz</a>
-                </Link>
-              )}
+                    <a className={style.quizBtn}>Take Quiz</a>
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>   ) :("")
-        ))}
+          ) : (
+            ""
+          )
+        )}
       </div>
     </>
   );

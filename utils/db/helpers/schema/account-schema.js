@@ -20,7 +20,6 @@ export const accountSchema = {
         bsonType: 'string',
       },
       email: {
-        minLength: 10,
         maxLength: 60,
         bsonType: 'string'
       },
