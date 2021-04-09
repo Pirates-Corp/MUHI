@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
@@ -88,10 +88,44 @@ export default function AdminSideBar(props) {
 
   const [user] = useContext(AuthContext);
 
+
+  useEffect(()=>{
+    if(window)
+    {
+     const script = document.createElement('script');
+     script.setAttribute( 'src', "https://apis.google.com/js/platform.js" );
+     script.async = true
+     script.defer = true
+     document.body.appendChild(script);
+    }
+  },[])
  
 
     const logout = async (e)=>{
      e.preventDefault();
+    
+ 
+    //  if(window)
+    //  {
+    //   if(window.gapi){
+    //     gapi.load('auth2', function()
+    //     {
+    //       // Retrieve the singleton for the GoogleAuth library and set up the client.
+    //      let  auth2 = gapi.auth2.init({
+    //         client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
+    //         cookiepolicy: 'single_host_origin',
+    //         // Request scopes in addition to 'profile' and 'email'
+    //         //scope: 'additional_scope'
+    //       });
+    //     }
+    //    var auth2 = window.gapi.auth2.getAuthInstance();
+    //    auth2.signOut().then(function () {
+    //      console.log('User signed out.');
+    //    });
+    //  }
+    // }
+
+
       let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
       if(logRes.status===200)
       {

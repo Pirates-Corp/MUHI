@@ -12,13 +12,13 @@ export default function quiztopic() {
     const userDataInLocalStorage = localStorage.getItem("userId")
     if(JSON.stringify(quizData) !== JSON.stringify(quizDataInLocalStorage)) setQuizData(JSON.parse(quizDataInLocalStorage))
     if(JSON.stringify(userId) !== JSON.stringify(userDataInLocalStorage)) setUserId(JSON.parse(userDataInLocalStorage))
-  })
+  },[])
 
   const syllabus = {}
 
   let marksTaken = 0
 
-  let totalMarks = quizData.hasOwnProperty('questions') ? quizData.questions.length : 0
+  let totalMarks = quizData.hasOwnProperty('questions') || quizData==null ? quizData.questions.length : 0
 
   if(quizData.hasOwnProperty('questions')) {
     quizData.questions.map((question) => {
