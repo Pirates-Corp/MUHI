@@ -10,10 +10,14 @@ const OpenQuizAlert = ({props}) => {
 
   const collectOpenQuizStudentData = (e)=>{
     e.preventDefault();
-    const student = e.currentTarget.name.value+"@"+ `${(document.getElementsByName('gender')[0].checked) ? ("male") : ("female")}`+".com";
+    const studentname = e.currentTarget.name.value
+    const studentGender = (document.getElementsByName('gender')[0].checked) ? ("male") : ("female")
+    const student = {
+      name : studentname,
+      gender : studentGender
+    }
     localStorage.setItem("Student",JSON.stringify(student))
     props.setStarted(0);
-    
   }
 
   return (

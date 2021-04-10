@@ -168,12 +168,12 @@ export const handleDocumentInsert = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentReceived = req.body;
       const collectionDetails = constants.collectionMap[collection];
+      const isUnauthOperation =  (collectionDetails.collectionName ===
+        constants.collectionMap.report.collectionName &&
+        documentReceived.id.includes("male.com")) || collectionDetails.collectionName ===
+        constants.collectionMap.auser.collectionName
       if (
-        (authResult && authResult[0] === 200) ||
-        (collectionDetails.collectionName ===
-          constants.collectionMap.report.collectionName &&
-          documentReceived.id.includes("male.com"))
-      ) {
+        (authResult && authResult[0] === 200) || isUnauthOperation ) {
         if (
           collectionDetails.collectionName ===
             constants.collectionMap.user.collectionName ||
@@ -220,10 +220,14 @@ export const handleDocumentDelete = async (req, res) => {
       resBody = "Invalid request";
     } else {
       const authResult = await authenticate(req);
-      if (authResult && authResult[0] === 200) {
-        const collection = decodeURIComponent(req.query?.collection);
-        const documentId = decodeURIComponent(req.query?.document);
-        const collectionDetails = constants.collectionMap[collection];
+      const collection = decodeURIComponent(req.query?.collection);
+      const documentId = decodeURIComponent(req.query?.document);
+      const collectionDetails = constants.collectionMap[collection];
+      const isUnauthOperation =  (collectionDetails.collectionName ===
+        constants.collectionMap.report.collectionName &&
+        documentReceived.id.includes("male.com")) || collectionDetails.collectionName ===
+        constants.collectionMap.auser.collectionName
+      if ((authResult && authResult[0] === 200) || isUnauthOperation) {
         if (
           (authResult[1].role === constants.roles.moderator &&
             collectionDetails.collectionName ===
@@ -1240,7 +1244,10 @@ const insertDoc = async (collectionDetails, doc) => {
       ) {
         mongoDocument._id = new String(doc.id).toLowerCase();
         delete doc.id;
-      } else {
+      } else if( collectionDetails.collectionName ===
+        constants.collectionMap.newsletter.collectionName ||
+      collectionDetails.collectionName ===
+        constants.collectionMap.quiz.collectionName){
         mongoDocument._id = new String(doc.title).toLowerCase();
       }
       mongoDocument = { ...mongoDocument, ...doc };

@@ -2,6 +2,7 @@ import { accountSchema } from "./db/helpers/schema/account-schema";
 import { quizSchema } from "./db/helpers/schema/quiz-schema";
 import { reportSchema } from "./db/helpers/schema/report-schema";
 import { newsLetterSchema } from "./db/helpers/schema/newsletter-schema";
+import { anonymousUserSchema } from "./db/helpers/schema/anonymous-user-schema";
 
 export const constants = {
   roles: {
@@ -25,6 +26,10 @@ export const constants = {
     report: {
       collectionName: process.env.reportsCollection,
       schema: reportSchema,
+    },
+    auser : {
+      collectionName: process.env.anonymousUserCollection,
+      schema: anonymousUserSchema,
     },
   },
 };

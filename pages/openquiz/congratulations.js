@@ -5,13 +5,13 @@ export default function quiztopic() {
 
   const [quizData,setQuizData] = useState({})
 
-  const [userId,setUserId] = useState(null)
+  const [studentData,setUserData] = useState(null)
 
   useEffect(()=>{
     const quizDataInLocalStorage = localStorage.getItem("currentQuiz")
-    const userDataInLocalStorage = localStorage.getItem("userId")
+    const userDataInLocalStorage = localStorage.getItem("Student")
     if(JSON.stringify(quizData) !== JSON.stringify(quizDataInLocalStorage)) setQuizData(JSON.parse(quizDataInLocalStorage))
-    if(JSON.stringify(userId) !== JSON.stringify(userDataInLocalStorage)) setUserId(JSON.parse(userDataInLocalStorage))
+    if(JSON.stringify(studentData) !== JSON.stringify(userDataInLocalStorage))  setUserData(JSON.parse(userDataInLocalStorage))
   },[])
 
   const syllabus = {}
@@ -27,13 +27,22 @@ export default function quiztopic() {
         marksTaken+=1
       }
     })
+    let studentReport = studentData
+    studentReport.score = marksTaken
+    fetch(`/api/db/auser/add`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(studentReport)
+    }).then(res => {
+      if(res.status === 201) console.log("Anonymose user data successfully pushed into DB");
+    });
   }
 
   totalMarks = totalMarks > 0 ? marksTaken+"/"+totalMarks : ""
 
   return (
     <CenterLayout>
-      <QuizResultCard props={{syllabus,totalMarks,userId}} />
+      <QuizResultCard props={{syllabus,totalMarks,userId : (studentData) ? studentData.name:""}} />
     </CenterLayout>
   );
 }
