@@ -67,6 +67,8 @@ export const handleDocumentReadAll = async (req, res) => {
       if (
         collectionDetails.collectionName ===
           constants.collectionMap.quiz.collectionName ||
+          collectionDetails.collectionName ===
+          constants.collectionMap.auser.collectionName ||
         (result && result[0] === 200)
       ) {
         if (
