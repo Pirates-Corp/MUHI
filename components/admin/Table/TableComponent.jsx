@@ -21,7 +21,7 @@ const TableComponent = (props) => {
  
  
   //Quiz List
-  if(tableData.length==0)
+  if(tableData == null)
   {
     apiData.allQuiz.map((quiz) => {
       QuizList.push(quiz.title);
@@ -69,14 +69,14 @@ const TableComponent = (props) => {
 
   const [tableCol, setTableCol] = React.useState(col);
   const [quizListState, setQuizListState] = React.useState(QuizList);
-  const [viewColNames, setViewColName] = React.useState(tableData.length == 0 ? studentCol : colNames);
-  const [exportHeader, setExportHeader] = React.useState((tableData.length==0) ?"All students" : "tableDataExport");
-  const [rawTableData, setRawTableData] = React.useState((tableData.length==0) ? initialStudentsData() : tableData);
-  const [viewData, setViewData] = React.useState( (tableData.length==0) ? rawTableData  : tableData);
+  const [viewColNames, setViewColName] = React.useState(tableData == null ? studentCol : colNames);
+  const [exportHeader, setExportHeader] = React.useState((tableData == null) ?"All students" : "tableDataExport");
+  const [rawTableData, setRawTableData] = React.useState((tableData == null) ? initialStudentsData() : tableData);
+  const [viewData, setViewData] = React.useState( (tableData == null) ? rawTableData  : tableData);
 
   useEffect(() => {
 
-    if(tableData.length==0)
+    if(tableData==null)
     {
       setViewData(rawTableData)
     }
@@ -133,7 +133,10 @@ const TableComponent = (props) => {
                       row.push(student.email);
                     }
                  })
+                 if(row.length!==0 && row.length>=5)
+                 {
                  studentData.push(row);
+                 }
                }
              })
          })

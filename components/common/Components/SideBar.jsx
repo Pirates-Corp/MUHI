@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import Head from 'next/head'
 import { AuthContext } from "../../context/AuthContext";
 import style from "../../common/Components/SideBar.module.scss";
 
@@ -92,38 +93,34 @@ export default function AdminSideBar(props) {
   useEffect(()=>{
     if(window)
     {
-     const script = document.createElement('script');
-     script.setAttribute( 'src', "https://apis.google.com/js/platform.js" );
-     script.async = true
-     script.defer = true
-     document.body.appendChild(script);
+     
+     if(window.gapi)
+     {
+       // Retrieve the singleton for the GoogleAuth library and set up the client.
+       window.gapi.load('auth2',()=>{
+        window.gapi.auth2.init({
+           client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
+           cookiepolicy: 'single_host_origin',
+           // Request scopes in addition to 'profile' and 'email'
+           //scope: 'additional_scope'
+         });
+       })
+     }
     }
+
+    
   },[])
  
 
     const logout = async (e)=>{
      e.preventDefault();
-    
- 
-    //  if(window)
-    //  {
-    //   if(window.gapi){
-    //     gapi.load('auth2', function()
-    //     {
-    //       // Retrieve the singleton for the GoogleAuth library and set up the client.
-    //      let  auth2 = gapi.auth2.init({
-    //         client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
-    //         cookiepolicy: 'single_host_origin',
-    //         // Request scopes in addition to 'profile' and 'email'
-    //         //scope: 'additional_scope'
-    //       });
-    //     }
-    //    var auth2 = window.gapi.auth2.getAuthInstance();
-    //    auth2.signOut().then(function () {
-    //      console.log('User signed out.');
-    //    });
-    //  }
-    // }
+  
+
+     let auth2 = window.gapi.auth2.getAuthInstance();
+     auth2.signOut().then(function () {
+       console.log('User signed out.');
+     });
+       
 
 
       let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
@@ -147,7 +144,11 @@ export default function AdminSideBar(props) {
     cssStyle = (props.type == "user") ? {"--height" : "32vh","--holder-height":"340px" ,"--background":"#286da9","--activeBackground":"#4ca2ee" }
                                         :{"--height" : "25vh","--holder-height":"460px","--background":"#343131","--activeBackground":"#7a7979" };
     return(
-        <div>
+        <>
+           <Head>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    </Head>
+
             <div id={style.nav} >
                 <input id="check-box" className={style.checkBox} type="checkbox" />
                 <label htmlFor="check-box" >
@@ -198,6 +199,6 @@ export default function AdminSideBar(props) {
           </label>
         </ul>
       </div>
-    </div>
+    </>
   );
 }

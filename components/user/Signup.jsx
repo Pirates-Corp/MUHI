@@ -92,6 +92,7 @@ function googleSignUp(googleUser) {
       if(res.status==409)
       { 
         alert("User Already Exist")
+        return
       }
       if(res.status==401)
       { 
@@ -122,17 +123,11 @@ function googleSignUp(googleUser) {
    useEffect(()=>{
      if(window)
      {
-      const script = document.createElement('script');
-      script.setAttribute( 'src', "https://apis.google.com/js/platform.js" );
-      script.async = true
-      script.defer = true
-      document.body.appendChild(script);
- 
       if(window.gapi){
         gapi.load('auth2', function()
         {
-          // Retrieve the singleton for the GoogleAuth library and set up the client.
-         let  auth2 = gapi.auth2.init({
+            // Retrieve the singleton for the GoogleAuth library and set up the client.
+            let  auth2 = gapi.auth2.init({
             client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
             cookiepolicy: 'single_host_origin',
             // Request scopes in addition to 'profile' and 'email'
@@ -158,7 +153,9 @@ function googleSignUp(googleUser) {
         <>
         <Head>
         <title>Sign Up - MUHI</title>
-      </Head>
+          <script src="https://apis.google.com/js/platform.js" async defer></script>
+        </Head>
+
          <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
             <div id={style.header}>

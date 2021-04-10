@@ -17,7 +17,7 @@ export default function quiztopic({ props }) {
     });
   }
 
-  const totalMarks =  props.quizData && props.quizData.quizTag.split("-")[1].toLowerCase().trim() === "true"  ? totalMark=props.userReport.score.taken +"/" +props.userReport.score.total : "";
+  const totalMarks =  props.quizData && props.quizData.quizTag.split("-")[1].toLowerCase().trim() === "false"  ? props.userReport.score.taken +"/" +props.userReport.score.total : "";
   const userId = props.userId;
   return (
     <CenterLayout>

@@ -1,10 +1,12 @@
 import Link from "next/link";
 import {useRouter} from 'next/router'
+import { useEffect, useState } from "react";
 import style from "../../user/Quiz/QuizResultCardComponent.module.scss";
 const QuizResultCard = ({ props }) => {
   // const syllabus = {};
 
   const router = useRouter();
+  const [studentName , setStudentName] = useState(' ');
 
   // if (props.userReport != undefined) {
   //   props.userReport.report.map((report) => {
@@ -18,10 +20,26 @@ const QuizResultCard = ({ props }) => {
   //     }
   //   });
   // }
+
+  useEffect(()=>{
+    if(localStorage.getItem('Student')!==null)
+    {
+      setStudentName(JSON.parse(localStorage.getItem('Student')).split('@')[0])
+    }
+
+  },[])
   
   const closeBtn = () =>{
      localStorage.clear();
-     router.push('/');
+
+     if(router.pathname.startsWith('/quiz'))
+     {
+       router.push('/quiz');
+     }
+     else
+     {
+      router.push('/');
+     }
   }
 
   return (
@@ -33,12 +51,29 @@ const QuizResultCard = ({ props }) => {
           </div>
 
           <div id={style.msg}>
-            <p>
-              We have sent you the syllabus as a mail to{" "}
-              <Link href="#">
-                <a>{props.userId}</a>
-              </Link>
-            </p>
+
+            {
+              (router.pathname.startsWith('/quiz')) ? 
+              (
+              <p>
+                  We have sent you the syllabus as a mail to{" "}
+                  <Link href="#">
+                    <a>{props.userId}</a>
+                  </Link>
+              </p>
+              ) :
+              (<>
+                <p> Thanks for taking this Quiz, {studentName} </p>
+                <p>
+                  To keep track your quiz prograss , Join Now by 
+                  
+                    <a href="/signup"> Signing up</a>
+                
+              </p>
+              </>
+              )
+            }
+            
           </div>
 
           <div id={style.syllabus}>

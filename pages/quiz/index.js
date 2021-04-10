@@ -6,6 +6,13 @@ import { useEffect, useState } from "react";
 function quiztopic({ props }) {
  
   console.log(props);
+ 
+
+  useEffect(()=>{
+    sessionStorage.clear();
+    localStorage.clear();
+  },[])
+
 
   return (
     <BaseLayout>

@@ -2,6 +2,7 @@ module.exports = {
   env: {
     nodeEnv: "development",
     domainUrl : "https://localhost:3000",
+    googleAuthId : "268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com",
     dbUser: "muhi",
     dbPass: "muhi.org",
     dbHost: "quiz.manng.mongodb.net",

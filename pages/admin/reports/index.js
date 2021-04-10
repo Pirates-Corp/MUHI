@@ -19,7 +19,7 @@ export default function studentReport({props}) {
           colNames={[]}
           buttonColor="blue"
           buttonText="View"
-          tableData={[]}
+          tableData={null}
           apiData={props}
           feature={{
             search : true,

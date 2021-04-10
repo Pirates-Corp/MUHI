@@ -40,14 +40,16 @@ const Timer = ({ props }) => {
             "Quiz is about to start. Kindly click ok to start"
           );
           if (isStarted) {
-            localStorage.setItem('startedVal', JSON.stringify(0))
             setStarted(0);
+            localStorage.setItem('startedVal', JSON.stringify(0))
           } else {
             router.push("/quiz");
+        
           }
         } 
         else {
           router.push("/quiz");
+   
         }
     }
 
@@ -88,7 +90,7 @@ const Timer = ({ props }) => {
         </p>
       </div>
       {
-        (started==-1) ?
+        (started==-1 && router.pathname.startsWith('/openquiz') ) ?
         (<OpenQuizAlert  props={{started,setStarted}}/>):
         ""
       }

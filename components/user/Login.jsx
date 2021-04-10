@@ -1,5 +1,6 @@
 import React,{useContext, useEffect } from "react"
 import Link from "next/link";
+import Head from 'next/head'
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
 import {AuthContext} from '../context/AuthContext'
@@ -69,18 +70,12 @@ export default function Login() {
   useEffect(()=>{
     if(window)
     {
-     const script = document.createElement('script');
-     script.setAttribute( 'src', "https://apis.google.com/js/platform.js" );
-     script.async = true
-     script.defer = true
-     document.body.appendChild(script);
-
      if(window.gapi){
        gapi.load('auth2', function()
        {
          // Retrieve the singleton for the GoogleAuth library and set up the client.
         let  auth2 = gapi.auth2.init({
-           client_id: '268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com',
+           client_id: "268288424375-nqcjflopnej8ihc781orbprr9rjdg0ii.apps.googleusercontent.com",
            cookiepolicy: 'single_host_origin',
            // Request scopes in addition to 'profile' and 'email'
            //scope: 'additional_scope'
@@ -105,6 +100,9 @@ export default function Login() {
 
   return (
     <>
+    <Head>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    </Head>
     
       <div id={style.loginBox}>
         <div id={style.loginInnerBox}>
