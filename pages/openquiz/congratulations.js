@@ -27,8 +27,9 @@ export default function quiztopic() {
         marksTaken+=1
       }
     })
-    let studentReport = studentData
+    let studentReport = {...studentData}
     studentReport.score = marksTaken
+    studentReport.addedTime = Date.now()
     fetch(`/api/db/auser/add`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
