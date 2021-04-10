@@ -6,7 +6,7 @@ const QuizResultCard = ({ props }) => {
   // const syllabus = {};
 
   const router = useRouter();
-  const [studentName, setStudentName] = useState("");
+  // const [studentName, setStudentName] = useState("");
 
   // if (props.userReport != undefined) {
   //   props.userReport.report.map((report) => {
@@ -21,21 +21,21 @@ const QuizResultCard = ({ props }) => {
   //   });
   // }
 
-  useEffect(() => {
-    let studentDataInCache = localStorage.getItem("Student")
-    if ( studentDataInCache!== null) {
-      let studentReport = JSON.parse(studentDataInCache)
-      if(studentName === "") {
-        studentReport.score = props.totalMarks
-        fetch(`/api/db/auser/add`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(studentReport)
-        });
-      }
-      setStudentName(studentReport.name);
-    }
-  }, []);
+  // useEffect(() => {
+  //   let studentDataInCache = localStorage.getItem("Student")
+  //   if ( studentDataInCache!== null) {
+  //     let studentReport = JSON.parse(studentDataInCache)
+  //     if(studentName === "") {
+  //       studentReport.score = props.totalMarks
+  //       fetch(`/api/db/auser/add`, {
+  //         method: "PUT",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(studentReport)
+  //       });
+  //     }
+  //     setStudentName(studentReport.name);
+  //   }
+  // }, []);
 
   const closeBtn = () => {
     localStorage.clear();
