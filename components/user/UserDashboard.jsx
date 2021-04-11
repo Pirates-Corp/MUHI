@@ -3,12 +3,13 @@ import BaseLayout from '../Layouts/BaseLayout'
 import PropPass from '../Layouts/PropPass'
 import GreetingHeader from '../common/Header/GreetingHeader'
 import OverallRowCard from '../common/Cards/OverallRowCards'
+import SubHeader from '../common/Header/SubHeading'
 import QuizInformationCard from '../common/Cards/QuizInformationCard'
 const userDashboard = () => {
 
   const [overallRowCardData ,setOverallRowCardData] = useState([]);
   const [QuizInformationCardData , setQuizInformationCardData] = useState([]);
-;
+
  
   
   
@@ -128,6 +129,7 @@ const userDashboard = () => {
       <PropPass type="user" />
       <GreetingHeader for="user" />
       <OverallRowCard data={OverallData}/>
+      <SubHeader heading="Quiz Info"/>
       <QuizInformationCard 
       view={{
          quizData : true,

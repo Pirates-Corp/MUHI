@@ -1,11 +1,6 @@
-import BaseLayout from '../../components/Layouts/BaseLayout.jsx'
-import GreetingHeader from '../../components/common/Header/GreetingHeader'
+import AdminDashboard from '../../components/admin/AdminDashboard'
 export default function dashborad() {
   return (
-    <div>
-      <BaseLayout>
-         <GreetingHeader/>
-      </BaseLayout>
-    </div>
+    <AdminDashboard/>
   )
 }
