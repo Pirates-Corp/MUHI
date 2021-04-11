@@ -118,7 +118,7 @@ const [QuizInformationCardData , setQuizInformationCardData] = useState([]);
                     {
                         heading : "Result Status",
                         icon    : "/imgs/svgs/Result.svg",
-                        data    : quiz.quizTag.split('-')[1]=='true' ? 'Not Published' : 'Published'
+                        data    : quiz.quizTag.split('-')[1]=='true' ? 'Hidden' : 'Visible'
                     }
                 ],
                 buttonData:{

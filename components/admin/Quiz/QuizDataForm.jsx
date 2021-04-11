@@ -118,7 +118,7 @@ const QuizDataForm = () => {
         QuizData = {
         title : e.currentTarget.quizName.value,
         duration : Number(e.currentTarget.duration.value) * 60,
-        quizTag : e.currentTarget.type.value +"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-"+ e.currentTarget.quizTag.value ,
+        quizTag : e.currentTarget.type.value +"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-false-"+e.currentTarget.quizTag.value ,
         schedule : 
          {  startTime : new Date( e.currentTarget.startTime.value).getTime(),
             endTime : new Date(e.currentTarget.endTime.value).getTime()
@@ -162,7 +162,7 @@ const QuizDataForm = () => {
       let  QuizData = {
           title : document.getElementById('quizName').value,  
           duration : Number(document.getElementById('quizTime').value) *60 ,
-          quizTag : ((document.getElementsByName('type')[0].checked) ? "open" : "close")+"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-"+ document.getElementById('quizTag').value,
+          quizTag : ((document.getElementsByName('type')[0].checked) ? "open" : "close")+"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-false-"+ document.getElementById('quizTag').value,
           schedule : 
            {  startTime : new Date( document.getElementById("startTime").value).getTime(),
               endTime : new Date(document.getElementById("endTime").value).getTime()
@@ -230,7 +230,7 @@ const QuizDataForm = () => {
                   id="quizTag"
                   name="quiztag"
                   placeholder="Quiz tag"
-                  defaultValue = {(Quiz.noData)? '' : new String(Quiz.data.quizTag).split('-').splice(2).join('-')}
+                  defaultValue = {(Quiz.noData)? '' : new String(Quiz.data.quizTag).split('-').splice(3).join('-')}
                   required
                   onKeyUp={e=>showSuggestion(e)}
                 />

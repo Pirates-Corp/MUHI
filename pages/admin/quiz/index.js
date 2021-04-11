@@ -64,7 +64,8 @@ export default function quizzes(props) {
      }
 
      allQuiz.push(item)
-     quizTags.push(quiz.quizTag.split('-')[2]);
+     console.log("quiz.quizTag",quiz.quizTag);
+     quizTags.push(quiz.quizTag.split('-')[3]);
 
   })
   
