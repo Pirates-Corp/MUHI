@@ -30,7 +30,31 @@ if (!cached) {
   };
 }
 
-const updateQuizRank = async (id) => {};
+const updateQuizRank = async (quizId, reportsArray) => {
+  const quizArray = [];
+  reportsArray.map((userReport) => {
+    // console.log("userReport", userReport);
+    userReport.reports.map((quizReport) => {
+      if (quizReport.id == quizId) quizArray.push(quizReport);
+      else console.log('===========',quizReport.id,quizId);
+    });
+  });
+  console.log("quiz array", quizArray);
+  quizArray.sort(function (a, b) {
+    return b.score.taken - a.score.taken;
+  });
+  const rankMap = {};
+  let rank = 0;
+  quizArray.map((doc, index) => {
+    if (rankMap.hasOwnProperty(doc.score.taken)) {
+      doc.rank = rankMap[doc.score.taken];
+    } else {
+      doc.rank = ++rank;
+      rankMap[doc.score.taken + ""] = rank;
+    }
+  });
+  console.log("quiz array",quizArray);
+};
 
 const markQuizAsRanked = async (id, tag) => {
   const tagParts = tag.split("-");
@@ -62,16 +86,16 @@ const updateOverAllRank = async (reportsArray) => {
   reportsArray.sort(function (a, b) {
     return b.avgScore - a.avgScore;
   });
-  const rankMap = {}
-  let rank = 0
+  const rankMap = {};
+  let rank = 0;
   reportsArray.map((doc, index) => {
-    if(rankMap.hasOwnProperty((doc.avgScore))) {
-      doc.rank = rankMap[doc.avgScore]
+    if (rankMap.hasOwnProperty(doc.avgScore)) {
+      doc.rank = rankMap[doc.avgScore];
     } else {
-      doc.rank = ++rank
-      rankMap[(doc.avgScore)+""] = rank
+      doc.rank = ++rank;
+      rankMap[doc.avgScore + ""] = rank;
     }
-    console.log('Updated rank for the user '+doc._id);
+    console.log("Updated rank for the user " + doc._id);
   });
   // console.log("docsArraySorted=>", reportsArray);
 };
@@ -128,7 +152,6 @@ const handleRanking = async () => {
           ? allReportsQueryResponse[1]
           : undefined;
         if (reportCursor) {
-          const collectionsArray = [];
           if ((await reportCursor.count()) === 0) {
             console.log(
               "No documents found in the collection => " +
@@ -136,15 +159,20 @@ const handleRanking = async () => {
             );
           } else {
             const reportsArray = await reportCursor.toArray();
+            let dataModified = false;
             await quizCursor.forEach(async (doc) => {
               if (doc.quizTag.split("-")[2].toLowerCase() === "false") {
                 // console.log(doc);
                 await updateQuizRank(doc._id, reportsArray);
-                await markQuizAsRanked(doc._id, doc.quizTag);
+                // await markQuizAsRanked(doc._id, doc.quizTag);
+                dataModified = true;
               }
             });
-            await updateOverAllRank(reportsArray);
-            await updateUserReports(reportsArray);
+            if (dataModified) {
+              console.log('Quizzes ranked. Updating users overall rank');
+              await updateOverAllRank(reportsArray);
+              await updateUserReports(reportsArray);
+            }
           }
         } else {
           console.log(

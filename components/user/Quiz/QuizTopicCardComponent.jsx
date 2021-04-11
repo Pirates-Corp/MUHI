@@ -103,7 +103,7 @@ const QuizTopicCardComponent = ({ props }) => {
                 ) : (
                   <Link
                     href={{
-                      pathname: (props.isQuizOpen && props.isQuizOpen === true) ? "openquiz/" + quiz.title: "quiz/" + quiz.title,
+                      pathname: (props.isQuizOpen && props.isQuizOpen === true) ? "openquiz/" + quiz._id: "quiz/" + quiz._id,
                       query: {
                         questionId: 0,
                       },
