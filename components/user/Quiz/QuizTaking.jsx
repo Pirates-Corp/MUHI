@@ -105,7 +105,7 @@ function QuizTaking({ props }) {
           // console.log('does not has own poperty==============');
           setCurrentQuiz(JSON.parse(quizInCache));
         } else {
-          if (currentQuiz.title === quizId) {
+          if (currentQuiz._id === quizId) {
             // console.log('same title==============');
             if (currentQuiz.status === 1) {
               // localStorage.removeItem("currentQuiz");

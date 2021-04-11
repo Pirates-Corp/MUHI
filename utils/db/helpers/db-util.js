@@ -164,7 +164,7 @@ const handleRanking = async () => {
               if (doc.quizTag.split("-")[2].toLowerCase() === "false") {
                 // console.log(doc);
                 await updateQuizRank(doc._id, reportsArray);
-                // await markQuizAsRanked(doc._id, doc.quizTag);
+                await markQuizAsRanked(doc._id, doc.quizTag);
                 dataModified = true;
               }
             });
