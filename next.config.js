@@ -39,5 +39,6 @@ module.exports = {
       invalidUser: "?incorrect",
       passwordResetPath: "/admin/reset_password/",
     },
+    rankingInterval : 1
   },
 };

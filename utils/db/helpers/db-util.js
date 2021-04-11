@@ -7,16 +7,16 @@ const uri = process.env.dbConnectionString
   .replace("<dbUser>", encodeURIComponent(process.env.dbUser))
   .replace("<dbPass>", encodeURIComponent(process.env.dbPass));
 
-  const dbOperation= {
-    updateOne: "UPDATE_ONE",
-    updateMany: "UPDATE_MANY",
-    deleteOne: "DELETE_ONE",
-    deleteMany: "DELETE_MANY",
-    createOne: "CREATE_ONE",
-    createMany: "CREATE_MANY",
-    readOne: "READ_ONE",
-    readMany: "READ_MANY",
-  }
+const dbOperation = {
+  updateOne: "UPDATE_ONE",
+  updateMany: "UPDATE_MANY",
+  deleteOne: "DELETE_ONE",
+  deleteMany: "DELETE_MANY",
+  createOne: "CREATE_ONE",
+  createMany: "CREATE_MANY",
+  readOne: "READ_ONE",
+  readMany: "READ_MANY",
+};
 
 let cached = global.mongo;
 
@@ -26,8 +26,140 @@ if (!cached) {
     promise: null,
     user: null,
     collections: {},
+    isRankingInProgress: false,
   };
 }
+
+const updateQuizRank = async (id) => {};
+
+const markQuizAsRanked = async (id, tag) => {
+  const tagParts = tag.split("-");
+  tagParts[2] = true;
+  tag = tagParts.join("-");
+  console.log("tag", tag);
+  const filter = { _id: id };
+  const updateDoc = {
+    $set: {
+      quizTag: tag,
+    },
+  };
+  const options = { upsert: false };
+  const collectionDetails = constants.collectionMap.quiz;
+  const queryResult = await updateDocument(
+    collectionDetails.collectionName,
+    collectionDetails.schema,
+    filter,
+    updateDoc,
+    options
+  );
+  if (queryResult[0] === true) {
+    // console.log("Quiz `" + id + "` is marked as Ranked");
+  }
+};
+
+const updateOverAllRank = async (reportsArray) => {
+  // console.log("docsArray=>", reportsArray);
+  reportsArray.sort(function (a, b) {
+    return b.avgScore - a.avgScore;
+  });
+  const rankMap = {}
+  let rank = 0
+  reportsArray.map((doc, index) => {
+    if(rankMap.hasOwnProperty((doc.avgScore))) {
+      doc.rank = rankMap[doc.avgScore]
+    } else {
+      doc.rank = ++rank
+      rankMap[(doc.avgScore)+""] = rank
+    }
+    console.log('Updated rank for the user '+doc._id);
+  });
+  // console.log("docsArraySorted=>", reportsArray);
+};
+
+const updateUserReports = async (reportsArray) => {
+  try {
+    reportsArray.map(async (report) => {
+      const filter = { _id: report._id };
+      const updateDoc = {
+        $set: {
+          ...report,
+        },
+      };
+      const options = { upsert: false };
+      const collectionDetails = constants.collectionMap.report;
+      const queryResult = await updateDocument(
+        collectionDetails.collectionName,
+        collectionDetails.schema,
+        filter,
+        updateDoc,
+        options
+      );
+      if (queryResult[0] === true) {
+        // console.log("User `" + report._id + "` is ranked");
+      }
+    });
+  } catch (err) {
+    console.error("Error in updateUserReports page");
+  }
+};
+
+const handleRanking = async () => {
+  try {
+    if (cached.isRankingInProgress === false) {
+      cached.isRankingInProgress = true;
+      const collectionDetails = constants.collectionMap.quiz;
+      const docCondition = {
+        $expr: { $gt: [Date.now(), "$schedule.endTime"] },
+      };
+      const queryResponse = await getDocuments(
+        collectionDetails.collectionName,
+        collectionDetails.schema,
+        docCondition
+      );
+      const quizCursor = queryResponse[0] ? queryResponse[1] : undefined;
+      if (quizCursor) {
+        const query = {};
+        const allReportsQueryResponse = await getDocuments(
+          constants.collectionMap.report.collectionName,
+          constants.collectionMap.report.schema,
+          query
+        );
+        const reportCursor = allReportsQueryResponse[0]
+          ? allReportsQueryResponse[1]
+          : undefined;
+        if (reportCursor) {
+          const collectionsArray = [];
+          if ((await reportCursor.count()) === 0) {
+            console.log(
+              "No documents found in the collection => " +
+                collectionDetails.collectionName
+            );
+          } else {
+            const reportsArray = await reportCursor.toArray();
+            await quizCursor.forEach(async (doc) => {
+              if (doc.quizTag.split("-")[2].toLowerCase() === "false") {
+                // console.log(doc);
+                await updateQuizRank(doc._id, reportsArray);
+                await markQuizAsRanked(doc._id, doc.quizTag);
+              }
+            });
+            await updateOverAllRank(reportsArray);
+            await updateUserReports(reportsArray);
+          }
+        } else {
+          console.log(
+            "Problem in Cursor fetched from DB in handle quiz completed method"
+          );
+        }
+      } else {
+        console.log("Problem in Cursor fetched from DB");
+      }
+      cached.isRankingInProgress = false;
+    }
+  } catch (err) {
+    console.err("Exception in handleRanking function ", err);
+  }
+};
 
 export const getDatabaseInstance = async () => {
   if (cached.conn) {
@@ -56,6 +188,7 @@ export const getDatabaseInstance = async () => {
         console.log("Error while connectinng to db => " + err);
       });
     cached.conn = await cached.promise;
+    setInterval(handleRanking, process.env.rankingInterval * 10000);
     return cached.conn;
   }
 };
@@ -103,13 +236,13 @@ export const getCollection = async (collectionName, schema) => {
 export const removeCollection = async (collectionName, schema) => {
   try {
     const collection = await getCollection(collectionName, schema);
-    const removedResponse = await collection.drop({});    
-    cached.collections[collectionName] = null
+    const removedResponse = await collection.drop({});
+    cached.collections[collectionName] = null;
     return removedResponse;
   } catch (err) {
     console.error("problem removin collection =>" + err);
   }
-  return false
+  return false;
 };
 
 export const getDocument = async (collectionName, schema, document) => {
@@ -151,7 +284,7 @@ export const updateDocuments = async (
   collectionName,
   schema,
   document,
-  updateConition,
+  updateCondition,
   queryOptions
 ) => {
   return await processQuery(
@@ -159,7 +292,7 @@ export const updateDocuments = async (
     collectionName,
     schema,
     document,
-    updateConition,
+    updateCondition,
     queryOptions
   );
 };
@@ -237,7 +370,7 @@ export const processQuery = async (
         return [false, "Invalid Query"];
     }
   } catch (err) {
-    console.log("Error in process query function => "+err);
+    console.log("Error in process query function => " + err);
     return [false, err];
   }
 };

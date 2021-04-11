@@ -978,11 +978,6 @@ export const handleSubFieldUpdate = async (req, res) => {
             );
             resCode = updateResponse[0];
             resBody = updateResponse[1];
-            if (resCode == 200) {
-              if (matchedFields[0] && matchedFields[0].status === 1) {
-                await handleQuizCompletedEvent(document, matchedFields[0].id);
-              }
-            }
           }
         } else {
           resCode = 404;
@@ -1341,38 +1336,6 @@ const updateResultsInQuizReports = async (
       doc.status = 1;
   } else {
     console.log("Report document is null for id " + doc.id);
-  }
-};
-
-const handleQuizCompletedEvent = async (currentUserReport, currentQuizId) => {
-  const query = {};
-  const allReportsQueryResponse = await getDocuments(
-    constants.collectionMap.report.collectionName,
-    constants.collectionMap.report.schema,
-    query
-  );
-  const cursor = allReportsQueryResponse[0]
-    ? allReportsQueryResponse[1]
-    : undefined;
-  if (cursor) {
-    const collectionsArray = [];
-    if ((await cursor.count()) === 0) {
-      console.log(
-        "No documents found in the collection => " +
-          collectionDetails.collectionName
-      );
-    } else {
-      const docsArray = await cursor.toArray();
-      console.log("docsArray=>", docsArray);
-      docsArray.sort(function (a, b) {
-        return a.avgScore - b.avgScore;
-      });
-      console.log("docsArraySorted=>", docsArray);
-    }
-  } else {
-    console.log(
-      "Problem in Cursor fetched from DB in handle quiz completed method"
-    );
   }
 };
 
