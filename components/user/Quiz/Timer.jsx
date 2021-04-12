@@ -40,7 +40,6 @@ const Timer = ({ props }) => {
             "Quiz is about to start. Kindly click ok to start"
           );
           if (isStarted) {
-            setStarted(0);
             localStorage.setItem('startedVal', JSON.stringify(0))
           } else {
             router.push("/quiz");

@@ -91,7 +91,7 @@
      {
         font-family: TextRegular;
         display: block;
-        width: fit-content;
+        width: max-content;
         border: 2px solid var(--primary-light); 
         border-radius: 5px;  
         padding: .2rem;
@@ -154,7 +154,7 @@
          {
             font-family: TextRegular;
             display: block;
-            width: fit-content;
+            width: max-content;
             border: 2px solid var(--primary-light); 
             border-radius: 5px;  
             text-transform: capitalize;

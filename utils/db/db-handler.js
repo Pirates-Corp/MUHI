@@ -225,9 +225,8 @@ export const handleDocumentDelete = async (req, res) => {
       const collection = decodeURIComponent(req.query?.collection);
       const documentId = decodeURIComponent(req.query?.document);
       const collectionDetails = constants.collectionMap[collection];
-      const isUnauthOperation =  (collectionDetails.collectionName ===
-        constants.collectionMap.report.collectionName &&
-        documentReceived.id.includes("male.com")) || collectionDetails.collectionName ===
+      const isUnauthOperation =  ( collectionDetails.collectionName ===
+        constants.collectionMap.report.collectionName ) || collectionDetails.collectionName ===
         constants.collectionMap.auser.collectionName
       if ((authResult && authResult[0] === 200) || isUnauthOperation) {
         if (
