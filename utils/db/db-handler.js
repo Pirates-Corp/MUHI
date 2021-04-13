@@ -933,9 +933,10 @@ export const handleSubFieldUpdate = async (req, res) => {
       const result = await getDoc(req);
       if (result && result[0] === 200) {
         let duration = newDoc.duration ? newDoc.duration : -1;
-        let status = newDoc.status ? newDoc.status : undefined;
+        let status = newDoc.status ? newDoc.status : 0;
         delete newDoc.duration;
-        const document = result[1];
+        delete newDoc.status;
+        const document = {...result[1]}
         const matchedFields = document[fieldName].filter((doc) => {
           return doc.id == fieldId;
         });
@@ -945,13 +946,13 @@ export const handleSubFieldUpdate = async (req, res) => {
             (doc) => {
               if (doc.id == newDoc.id) {
                 modifiedSubField = true;
-                doc = newDoc;
+                doc = {...newDoc}
               }
               return doc;
             }
           );
           if (!modifiedSubField && newDoc.answer !== "") {
-            modifiedSubFields.push(newDoc);
+            modifiedSubFields.push({...newDoc});
           }
           matchedFields[0][subFieldName] = modifiedSubFields;
           if (
@@ -970,6 +971,7 @@ export const handleSubFieldUpdate = async (req, res) => {
           }
 
           if (modifiedSubFields[0] || newDoc.answer === "") {
+            console.log("document before update =>",JSON.stringify(document));
             const updateResponse = await updateDoc(
               collectionDetails,
               documentId,
@@ -977,6 +979,7 @@ export const handleSubFieldUpdate = async (req, res) => {
             );
             resCode = updateResponse[0];
             resBody = updateResponse[1];
+            console.log("document after update =>",JSON.stringify(resBody));
           }
         } else {
           resCode = 404;
@@ -1015,9 +1018,7 @@ const getDoc = async (req) => {
     const collection = decodeURIComponent(req.query?.collection);
     const collectionDetails = constants.collectionMap[collection];
     const documentId = decodeURIComponent(req.query?.document)
-        .trim()
-        .toLowerCase();
-        const isUnAuthData = constants.collectionMap.quiz.collectionName ===
+    const isUnAuthData = constants.collectionMap.quiz.collectionName ===
         collectionDetails.collectionName ||
       (constants.collectionMap.report.collectionName ===
         collectionDetails.collectionName && documentId.includes('male.com'))
@@ -1286,7 +1287,7 @@ export const addUserReport = async (id) => {
   const newReport = {
     id,
     rank: 0,
-    avgScore: 0,
+    avgScore: 0.0,
     reports: [],
   };
   const result = await insertDoc(constants.collectionMap.report, newReport);
@@ -1296,7 +1297,7 @@ export const addUserReport = async (id) => {
 const updateResultsInQuizReports = async (
   doc,
   duration = -1,
-  status = undefined
+  status = 0
 ) => {
   const quizResult = await getDocument(
     constants.collectionMap.quiz.collectionName,
@@ -1330,9 +1331,10 @@ const updateResultsInQuizReports = async (
     if (
       // doc.questionsAttended.length === quizResult[1].questions.length ||
       doc.time.taken === doc.time.total ||
-      (status != undefined && status == 1)
-    )
+      (status == 1)
+    ){
       doc.status = 1;
+    }
   } else {
     console.log("Report document is null for id " + doc.id);
   }
@@ -1347,9 +1349,9 @@ const updateAvgScore = (currentUserReport, currentQuizId) => {
     );
     totalMarks += report.score.taken;
   });
-  currentUserReport.avgScore = (
+  currentUserReport.avgScore = Number((
     totalMarks / currentUserReport.reports.length
-  ).toFixed(2);
+  ).toFixed(2));
   console.log("Avg score updated in doc => ", currentUserReport);
 };
 
