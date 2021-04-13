@@ -41,7 +41,7 @@ const Timer = ({ props }) => {
           );
           if (isStarted) {
             localStorage.setItem('startedVal', JSON.stringify(0))
-            setStarted(0)
+            setStarted(0);
           } else {
             router.push("/quiz");
         

@@ -116,7 +116,7 @@ const QuizDataForm = () => {
       let QuizData;
       e.preventDefault();
         QuizData = {
-        title : e.currentTarget.quizName.value,
+        title : (e.currentTarget.quizName.value).trim(),
         duration : Number(e.currentTarget.duration.value) * 60,
         quizTag : e.currentTarget.type.value +"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-false-"+e.currentTarget.quizTag.value ,
         schedule : 
@@ -160,7 +160,7 @@ const QuizDataForm = () => {
 
 
       let  QuizData = {
-          title : document.getElementById('quizName').value,  
+          title : (document.getElementById('quizName').value).trim(),  
           duration : Number(document.getElementById('quizTime').value) *60 ,
           quizTag : ((document.getElementsByName('type')[0].checked) ? "open" : "close")+"-"+((document.getElementById('hideScore').checked == true)? "true" : "false") +"-false-"+ document.getElementById('quizTag').value,
           schedule : 

@@ -91,14 +91,12 @@ const QuizResultCard = ({ props }) => {
         </div>
 
         <div id={style.footer}>
-          {props.totalMarks === "" ? (
-            ""
-          ) : (
-            <div id={style.markHolder}>
-              <p>Your Score</p>
-              <h1 id={style.mark}>{props.totalMarks}</h1>
-            </div>
-          )}
+
+          <div  style={(props.totalMarks === "")? { visibility :"hidden" } : { visibility :"visible" } } id={style.markHolder}>
+            <p>Your Score</p>
+            <h1 id={style.mark}>{props.totalMarks}</h1>
+          </div>
+          
 
           <div id={style.btnHolder}>
             <button className="redBtn" onClick={closeBtn}>
