@@ -26,7 +26,7 @@ export const authenticate = async (httpReq) => {
   let resCode = 400;
   let resBody = null;
   try {
-    const token = getTokenFromCookie(httpReq)
+    const token = getTokenFromCookie(httpReq);
     if (token) {
       const decoded = decodePayload(token);
       if (decoded) {
@@ -172,7 +172,10 @@ export const signup = async (httpReq, httpRes) => {
     if (httpReq.method !== "PUT") {
       resCode = 401;
       resText = "";
-    } else if (authResult[0] === 200 && authResult[1].role !== constants.roles.admin) {
+    } else if (
+      authResult[0] === 200 &&
+      authResult[1].role !== constants.roles.admin
+    ) {
       if (authResult[1].role === constants.roles.user) {
         httpRes.redirect(process.env.routes.loginRedirectUser);
       } else {
@@ -187,7 +190,9 @@ export const signup = async (httpReq, httpRes) => {
             ? userDetails.name
             : userDetails.email
         ).toLowerCase();
-        userDetails.mobileNo = userDetails.mobileNo ? userDetails.mobileNo : '+91 xxxxx xxxxx';
+        userDetails.mobileNo = userDetails.mobileNo
+          ? userDetails.mobileNo
+          : "+91 xxxxx xxxxx";
         userDetails.role = new String(userDetails.role).toLowerCase();
         userDetails.state = new String(
           userDetails.state ? userDetails.state : "active"
@@ -208,7 +213,7 @@ export const signup = async (httpReq, httpRes) => {
             process.env.hashSaltRounds
           );
           userDetails.lastLogin = Date.now();
-          userDetails.email = userDetails.email.trim().toLowerCase()
+          userDetails.email = userDetails.email.trim().toLowerCase();
           const result = await createUser(userDetails);
           if (result.length >= 1 && result[0] === true) {
             resText =
@@ -216,11 +221,11 @@ export const signup = async (httpReq, httpRes) => {
               JSON.stringify(userDetails) +
               ";";
 
-            if(constants.roles.moderator === userDetails.role) {
-              httpRes.statusCode = 201
-              httpRes.send(resText)
-              return
-            }  
+            if (constants.roles.moderator === userDetails.role) {
+              httpRes.statusCode = 201;
+              httpRes.send(resText);
+              return;
+            }
 
             const jwtToken = encodePayload(
               { id: userDetails._id, password: plainPassword },
@@ -239,16 +244,18 @@ export const signup = async (httpReq, httpRes) => {
             } else if (userDetails.role === constants.roles.moderator) {
               httpRes.redirect(process.env.routes.loginRedirectAdmin);
             } else {
-              httpRes.redirect(307,process.env.routes.loginRedirectUser);
+              httpRes.redirect(307, process.env.routes.loginRedirectUser);
             }
-            const reportCreationResult = await addUserReport(userDetails._id);
-            if (reportCreationResult && reportCreationResult[0] === 201) {
-              resText = resText + "and Report is created for user";
-            } else {
-              resText =
-                resText +
-                "and Report creation is failed for user =>" +
-                reportCreationResult[1];
+            if (constants.roles.user === userDetails.role) {
+              const reportCreationResult = await addUserReport(userDetails._id);
+              if (reportCreationResult && reportCreationResult[0] === 201) {
+                resText = resText + "and Report is created for user";
+              } else {
+                resText =
+                  resText +
+                  "and Report creation is failed for user =>" +
+                  reportCreationResult[1];
+              }
             }
             console.log("Singup result => " + resText);
             return;
@@ -504,10 +511,10 @@ export const updateUserPassword = async (id, password) => {
     };
     const queryOptions = { upsert: false };
     const result = await updateUserDetails(id, updateCondition, queryOptions);
-    if(result[0] === true) {
-      updateCurrentUserInGlobalScope(await getUser(id,true))
+    if (result[0] === true) {
+      updateCurrentUserInGlobalScope(await getUser(id, true));
     }
-    return result
+    return result;
   } catch (err) {
     console.log("Error while updating last login time for user=> " + err);
   }
@@ -605,12 +612,12 @@ export const getCurrentUser = () => {
     "Current User doesn't exists in the global scope. Returning null"
   );
 
-  return undefined; 
+  return undefined;
 };
 
 export const updateCurrentUserInGlobalScope = (userDetails) => {
-  cached.user = userDetails === null ? null : {...userDetails};
-  console.log("Updated Current User in Global Scope =>",cached.user);
+  cached.user = userDetails === null ? null : { ...userDetails };
+  console.log("Updated Current User in Global Scope =>", cached.user);
 };
 
 export const removeCurrentUserFromGlobalScope = () => {
