@@ -36,7 +36,7 @@ const updateQuizRank = async (quizId, reportsArray) => {
     // console.log("userReport", userReport);
     userReport.reports.map((quizReport) => {
       if (quizReport.id == quizId) quizArray.push(quizReport);
-      else console.log('===========',quizReport.id,quizId);
+      else console.log("===========", quizReport.id, quizId);
     });
   });
   console.log("quiz array before ranking", quizArray);
@@ -53,7 +53,7 @@ const updateQuizRank = async (quizId, reportsArray) => {
       rankMap[doc.score.taken + ""] = rank;
     }
   });
-  console.log("quiz array after ranking",quizArray);
+  console.log("quiz array after ranking", quizArray);
 };
 
 const markQuizAsRanked = async (id, tag) => {
@@ -119,7 +119,7 @@ const updateUserReports = async (reportsArray) => {
         options
       );
       if (queryResult[0] === true) {
-        // console.log("User `" + report._id + "` is ranked");
+        console.log("User `" + report._id + "` is ranked");
       }
     });
   } catch (err) {
@@ -130,7 +130,7 @@ const updateUserReports = async (reportsArray) => {
 const handleRanking = async () => {
   try {
     if (cached.isRankingInProgress === false) {
-      console.log('Ranking......');
+      console.log("Ranking......");
       cached.isRankingInProgress = true;
       const collectionDetails = constants.collectionMap.quiz;
       const docCondition = {
@@ -156,26 +156,23 @@ const handleRanking = async () => {
           if ((await reportCursor.count()) === 0) {
             console.log(
               "No documents found in the collection => " +
-              constants.collectionMap.report.collectionName
+                constants.collectionMap.report.collectionName
             );
           } else {
             const reportsArray = await reportCursor.toArray();
             const quizArray = await quizCursor.toArray();
-            let dataModified = false;
-            quizArray.forEach(async (doc) => {
+            quizArray.map(async (doc, index) => {
               if (doc.quizTag.split("-")[2].toLowerCase() === "false") {
-                dataModified = true
-                console.log('Updatig ranks for quiz => '+doc._id);
+                console.log("Updatig ranks for quiz => " + doc._id);
                 await updateQuizRank(doc._id, reportsArray);
+                await markQuizAsRanked(doc._id, doc.quizTag);
+              }
+              if (index === quizArray.length - 1) {
+                console.log("Quizzes ranked. Updating users overall rank");
                 await updateOverAllRank(reportsArray);
+                await updateUserReports(reportsArray);
               }
             });
-            console.log('Ranks '+(dataModified===true ? '' : 'not-')+'modified for any quiz');
-            if (dataModified===true) {
-              console.log('Quizzes ranked. Updating users overall rank');
-              await updateUserReports(reportsArray);
-              await markQuizAsRanked(doc._id, doc.quizTag);
-            }
           }
         } else {
           console.log(
@@ -186,7 +183,9 @@ const handleRanking = async () => {
         console.log("Problem in Cursor fetched from DB");
       }
       cached.isRankingInProgress = false;
-    } else {console.log('quiz ranking is already in progress');}
+    } else {
+      console.log("quiz ranking is already in progress");
+    }
   } catch (err) {
     console.error("Exception in handleRanking function ", err);
   }
