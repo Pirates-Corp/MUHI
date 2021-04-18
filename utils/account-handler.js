@@ -92,9 +92,9 @@ export const login = async (httpReq, httpRes) => {
             user.password
           );
           if (isPasswordCorrect) {
-            if(user.state !== 'active') {
+            if(user.state.toLowerCase() !== 'active') {
               console.log('User is in seuspended state => ',user);
-              httpRes.redirect(process.env.routes.suspendedRedirect);
+              httpRes.redirect(httpReq.headers.referer.split("?")[0] +process.env.routes.suspendedRedirect);
               return;
             }
             resText = "Login Successfull for user => " + userDetails.id;

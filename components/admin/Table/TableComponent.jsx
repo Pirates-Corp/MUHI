@@ -320,6 +320,7 @@ const TableComponent = (props) => {
       let res = confirm(`Are sure , want to Active the ${StudentName} ?`)
       if(res) 
       {
+        console.log(url.split('-')[0]);
         await fetch(url.split('-')[0],{method : 'PUT'});
         window.location.reload();
       }

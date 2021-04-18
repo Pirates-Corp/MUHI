@@ -101,6 +101,13 @@ export default function Login() {
       setOpenSnackbar(true);
       router.push('/');
     }
+    if(router.asPath === "/?suspended")
+    {
+      setMessage("Your account has been suspended");
+      setColor("red");
+      setOpenSnackbar(true);
+      router.push('/');
+    }
 
   },[])
 
