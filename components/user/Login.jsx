@@ -1,16 +1,19 @@
-import React,{useContext, useEffect } from "react"
+import React,{useContext, useEffect,useState } from "react"
 import Link from "next/link";
 import Head from 'next/head'
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
 import {AuthContext} from '../context/AuthContext'
-//import {OAuth2Client} from 'google-auth-library';
-// import Snackbar from '../../components/common/Popups/Snackbar'
+import Snackbar from '../../components/common/Popups/Snackbar'
 export default function Login() {
 
   const router = useRouter();
 
   const [user] = useContext(AuthContext);
+  
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
+  const [openSnackbar, setOpenSnackbar]= useState(true);
 
   if(user!==null)
   {
@@ -24,12 +27,6 @@ export default function Login() {
     }
   }
 
-
-  if(router.asPath === "/?incorrect")
-  {
-    alert("Incorrect Email / Password");
-    window.location.assign('/');
-  }
 
 
   const googleLogin = async(googleUser)=>{
@@ -95,12 +92,23 @@ export default function Login() {
       }
 
     }
-  })
+
+    
+    if(router.asPath === "/?incorrect")
+    {
+      setMessage("Incorrect Email / Password");
+      setColor("red");
+      setOpenSnackbar(true);
+      router.push('/');
+    }
+
+  },[])
 
 
   return (
     <>
     <Head>
+      <title>MUHI Quiz Login</title>
       <script src="https://apis.google.com/js/platform.js" async defer></script>
     </Head>
     
@@ -157,7 +165,12 @@ export default function Login() {
           </div>
         </div>
       </div>
-     
+      <Snackbar 
+          message={message} 
+          time="4000" color={color} 
+          open={openSnackbar} 
+          setOpen={setOpenSnackbar}
+        />
          
     </>
   );

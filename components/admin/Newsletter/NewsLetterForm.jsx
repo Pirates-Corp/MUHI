@@ -20,7 +20,7 @@ const NewsLetterForm = () => {
       let currentTime;
 
       if(milisec){
-        console.log("inmili")
+     
         currentTime =
           new Date(milisec).toISOString().split(":")[0] +
           ":" +
@@ -28,7 +28,6 @@ const NewsLetterForm = () => {
           console.log(currentTime)
           return currentTime;
       }else{
-        console.log("asjdgsa")
         currentTime =
           new Date().toISOString().split(":")[0] +
           ":" +
