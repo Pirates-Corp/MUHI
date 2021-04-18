@@ -30,7 +30,7 @@ if (!cached) {
   };
 }
 
-const updateQuizRank = async (quizId, reportsArray) => {
+const updateQuizRank = (quizId, reportsArray) => {
   const quizArray = [];
   reportsArray.map((userReport) => {
     // console.log("userReport", userReport);
@@ -161,18 +161,20 @@ const handleRanking = async () => {
           } else {
             const reportsArray = await reportCursor.toArray();
             const quizArray = await quizCursor.toArray();
-            quizArray.map(async (doc, index) => {
+            const promiseArr = []
+            quizArray.map((doc) => {
               if (doc.quizTag.split("-")[2].toLowerCase() === "false") {
                 console.log("Updatig ranks for quiz => " + doc._id);
-                await updateQuizRank(doc._id, reportsArray);
-                await markQuizAsRanked(doc._id, doc.quizTag);
-              }
-              if (index === quizArray.length - 1) {
-                console.log("Quizzes ranked. Updating users overall rank");
-                await updateOverAllRank(reportsArray);
-                await updateUserReports(reportsArray);
-              }
+                updateQuizRank(doc._id, reportsArray)
+                promiseArr.push(markQuizAsRanked(doc._id, doc.quizTag))
+              }              
             });
+            if (promiseArr.length > 0) {
+              await Promise.all(promiseArr)
+              console.log("Quizzes ranked. Updating users overall rank");
+              updateOverAllRank(reportsArray);
+              await updateUserReports(reportsArray);
+            }
           }
         } else {
           console.log(
