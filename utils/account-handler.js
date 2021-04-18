@@ -51,7 +51,7 @@ export const authenticate = async (httpReq) => {
         }
       } else {
         console.log("JWT expired.");
-        removeCurrentUserFromGlobalScope();
+        // removeCurrentUserFromGlobalScope();
       }
     } else {
       resCode = 401;
@@ -100,7 +100,7 @@ export const login = async (httpReq, httpRes) => {
             saveTokenInCookie(httpRes, jwtToken);
             resCode = 200;
             await updateLastAciveTimeForTheUser(user._id);
-            updateCurrentUserInGlobalScope(user);
+            // updateCurrentUserInGlobalScope(user);
             console.log(resText);
             if (user.role === constants.roles.admin) {
               httpRes.redirect(307, process.env.routes.loginRedirectAdmin);
@@ -153,7 +153,7 @@ export const logout = async (httpReq, httpRes) => {
     if ((await authenticate(httpReq))[0] === 200) {
       resCode = 200;
       resText = "Logout successfull";
-      removeCurrentUserFromGlobalScope();
+      // removeCurrentUserFromGlobalScope();
       deleteTokenFromCookie(httpRes);
     } else {
       resCode = 400;
@@ -233,7 +233,7 @@ export const signup = async (httpReq, httpRes) => {
             );
             saveTokenInCookie(httpRes, jwtToken);
             resCode = 201;
-            updateCurrentUserInGlobalScope(userDetails);
+            // updateCurrentUserInGlobalScope(userDetails);
             await sendMail(
               userDetails.email,
               process.env.mailSubject_accountCreationNotification,
@@ -512,7 +512,7 @@ export const updateUserPassword = async (id, password) => {
     const queryOptions = { upsert: false };
     const result = await updateUserDetails(id, updateCondition, queryOptions);
     if (result[0] === true) {
-      updateCurrentUserInGlobalScope(await getUser(id, true));
+      // updateCurrentUserInGlobalScope(await getUser(id, true));
     }
     return result;
   } catch (err) {
@@ -521,9 +521,9 @@ export const updateUserPassword = async (id, password) => {
 };
 
 export const getUser = async (id, isDbReq = false) => {
-  const currentUser = getCurrentUser();
-  if (currentUser && currentUser._id == id && isDbReq === false)
-    return currentUser;
+  // const currentUser = getCurrentUser();
+  // if (currentUser && currentUser._id == id && isDbReq === false)
+  //   return currentUser;
   const queryResponse = await getDocument(
     constants.collectionMap.user.collectionName,
     constants.collectionMap.user.schema,
@@ -622,7 +622,7 @@ export const updateCurrentUserInGlobalScope = (userDetails) => {
 
 export const removeCurrentUserFromGlobalScope = () => {
   console.log("Removing Current User form Global Scope.User");
-  updateCurrentUserInGlobalScope(null);
+  // updateCurrentUserInGlobalScope(null);
 };
 
 export const sendMail = async (toAddress, mailSubject, mailBody) => {
