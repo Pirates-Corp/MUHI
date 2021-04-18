@@ -60,9 +60,12 @@ export default function Signup() {
   
       if(res.status==409)
       { 
-        alert("User Already Exist")
+        setMessage("User Already Exist");
+        setColor("red");
+        setOpenSnackbar(true);
+        router.push('/signup');
       }
-      if(res.status==401)
+      else if(res.status==401)
       { 
         alert("Something went wrong , Try again")
       }
@@ -96,14 +99,17 @@ function googleSignUp(googleUser) {
     }).then(res=>{
       if(res.status==409)
       { 
-
         setMessage("User Already Exist");
         setColor("red");
         setOpenSnackbar(true);
+        router.push('/signup');
       }
-      if(res.status==401)
+      else if(res.status==401)
       { 
-        alert("Something went wrong , Try again")
+        setMessage("Something went wrong , Try again");
+        setColor("red");
+        setOpenSnackbar(true);
+        router.push('/signup');
       }
       else
       {
