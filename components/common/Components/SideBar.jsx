@@ -115,16 +115,16 @@ export default function AdminSideBar(props) {
     const logout = async (e)=>{
      e.preventDefault();
   
+     if(window.gapi.auth2)
+     {
+       let auth2 = window.gapi.auth2.getAuthInstance();
+       auth2.signOut().then(function () {
+         console.log('User signed out.');
+       });
+     }
 
-     let auth2 = window.gapi.auth2.getAuthInstance();
-     auth2.signOut().then(function () {
-       console.log('User signed out.');
-     });
-       
-
-
-      let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
-      if(logRes.status===200)
+    let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
+    if(logRes.status===200)
       {
           sessionStorage.clear();
           localStorage.clear();

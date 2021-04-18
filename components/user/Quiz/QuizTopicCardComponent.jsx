@@ -14,10 +14,11 @@ const QuizTopicCardComponent = ({ props }) => {
   const currentUserReport = props.currentUserReport
     ? props.currentUserReport
     : {};
-  const offsetInMillis = new Date().getTimezoneOffset() * 60000;
+  //const offsetInMillis = new Date().getTimezoneOffset() * 60000;
 
   const getDateString = (timeInMillis) => {
-    let date = new Date(timeInMillis + offsetInMillis);
+   // let date = new Date(timeInMillis + offsetInMillis);
+    let date = new Date(timeInMillis);
     date.setSeconds(0);
     return date.toLocaleString();
     // return isoString.substring(0,isoString.indexOf('.')-3).replace("T"," ");

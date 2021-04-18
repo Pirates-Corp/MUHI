@@ -9,8 +9,8 @@ const UpdateProfile = () =>{
 
     const getDataFromDB = async()=>{
       const result = await fetch("/api/db/user", { method: "GET" });
-      const userData = await result.json();
-      return userData;
+      const apiData = await result.json();
+      return apiData;
     }
 
     const enableFunction =(e,id)=>
@@ -24,11 +24,8 @@ const UpdateProfile = () =>{
     const updateAccount = async(e)=>{
        e.preventDefault();
       
-       let updatedData = {name : e.currentTarget.username.value+"" ,mobileNo: e.currentTarget.mobile.value+""}
+       let updatedData = {name : e.currentTarget.username.value+"".trim() ,mobileNo: (e.currentTarget.mobile.value+""!=="")? e.currentTarget.mobile.value+"" : "+91 xxxxx xxxxx"}
 
-       let userData = {username : e.currentTarget.username.value+"" ,mobileNo: e.currentTarget.mobile.value+""}
-
-       console.log(updatedData);
 
        let res = await fetch(`/api/db/user/${userData.email}/update`, { method: "PUT" ,
        headers: {
@@ -37,11 +34,12 @@ const UpdateProfile = () =>{
        body: JSON.stringify(updatedData)
        });
 
-       if(res.status)
+       if(res.status == 200)
        {
          document.getElementById('username').disabled = true;
          document.getElementById('mobile').disabled = true;
          const {email,mobileNo, name} = await getDataFromDB(); 
+         console.log(name);
          setUserData({email,mobileNo,name});
          alert("Your data has been updated");
        }
@@ -82,10 +80,9 @@ const UpdateProfile = () =>{
 
 
     React.useEffect(async () => {
-      
       const {email,mobileNo, name} = await getDataFromDB(); 
+      console.log("From Use Effect ====>",name , email ,mobileNo);
       setUserData({email,mobileNo,name});
-
     }, []);
   
     
