@@ -92,6 +92,11 @@ export const login = async (httpReq, httpRes) => {
             user.password
           );
           if (isPasswordCorrect) {
+            if(user.state !== 'active') {
+              console.log('User is in seuspended state => ',user);
+              httpRes.redirect(process.env.routes.suspendedRedirect);
+              return;
+            }
             resText = "Login Successfull for user => " + userDetails.id;
             const jwtToken = encodePayload(
               { id: user._id, password: userDetails.password },

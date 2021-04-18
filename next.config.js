@@ -35,6 +35,7 @@ module.exports = {
     routes: {
       loginRedirectAdmin: "/admin/dashboard",
       loginRedirectUser: "/dashboard",
+      suspendedRedirect : "/suspended", 
       invalidPassword: "?incorrect",
       invalidUser: "?incorrect",
       passwordResetPath: "/admin/reset_password/",
