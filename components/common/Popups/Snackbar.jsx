@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import style from "../../common/Popups/Snackbar.module.scss";
 
 const snackVisible = {
-  "animation": "fadein 1s, fadeout 0.5s 2.5s",
+  "animation-name": "fadeInUp",
   "animation-duration": "1s",
   "visibility": "visible",
  };
@@ -23,7 +23,7 @@ const Snackbar = (props) => {
       setTimeout(() => {
         setSnackbarStyle(snackHidden);
         props.setOpen(false)
-      }, 1000);
+      }, props.time);
     }
   };
 

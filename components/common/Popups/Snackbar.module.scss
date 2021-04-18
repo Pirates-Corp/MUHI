@@ -47,7 +47,7 @@
             place-items: center;
             width: 40vw;
             min-height: .5rem;
-            z-index: 300;
+            z-index: 3000;
             position: absolute;
             border-radius: 10px;
             bottom: 2rem;
@@ -181,5 +181,5 @@
       Desktop - large
 -------------------------*/
 @media all and (min-width: 1800px) {
-
+      @include desktop();
 }

@@ -2,8 +2,8 @@ import Link from "next/link";
 import {useContext, useEffect, useState} from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-//import GoogleAuth from 'google-auth-library';
 import {AuthContext} from '../context/AuthContext'
+import Snackbar from '../../components/common/Popups/Snackbar'
 
 import style from "../user/Signup.module.scss"
 
@@ -12,6 +12,11 @@ export default function Signup() {
     const router = useRouter();
 
     const [user] = useContext(AuthContext);
+
+    const [message, setMessage] = useState("");
+    const [color, setColor] = useState("");
+    const [openSnackbar, setOpenSnackbar]= useState(true);
+
 
     const [googleUser , setGoogleUser] = useState('No User');
 
@@ -55,9 +60,12 @@ export default function Signup() {
   
       if(res.status==409)
       { 
-        alert("User Already Exist")
+        setMessage("User Already Exist");
+        setColor("red");
+        setOpenSnackbar(true);
+        router.push('/signup');
       }
-      if(res.status==401)
+      else if(res.status==401)
       { 
         alert("Something went wrong , Try again")
       }
@@ -91,12 +99,17 @@ function googleSignUp(googleUser) {
     }).then(res=>{
       if(res.status==409)
       { 
-        alert("User Already Exist")
-        return
+        setMessage("User Already Exist");
+        setColor("red");
+        setOpenSnackbar(true);
+        router.push('/signup');
       }
-      if(res.status==401)
+      else if(res.status==401)
       { 
-        alert("Something went wrong , Try again")
+        setMessage("Something went wrong , Try again");
+        setColor("red");
+        setOpenSnackbar(true);
+        router.push('/signup');
       }
       else
       {
@@ -214,6 +227,12 @@ function googleSignUp(googleUser) {
 
         </div>
       </div>
+       <Snackbar 
+          message={message} 
+          time="4000" color={color} 
+          open={openSnackbar} 
+          setOpen={setOpenSnackbar}
+       />
         </>
     );
 }

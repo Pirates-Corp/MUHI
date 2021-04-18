@@ -1,16 +1,19 @@
-import { useRouter } from 'next/router'
+import { useRouter  } from 'next/router'
 import Link from "next/link"
+import Head from "next/head"
 import style from "../admin/adminLogin.module.scss";
+import { useEffect , useState} from 'react';
+import Snackbar from '../../components/common/Popups/Snackbar'
+
 
 const Login = () => {
+
     const router = useRouter();
+    const [message, setMessage] = useState("");
+    const [color, setColor] = useState("");
+    const [openSnackbar, setOpenSnackbar]= useState(true);
 
-    
-
-    if(router.asPath === "/admin/login?incorrect")
-    {
-    alert("Incorrect Email / Password");
-    }
+   
 
     // const onSubmit = async (e) => {
         
@@ -36,7 +39,22 @@ const Login = () => {
     //     }
     // }
 
+    useEffect(()=>{
+        if(router.asPath === "/admin/login?incorrect")
+        {
+            setMessage("Incorrect Admin Username / Password");
+            setColor("red");
+            setOpenSnackbar(true);
+            router.push('/admin/login')
+        }
+    },[])
+
+
   return (
+    <>
+    <Head>
+        <title>Admin Login</title>
+    </Head>
     <div id={style.loginBox} >
         <div id={style.innerLoginBox}> 
             <div id={style.headingHolder}> 
@@ -61,7 +79,14 @@ const Login = () => {
                 <a className={style.studentLogin}>Go to Student Login</a>
             </Link>
         </div>
-    </div>
+     </div>
+     <Snackbar 
+          message={message} 
+          time="4000" color={color} 
+          open={openSnackbar} 
+          setOpen={setOpenSnackbar}
+    />
+    </>
   )
 }
 
