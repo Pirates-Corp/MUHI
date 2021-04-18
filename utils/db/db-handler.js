@@ -72,10 +72,6 @@ export const handleDocumentReadAll = async (req, res) => {
         (result && result[0] === 200)
       ) {
         if (
-          (result &&
-            result[1].role === constants.roles.moderator &&
-            collectionDetails.collectionName ===
-              constants.collectionMap.user.collectionName) ||
           (result[1].role === constants.roles.user &&
             collectionDetails.collectionName ===
               constants.collectionMap.user.collectionName) ||
@@ -1028,7 +1024,6 @@ const getDoc = async (req) => {
     ) {
       if (
         (authResult[0] == 200 &&
-          authResult[1].role !== constants.roles.admin &&
           collectionDetails.collectionName ===
             constants.collectionMap.user.collectionName &&
           authResult[1]._id !== documentId) ||

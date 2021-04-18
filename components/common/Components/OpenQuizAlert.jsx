@@ -17,6 +17,7 @@ const OpenQuizAlert = ({props}) => {
       gender : studentGender
     }
     localStorage.setItem("Student",JSON.stringify(student))
+    localStorage.setItem('startedVal', JSON.stringify(0))
     props.setStarted(0);
   }
 
