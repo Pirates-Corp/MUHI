@@ -1,4 +1,5 @@
-import React from "react";
+import React,{useContext} from "react";
+import { AuthContext } from "../../context/AuthContext";
 import style from './UpdateProfile.module.scss'
 import PrimaryHeading from "../Header/PrimaryHeading"
 import SubHeading from "../Header/SubHeading"
@@ -6,6 +7,8 @@ import SubHeading from "../Header/SubHeading"
 const UpdateProfile = () =>{
 
     const [userData, setUserData] = React.useState({username: " ",mobile:" "})
+    
+  const [user] = useContext(AuthContext);
 
     const getDataFromDB = async()=>{
       const result = await fetch("/api/db/user", { method: "GET" });
@@ -65,7 +68,23 @@ const UpdateProfile = () =>{
               if(res.status===200)
               {
                 alert("Password Updated successfully ,Login Again");
-                window.location.assign('/');
+                
+
+                let logRes = await fetch("/api/auth/logout",{method: 'PUT'});
+                if(logRes.status===200)
+                    {
+                        sessionStorage.clear();
+                        localStorage.clear();
+                        
+                        if(user.role === "admin" || user.role === "moderator")
+                        {
+                            window.location.href="/admin/login";
+                        }
+                        else
+                        {
+                            window.location.href="/";
+                        }
+                    }
               }
        }
        else
