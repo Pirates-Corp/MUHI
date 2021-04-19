@@ -52,7 +52,7 @@ const TableComponent = (props) => {
             }
             else
             {
-              row = [];
+            row = [];
             }
           }
        })
@@ -62,9 +62,6 @@ const TableComponent = (props) => {
         }
       });
     return allStudents;
-
-
-
   };
 
   const [tableCol, setTableCol] = React.useState(col);
@@ -117,13 +114,16 @@ const TableComponent = (props) => {
     }
     else
     {
-         let row = [];
-         apiData.allReports.map((user)=>{
-             user.reports.map(quiz=>{
-             
-               if(quiz.id.toLowerCase()==currentQuiz.toLowerCase())
-               {
-                 row = Object.values(user).slice(1,3);
+      apiData.allReports.map((user)=>{
+
+        user.reports.map(quiz=>{
+          
+          if(quiz.id.toLowerCase()==currentQuiz.toLowerCase())
+          {
+                 //row = Object.values(user).slice(2,3);
+                 let row = [];
+                 row.push(quiz.rank);
+                 row.push(user.avgScore)
                  row.push(quiz.score.taken+'/'+quiz.score.total);
                  row.push(parseInt(quiz.time.taken/60)+'/'+parseInt(quiz.time.total/60))
                  apiData.allUsers.map((student)=>{
@@ -135,7 +135,7 @@ const TableComponent = (props) => {
                  })
                  if(row.length!==0 && row.length>=5)
                  {
-                 studentData.push(row);
+                   studentData.push(row);
                  }
                }
              })
@@ -145,7 +145,7 @@ const TableComponent = (props) => {
          cols = ['Student Name','Rank','Average Score','score','Time Taken']
          tableColLen = cols.length+1;
      }
-     setExportHeader(currentQuiz)
+    setExportHeader(currentQuiz)
     setTableCol(tableColLen)
     setViewColName(cols)
     setViewData(rawTableData);
@@ -168,9 +168,11 @@ const TableComponent = (props) => {
         sortArr.push(arr[index]);
       });
 
-      sortArr.sort(function (a, b) {
-        return ('' + a.toLowerCase()).localeCompare(b.toLowerCase());
-    });
+      // sortArr.sort(function (a, b) {
+      //   return ('' + a.toLowerCase()).localeCompare(b.toLowerCase());
+      //  });
+
+      sortArr.sort();
 
       sortArr.map((key) => {
         viewData.map((arr) => {
@@ -202,10 +204,20 @@ const TableComponent = (props) => {
           apiData.allUsers.map((student)=>{
             if(user._id===student._id)
             {
-              row.unshift(student.name);
+              if(student.role=="user")
+              {
+                row.unshift(student.name);
+              }
+              else
+              {
+                row = [];
+              }
             }
          })
+         if(row.length!==0)
+        {
           ExportData.push(row);
+        }
         });
         ExportData.unshift(exportStudentCol);
       } 
@@ -226,15 +238,14 @@ const TableComponent = (props) => {
           "score",
           "Time Taken",
           "Status",
-          "Questions Left",
+          "Questions Attended",
         ];
-        let tagMap = {};
         let runOnce = true;
         apiData.allReports.map((user) => {
           user.reports.map((quiz) => {
-            console.log(quiz.id);
-            console.log(quiz.id.toLowerCase(), exportHeader.toLowerCase());
+            
             if (quiz.id.toLowerCase() == exportHeader.toLowerCase()) {
+              let tagMap = {};
               row = Object.values(user).slice(0, 3);
               row.push(quiz.score.taken + "/" + quiz.score.total);
               row.push(parseInt(quiz.time.taken/60) + "/" + parseInt(quiz.time.total/60) + "Mins");
@@ -247,21 +258,32 @@ const TableComponent = (props) => {
                 }
              })
               quiz.report.map((tag) => {
+                
                 if (tag.chapter + "_" + tag.section in tagMap)
-                  tagMap[tag.chapter + "_" + tag.section] =
-                    tagMap[tag.chapter + "_" + tag.section] +
-                    Number(tag.result);
+                 {
+                   tagMap[tag.chapter + "_" + tag.section] =
+                   tagMap[tag.chapter + "_" + tag.section] +  parseInt(tag.result);
+                 }
                 else
-                  tagMap[tag.chapter + "_" + tag.section] = Number(tag.result);
+                {
+             
+                  tagMap[tag.chapter + "_" + tag.section] =   parseInt(tag.result);
+                }
               });
-              row.push(...Object.keys(tagMap).map((key) => tagMap[key]));
-
+              if(Object.values(tagMap).length !== 0)
+              {
+                row.push(...Object.keys(tagMap).map((key) => isNaN(tagMap[key]) ?  0 : tagMap[key] ));
+              }
+              else
+              {
+                row.push(0);
+              }
               if (runOnce) {
                 exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
                 runOnce = false;
               }
 
-              tagMap = {};
+             
               ExportData.push(row);
             }
           });
@@ -274,10 +296,9 @@ const TableComponent = (props) => {
       ExportData.unshift(viewColNames);
     }
 
-    console.log(ExportData);
+    console.log("Export Data ====> ",ExportData);
 
     let wb = XLSX.utils.book_new();
-
     wb.Props = {
       Title: exportHeader + "- Reports",
       Subject: exportHeader,

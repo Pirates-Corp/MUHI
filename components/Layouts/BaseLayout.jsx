@@ -10,19 +10,20 @@ const BaseLayout = ({children}) =>
 
   const [user] = useContext(AuthContext);
 
-   if(user === null  )
+   if(user === null)
    {
      router.push('/')
    }
 
    if(user)
    {
-     if(user.role=="user" && (router.pathname).startsWith('/admin'))
+     if((user.role=="user" && (router.pathname).startsWith('/admin')) || ((user.role=="moderator" && (router.pathname).startsWith('admin/accounts'))))
      {
       router.push('/dashboard');
      }
    }
-   else{
+   else
+   {
     router.push('/');
    }
    

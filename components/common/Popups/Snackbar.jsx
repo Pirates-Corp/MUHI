@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import style from "../../common/Popups/Snackbar.module.scss";
 
 const snackVisible = {
-  "animation-name": "fadeInUp",
-  "animation-duration": "1s",
+  "animationName": "fadeInUp",
+  "animationDuration": "1s",
   "visibility": "visible",
  };
  const snackHidden = {
-  "animation-name": "fadeInDown",
-  "animation-duration": "1s",
+  "animationName": "fadeInDown",
+  "animationDuration": "1s",
   "visibility": "hidden",
  };
 const Snackbar = (props) => {

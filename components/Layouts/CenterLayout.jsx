@@ -17,6 +17,14 @@ const CenterLayout = ({children}) =>
     }
    }
 
+   if(user)
+   {
+     if((user.role=="moderator" && (router.pathname).startsWith('admin/accounts')))
+     {
+      router.push('/dashboard');
+     }
+   }
+
 
 
 

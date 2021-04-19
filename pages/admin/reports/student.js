@@ -14,7 +14,6 @@ export default function studentReportAll() {
   useEffect(async () => {
     let id = JSON.parse(router.query.data);
 
-    console.log(id);
     const studentRes = await fetch(`/api/db/report/${id.split("-")[0]}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -43,31 +42,51 @@ export default function studentReportAll() {
     ];
 
 
-     let allReportsData = []
+    let allReportsData = []
 
-    console.log("first",studentData.reports);
+  
 
     studentData.reports.map(quiz=>{
-      let tagMap = {};
       let tagArray = []
-
-      //tag forming 
+      let tagMap = {};
       quiz.report.map((tag) => {
-        // let  tagField = ((tag.chapter + " " + tag.section) === undefined ? "Nodata"  : (tag.chapter + " " + tag.section) );
-        let  tagField = tag.chapter + " " + tag.section;
-
-        if (tagField in tagMap)
-          tagMap[tagField] = tagMap[tagField] +(isNaN(tag.result)? 0 : tag.result );
+        let tagField = ((tag.chapter + " " + tag.section) ? (tag.chapter + " " + tag.section): "Nodata"  );
+        if(tagField === "Nodata")
+        {
+            tagArray.push({
+              tagname : "No questions Attended",
+              data: ''
+            })
+        }
         else
-          tagMap[tagField] =  (isNaN(tag.result)? 0 : tag.result );
-          
-         
-          tagArray.push(tagMap);
-        });
-        
-        
-        tagMap = {};
-      console.log(tagArray);
+        {
+            if (tag.chapter + " - " + tag.section in tagMap)
+            {
+              tagMap[tag.chapter + " - " + tag.section] =  tagMap[tag.chapter + " - " + tag.section] +  parseInt(tag.result);
+            }
+            else
+            { 
+              tagMap[tag.chapter + " - " + tag.section] =   parseInt(tag.result);
+            }
+        }
+      });
+      
+      for(let index = 0; index < Object.keys(tagMap).length ; index++ )
+      {
+        tagArray.push({
+          tagname : Object.keys(tagMap)[index],
+          data: Object.values(tagMap)[index] 
+        })
+      }
+    
+      
+      if(tagArray.length === 0)
+      {
+        tagArray.push({
+          tagname : "No questions Attended",
+          data: ''
+        })
+      }
       
          
 
@@ -111,10 +130,7 @@ export default function studentReportAll() {
 
          }
       allReportsData.push(quizObj);
-      tagArray=[];
-
-      
-         
+      tagMap={};         
     })
 
    
@@ -132,7 +148,7 @@ export default function studentReportAll() {
         <QuizInformationCard 
           view={{
             quizData : true,
-            tagData :  false,
+            tagData :  true,
             showButtons : true
           }}
         apiData={allReports}
