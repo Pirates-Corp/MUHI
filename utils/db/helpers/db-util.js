@@ -161,6 +161,7 @@ const handleRanking = async () => {
           } else {
             const reportsArray = await reportCursor.toArray();
             const quizArray = await quizCursor.toArray();
+            console.log("quizArray => ",quizArray);
             const promiseArr = []
             quizArray.map((doc) => {
               if (doc.quizTag.split("-")[2].toLowerCase() === "false") {
@@ -220,7 +221,7 @@ export const getDatabaseInstance = async () => {
         console.log("Error while connectinng to db => " + err);
       });
     cached.conn = await cached.promise;
-    setInterval(handleRanking, process.env.rankingInterval * 10000);
+    setInterval(handleRanking, process.env.rankingInterval * 60000);
     return cached.conn;
   }
 };
