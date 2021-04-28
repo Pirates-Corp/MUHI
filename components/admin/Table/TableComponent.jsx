@@ -189,6 +189,7 @@ const TableComponent = (props) => {
   //Export option
   const exportFile = () => {
     let ExportData = [];
+    let ExportObjArr = [];
     if (exportHeader) {
       if (exportHeader == "All students") {
         const exportStudentCol = [
@@ -229,35 +230,40 @@ const TableComponent = (props) => {
 
       }
       else {
-        let row = [];
+        let header = [];
         const exportQuizCol = [
           "Student Name",
           "Email",
           "Rank",
           "Average Score",
-          "score",
+          "Score",
           "Time Taken",
           "Status",
           "Questions Attended",
         ];
-        //let runOnce = true;
         apiData.allReports.map((user) => {
           user.reports.map((quiz) => {
             
             if (quiz.id.toLowerCase() == exportHeader.toLowerCase()) {
               let tagMap = {};
-              row = Object.values(user).slice(0, 3);
+              let studentObj = {};
+
+
+                apiData.allUsers.map((student)=>{
+                  if(user._id===student._id)
+                  {
+                    studentObj["Student Name"] = student.name;
+                  }
+              })
+              studentObj.Email = user._id;
+              studentObj.Rank = quiz.rank;
+              studentObj["Average Score"] = user.avgScore;
+              studentObj.Score = quiz.score.taken + "/" + quiz.score.total;
+              studentObj["Time Taken"] = parseInt(quiz.time.taken/60) + "/" + parseInt(quiz.time.total/60) + "Mins";
+              studentObj["Status"] = (quiz.status)?"Completed" : "InComplete";
+              studentObj["Questions Attended"] = quiz.questionsAttended.length;
               
-              row.push(quiz.score.taken + "/" + quiz.score.total);
-              row.push(parseInt(quiz.time.taken/60) + "/" + parseInt(quiz.time.total/60) + "Mins");
-              row.push((quiz.status)?"Completed" : "InComplete");
-              row.push(quiz.questionsAttended.length);
-              apiData.allUsers.map((student)=>{
-                if(user._id===student._id)
-                {
-                  row.unshift(student.name);
-                }
-             })
+
               quiz.report.map((tag) => {
                 
                 if (tag.chapter + "_" + tag.section in tagMap)
@@ -272,32 +278,30 @@ const TableComponent = (props) => {
                 }
               });
 
-              console.log(row);
-              console.log("tagMap====>",tagMap);
-
-              if(Object.values(tagMap).length !== 0)
-              {
-                row.push(...Object.keys(tagMap).map((key) => isNaN(tagMap[key]) ?  0 : tagMap[key] ));
-              }
-              else
-              {
-                row.push(0);
-              }
-
-              // if (runOnce) {
-              //   exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
-              //   runOnce = false;
-              // }
+              const newObj = {...studentObj,...tagMap}
+              ExportObjArr.push(newObj);
+              exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
               
-             exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
-              
-              ExportData.push(row);
             }
           });
         });
+        
+        header = Array.from(new Set(exportQuizCol));
+        // console.log("export obj array---->",ExportObjArr);
+        // console.log("header---->",header);
 
-        //ExportData.unshift(exportQuizCol);
-        ExportData.unshift(Array.from(new Set(exportQuizCol)));
+        ExportObjArr.forEach(studentObject=>{
+          let row = [];
+          
+
+          header.forEach(headerName=>{
+            row.push(studentObject[headerName] ? studentObject[headerName]: 0);
+          })
+
+          ExportData.push(row);
+        })
+
+        ExportData.unshift(header);
         
       }
     } else {
@@ -305,7 +309,7 @@ const TableComponent = (props) => {
       ExportData.unshift(viewColNames);
     }
 
-    console.log("Export Data ====> ",ExportData);
+    // console.log("Export Data ====> ",ExportData);
 
     let wb = XLSX.utils.book_new();
     wb.Props = {
