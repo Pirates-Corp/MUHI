@@ -38,7 +38,7 @@ module.exports = {
       suspendedRedirect : "?suspended", 
       invalidPassword: "?incorrect",
       invalidUser: "?incorrect",
-      passwordResetPath: "/admin/reset_password/",
+      passwordResetPath: "/forgetpassword?token=",
     },
     rankingInterval : 1
   },

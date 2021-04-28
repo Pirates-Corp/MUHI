@@ -165,7 +165,7 @@ const TableComponent = (props) => {
       setViewData(rawTableData);
     } else {
       viewData.map((arr) => {
-        sortArr.push(arr[index]);
+        sortArr.push(arr[index]);    
       });
 
       // sortArr.sort(function (a, b) {
@@ -240,13 +240,14 @@ const TableComponent = (props) => {
           "Status",
           "Questions Attended",
         ];
-        let runOnce = true;
+        //let runOnce = true;
         apiData.allReports.map((user) => {
           user.reports.map((quiz) => {
             
             if (quiz.id.toLowerCase() == exportHeader.toLowerCase()) {
               let tagMap = {};
               row = Object.values(user).slice(0, 3);
+              
               row.push(quiz.score.taken + "/" + quiz.score.total);
               row.push(parseInt(quiz.time.taken/60) + "/" + parseInt(quiz.time.total/60) + "Mins");
               row.push((quiz.status)?"Completed" : "InComplete");
@@ -270,6 +271,10 @@ const TableComponent = (props) => {
                   tagMap[tag.chapter + "_" + tag.section] =   parseInt(tag.result);
                 }
               });
+
+              console.log(row);
+              console.log("tagMap====>",tagMap);
+
               if(Object.values(tagMap).length !== 0)
               {
                 row.push(...Object.keys(tagMap).map((key) => isNaN(tagMap[key]) ?  0 : tagMap[key] ));
@@ -278,18 +283,22 @@ const TableComponent = (props) => {
               {
                 row.push(0);
               }
-              if (runOnce) {
-                exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
-                runOnce = false;
-              }
 
-             
+              // if (runOnce) {
+              //   exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
+              //   runOnce = false;
+              // }
+              
+             exportQuizCol.push(...Object.keys(tagMap).map((key) => key));
+              
               ExportData.push(row);
             }
           });
         });
 
-        ExportData.unshift(exportQuizCol);
+        //ExportData.unshift(exportQuizCol);
+        ExportData.unshift(Array.from(new Set(exportQuizCol)));
+        
       }
     } else {
       ExportData.push(viewData);

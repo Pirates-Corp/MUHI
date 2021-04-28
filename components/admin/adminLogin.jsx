@@ -49,6 +49,11 @@ const Login = () => {
         }
     },[])
 
+    const goHome = (e)=>{
+        e.preventDefault();
+        window.location.assign('/');
+    }
+
 
   return (
     <>
@@ -75,9 +80,9 @@ const Login = () => {
                 
                 <input className="prBtn" type="submit" value="Login"/>
             </form>
-            <Link href="/">
-                <a className={style.studentLogin}>Go to Student Login</a>
-            </Link>
+           
+                <span onClick={e=>goHome(e)} className={style.studentLogin}>Go to Student Login</span>
+         
         </div>
      </div>
      <Snackbar 
