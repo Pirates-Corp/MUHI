@@ -42,6 +42,14 @@ const NewsLetterForm = () => {
     useEffect(()=>{
       if(router.query.data){
         let getData = JSON.parse(router.query.data);
+        let scheduleInfo = getData.schedule;
+
+        if(scheduleInfo.endTime === 0 && scheduleInfo.startTime === 0){
+          setSelectedOption("postNow")
+        } else {
+          setSelectedOption("scheduleLater")
+        }
+
         setDataToEdit(getData)
         if(getData){
           setStartDate(dataToEdit ? getTime(dataToEdit.schedule.startTime): getTime());
