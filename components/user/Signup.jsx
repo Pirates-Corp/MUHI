@@ -198,7 +198,7 @@ function googleSignUp(googleUser) {
 
                 <div className="TextBox" id={style.TextBox}>
                     <img src="/imgs/svgs/MobileNumber.svg" alt="password" />
-                    <input type="number"  name="mobileNo" placeholder="Mobile Number"  minLength='5' required />
+                    <input type="number"  name="mobileNo" placeholder="Mobile Number"  minLength='10' maxLength='15' required />
                 </div>
 
                 <div id={style.btnHolder}>

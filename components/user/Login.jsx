@@ -53,9 +53,16 @@ export default function Login() {
       { 
         alert("User Doesn't Exist")
       }
+      else if(res.status==401)
+      {
+        setMessage("Incorrect Email / Password");
+        setColor("red");
+        setOpenSnackbar(true);
+        window.location.assign('/');
+      }
       else
       {
-        console.log(res);
+       console.log(res);
        window.location.assign(res.url);
       }
     })  

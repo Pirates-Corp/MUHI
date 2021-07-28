@@ -58,11 +58,11 @@ const QuizResultCard = ({ props }) => {
         <div id={style.msg}>
           {router.pathname.startsWith("/quiz") ? (
             <p>
-              We have sent you the syllabus as a mail to{" "}
+             We have sent you the syllabus as a mail to{" "}
               <Link href="#">
                 <a>{props.userId}</a>
-              </Link>
-            </p>
+          </Link>
+            </p> 
           ) : (
             <>
               <p> Thanks for taking this Quiz, {props.userId} </p>
