@@ -3,7 +3,7 @@ import Link from "next/link";
 import Head from 'next/head'
 import style from "../user/Login.module.scss";
 import { useRouter } from 'next/router'
-import {AuthContext} from '../context/AuthContext'
+import { AuthContext } from '../context/AuthContext'
 import Snackbar from '../../components/common/Popups/Snackbar'
 export default function Login() {
 
@@ -34,8 +34,6 @@ export default function Login() {
     // var id_token = googleUser.getAuthResponse().id_token;
     //     console.log("ID Token: " + id_token);
     const body = {
-
-      
       id : googleUser.getBasicProfile().getEmail(),
       password :  googleUser.getBasicProfile().getEmail() + "@muhi",
      
@@ -72,6 +70,7 @@ export default function Login() {
 
 
   useEffect(()=>{
+    console.log('use effect');
     if(window)
     {
      if(window.gapi){
@@ -103,6 +102,7 @@ export default function Login() {
     
     if(router.asPath === "/?incorrect")
     {
+      console.log("hello");
       setMessage("Incorrect Email / Password");
       setColor("red");
       setOpenSnackbar(true);
@@ -116,7 +116,7 @@ export default function Login() {
       router.push('/');
     }
 
-  },[])
+  })
 
 
   return (

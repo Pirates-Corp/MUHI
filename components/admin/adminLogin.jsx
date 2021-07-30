@@ -66,12 +66,11 @@ const Login = () => {
                 <img src="/imgs/svgs/muhiLogo.svg" alt="mugi-logo"/>
                 <h1>Admin - Log In</h1>
             </div>
-            {/* onSubmit={e=>onSubmit(e)} */}
             <form action="/api/auth/login" method="POST" >
-                {/* {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null} */}
+              
                 <div className="TextBox">
                     <img src="/imgs/svgs/UserName.svg" alt="username" />
-                    <input type="text" id="id" name="id" placeholder="Username"  required />
+                    <input type="text" id="id" name="id" placeholder="Username" title="Email Id's and Moderator Login Not Allowed" pattern="[a-zA-Z0-9]+"  required />
                 </div>
                 <div className="TextBox">
                     <img src="/imgs/svgs/CurrentPassword.svg" alt="password" />
