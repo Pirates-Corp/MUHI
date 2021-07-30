@@ -74,18 +74,20 @@ const QuizResultCard = ({ props }) => {
           )}
         </div>
 
-        <div id={style.syllabus}>
+        <div id={style.syllabus} style={(props.totalMarks === "")? { visibility :"hidden" } : { visibility :"visible" } }>
           <h4>Syllabus List</h4>
           <div id={style.syllabusScroll}>
             <ul id={style.syllabusList}>
-              {Object.keys(props.syllabus).map((key) => (
+              {
+              Object.keys(props.syllabus).length > 0 ? 
+              Object.keys(props.syllabus).map((key) => (
                 <li>
                   <p>{key}</p>
                   <Link href={props.syllabus[key]}>
                     <a className="blueBtn">Open </a>
                   </Link>
                 </li>
-              ))}
+              )) : `You have completed the quiz !`}
             </ul>
           </div>
         </div>
