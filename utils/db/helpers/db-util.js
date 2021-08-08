@@ -161,7 +161,7 @@ const handleRanking = async () => {
           } else {
             const reportsArray = await reportCursor.toArray();
             const quizArray = await quizCursor.toArray();
-            console.log("quizArray => ",quizArray);
+            // console.log("quizArray => ",quizArray);
             const promiseArr = []
             quizArray.map((doc) => {
               if (doc.quizTag.split("-")[2].toLowerCase() === "false") {

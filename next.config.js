@@ -37,7 +37,8 @@ module.exports = {
       loginRedirectUser: "/dashboard",
       suspendedRedirect : "?suspended", 
       invalidPassword: "?incorrect",
-      invalidUser: "?incorrect",
+      invalidUser: "?invalidUser",
+      inValidEmail : "?incorrect",
       passwordResetPath: "/forgetpassword?token=",
     },
     rankingInterval : 1

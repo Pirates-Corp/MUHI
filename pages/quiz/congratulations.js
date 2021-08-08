@@ -4,17 +4,26 @@ export default function quiztopic({ props }) {
 
   const syllabus = {};
 
-  if (props.userReport != undefined) {
-    props.userReport.report.map((report) => {
+  if (props.userReport && props.quizData) {
+    let count = 0, countB = 0;
+    props.quizData.questions.map((question) => {
       if (props.quizData) {
-        props.quizData.questions.map((question) => {
-          if (question.id === report.id) {
-            syllabus[question.chapter + " - " + question.section] =
-              question.syllabus;
-          }
+        let isMarked = false;
+        props.userReport.report.map((report) => {
+          if (question.id === report.id && question.correctAnswer+"".toLowerCase() != report.answer+"".toLowerCase()) {
+              syllabus[question.chapter + " - " + question.section] = question.syllabus;  
+              countB++;
+          } else if (question.id === report.id) {
+            isMarked = true;
+          } 
         });
+        if(isMarked == false) {
+          count++;
+          syllabus[question.chapter + " - " + question.section] = question.syllabus;
+        }
       }
     });
+    console.log(count+" <========Count ================ "+countB);
   }
 
   const totalMarks =  props.quizData && props.quizData.quizTag.split("-")[1].toLowerCase().trim() === "false"  ? props.userReport.score.taken +"/" +props.userReport.score.total : "";

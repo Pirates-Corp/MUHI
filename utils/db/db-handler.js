@@ -470,7 +470,7 @@ export const handleFieldRead = async (req, res) => {
         if (matchedFields[0]) {
           resCode = 200;
           resBody = matchedFields[0];
-          console.log("Returning doc " + JSON.stringify(matchedFields[0]));
+          // console.log("Returning doc " + JSON.stringify(matchedFields[0]));
         } else {
           resCode = 404;
           resBody =
@@ -708,7 +708,7 @@ export const handleSubFieldRead = async (req, res) => {
           if (matchedSubFiels[0]) {
             resCode = 200;
             resBody = matchedSubFiels[0];
-            console.log("Returning doc " + JSON.stringify(matchedFields[0]));
+            // console.log("Returning doc " + JSON.stringify(matchedFields[0]));
           } else {
             resCode = 404;
           }
@@ -1096,12 +1096,12 @@ const getDoc = async (req) => {
               resCode = 401;
               resBody = "Restricted Operation";
             }
-            console.log(
-              "returning the document for the id " +
-                documentId +
-                " =>" +
-                JSON.stringify(resBody)
-            );
+            // console.log(
+            //   "returning the document for the id " +
+            //     documentId +
+            //     " =>" +
+            //     JSON.stringify(resBody)
+            // );
           } else {
             resCode = 404;
             resBody =

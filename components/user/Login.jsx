@@ -108,6 +108,15 @@ export default function Login() {
       setOpenSnackbar(true);
       router.push('/');
     }
+
+    if(router.asPath === "/?invalidUser")
+    {
+      setMessage("No User Found");
+      setColor("green");
+      setOpenSnackbar(true);
+      router.push('/');
+    }
+    
     if(router.asPath === "/?suspended")
     {
       setMessage("Your account has been suspended");
